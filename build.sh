@@ -32,9 +32,9 @@ fi
 
 echo "Building resources..."
 echo ""
-	resgen Novell.Directory.Ldap/Novell.Directory.Ldap.Utilclass/ResultCodeMessages.txt lib/ResultCodeMessages.resources
+	resgen Novell.Directory.Ldap/Properties/ResultCodeMessages.resx lib/ResultCodeMessages.resources
 	
-	resgen Novell.Directory.Ldap/Novell.Directory.Ldap.Utilclass/ExceptionMessages.txt lib/ExceptionMessages.resources
+	resgen Novell.Directory.Ldap/Properties/ExceptionMessages.resx lib/ExceptionMessages.resources
 
    	echo "Building Novell.Directory.Ldap.dll..."
 	echo ""
