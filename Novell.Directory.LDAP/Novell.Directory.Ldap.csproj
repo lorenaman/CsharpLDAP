@@ -7,7 +7,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0088E280-2D58-461F-ADCC-953610FB4F17}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Novell.Directory.Ldap</RootNamespace>
     <AssemblyName>Novell.Directory.Ldap</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -199,6 +198,16 @@
     <Compile Include="Message.cs" />
     <Compile Include="MessageAgent.cs" />
     <Compile Include="MessageVector.cs" />
+    <Compile Include="Properties\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\ResultCodeMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultCodeMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Rfc2251\RfcAbandonRequest.cs" />
     <Compile Include="Rfc2251\RfcAddRequest.cs" />
     <Compile Include="Rfc2251\RfcAddResponse.cs" />
@@ -268,8 +277,16 @@
     <Compile Include="Utilclass\TokenTypes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utilclass\ExceptionMessages.txt" />
-    <Content Include="Utilclass\ResultCodeMessages.txt" />
+    <EmbeddedResource Include="Properties\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+      <LogicalName>Novell.Directory.Ldap.ExceptionMessages.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ResultCodeMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResultCodeMessages.Designer.cs</LastGenOutput>
+      <LogicalName>ResultCodeMessages.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
