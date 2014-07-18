@@ -1,3 +1,5 @@
 doc/
 lib/
-opt/
+obj/
+bin/
+*.suo
