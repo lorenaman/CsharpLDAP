@@ -938,7 +938,7 @@ namespace Novell.Directory.Ldap
 		/* package */
 		internal void  writeMessage(Message info)
 		{
-			ExceptionMessages em = new ExceptionMessages();
+            Utilclass.ExceptionMessages em = new Utilclass.ExceptionMessages();
 			System.Object [][]contents = em.getContents();
 			messages.Add(info);
 			
@@ -1221,28 +1221,28 @@ namespace Novell.Directory.Ldap
 					if ((reader != null) && (reason != "reader: thread stopping")) 
 						reader.Abort();
 					// Close the socket
-					try
-					{
-						if(Ssl)
-						{
-							if(in_Renamed != null)
-								in_Renamed.Close();
-							if(out_Renamed != null)
-								out_Renamed.Close();
-							//sock.Shutdown(SocketShutdown.Both);
-							sock.Close();
-						}
-						else
-						{
-							if(in_Renamed != null)
-								in_Renamed.Close();						
-							socket.Close();
-						}
-					}
-					catch (System.IO.IOException ie)
-					{
-						// ignore problem closing socket
-					}
+                    try
+                    {
+                        if (in_Renamed != null)
+                            in_Renamed.Close();
+
+                        if (Ssl && out_Renamed != null)
+                            out_Renamed.Close();
+
+                        if (sock != null)
+                        {
+                            //sock.Shutdown(SocketShutdown.Both);
+                            sock.Close();
+                        }
+                        if (socket != null)
+                        {
+                            socket.Close();
+                        }
+                    }
+                    catch (System.IO.IOException ie)
+                    {
+                        // ignore problem closing socket
+                    }
 					socket = null;
 					sock = null;
 					in_Renamed=null;
