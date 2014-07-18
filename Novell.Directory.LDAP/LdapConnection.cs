@@ -817,7 +817,7 @@ namespace Novell.Directory.Ldap
                 conn.stopReaderOnReply(tlsID);
                                                                                 
                 // send tls message
-                LdapResponseQueue queue = SendRequestToServer(startTLS, 100, null, null);
+                LdapResponseQueue queue = SendRequestToServer(startTLS, defSearchCons.TimeLimit, null, null);
                                                                                 
                 LdapExtendedResponse response = (LdapExtendedResponse) queue.getResponse();
                 response.chkResultCode();
