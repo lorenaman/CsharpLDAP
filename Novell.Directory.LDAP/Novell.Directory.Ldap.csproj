@@ -33,16 +33,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Release\</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -275,6 +276,8 @@
     <Compile Include="Utilclass\SchemaParser.cs" />
     <Compile Include="Utilclass\SchemaTokenCreator.cs" />
     <Compile Include="Utilclass\TokenTypes.cs" />
+    <Compile Include="Controls\LdapPagedResultsControl.cs" />
+    <Compile Include="Controls\LdapPagedResultsResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\ExceptionMessages.resx">
