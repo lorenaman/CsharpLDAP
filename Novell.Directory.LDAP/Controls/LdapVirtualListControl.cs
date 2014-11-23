@@ -174,8 +174,8 @@ namespace Novell.Directory.Ldap.Controls
 		private static System.String requestOID = "2.16.840.1.113730.3.4.9";
 		
 		/*
-		* The Response stOID for a VLV Response
-		*/
+		 * The Response stOID for a VLV Response
+		 */
 		private static System.String responseOID = "2.16.840.1.113730.3.4.10";
 		
 		/*
@@ -274,9 +274,9 @@ namespace Novell.Directory.Ldap.Controls
 			BuildTypedVLVRequest();
 			
 			/* Set the request data field in the in the parent LdapControl to
-			* the ASN.1 encoded value of this control.  This encoding will be
-			* appended to the search request when the control is sent.
-			*/
+			 * the ASN.1 encoded value of this control.  This encoding will be
+			 * appended to the search request when the control is sent.
+			 */
 			setValue(m_vlvRequest.getEncoding(new LBEREncoder()));
 			return ;
 		}
@@ -506,18 +506,21 @@ namespace Novell.Directory.Ldap.Controls
 		static LdapVirtualListControl()
 		{
 			/*
-			* This is where we register the control responses
-			*/
+			 * This is where we register the control responses
+			 */
 			{
-				/* Register the VLV Sort Control class which is returned by the server
-				* in response to a VLV Sort Request
-				*/
+				/* 
+				 * Register the VLV Sort Control class which is returned by the server
+				 * in response to a VLV Sort Request
+				 */
 				try
 				{
 					LdapControl.register(responseOID, System.Type.GetType("Novell.Directory.Ldap.Controls.LdapVirtualListResponse"));
 				}
 				catch (System.Exception e)
 				{
+					System.Console.Error.WriteLine ("Could not register response control for LdapVirtualListControl"); 
+					System.Console.Error.WriteLine ("Error message: " + e.Message);
 				}
 			}
 		}
