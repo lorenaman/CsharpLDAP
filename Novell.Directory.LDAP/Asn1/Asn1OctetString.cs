@@ -85,9 +85,17 @@ namespace Novell.Directory.Ldap.Asn1
 				for(int i=1; i<sbytes.Length; i++)
 					sbytes[i] = (sbyte) bytes[i-1]; //cast byte-->sbyte
 */
+			/*
+			 * Novell code
 				System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
 				byte[] ibytes = encoder.GetBytes(content);
 				sbyte[] sbytes=SupportClass.ToSByteArray(ibytes);
+			 */
+				int i = 0;
+				byte[] ibytes = new byte[content.Length];
+				foreach (char c in content)
+					ibytes[i++] = (byte)c;
+				sbyte[] sbytes = Array.ConvertAll(ibytes, b => unchecked((sbyte)b));
 
 				this.content = sbytes;
 //				this.content = content.getBytes("UTF8");
@@ -157,11 +165,19 @@ namespace Novell.Directory.Ldap.Asn1
 			System.String s = null;
 			try
 			{
+			/* Novell code
 				System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
 				char[] dchar = encoder.GetChars(SupportClass.ToByteArray(content));
 				s = new String(dchar);
+
 //				sbyte *sb=content;
 //				s = new  String(sb,0,content.Length, new System.Text.UTF8Encoding());
+			 */
+				byte[] bytes = Array.ConvertAll(content, b => unchecked((byte)b));
+
+				s = "";
+				foreach (byte b in bytes)
+					s += (char)b;
 			}
 			catch (System.IO.IOException uee)
 			{
