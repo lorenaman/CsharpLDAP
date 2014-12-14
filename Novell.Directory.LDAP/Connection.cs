@@ -799,8 +799,10 @@ namespace Novell.Directory.Ldap
 				}
 				catch (System.Net.Sockets.SocketException se)
 				{
+					// XXX check again whether free is [not] required
+//					System.Console.Out.WriteLine("about to free the semaphore 1st time");
 					// Unable to connect to server host:port
-					freeWriteSemaphore(semId); 
+//					freeWriteSemaphore(semId); 
 					sock = null;
 					socket = null;
 					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new System.Object[] { host, port }, LdapException.CONNECT_ERROR, null, se);
@@ -809,7 +811,7 @@ namespace Novell.Directory.Ldap
 				catch (System.IO.IOException ioe)
 				{
 					// Unable to connect to server host:port
-					freeWriteSemaphore(semId);
+//					freeWriteSemaphore(semId);
 					sock = null;
 					socket = null;
 					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new System.Object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
@@ -821,6 +823,7 @@ namespace Novell.Directory.Ldap
 				this.startReader();
 				clientActive = true; // Client is up
 			} finally {
+//				System.Console.Out.WriteLine("about to free the semaphore 2nd time");
 				freeWriteSemaphore(semId);				
 			}
 			return;
