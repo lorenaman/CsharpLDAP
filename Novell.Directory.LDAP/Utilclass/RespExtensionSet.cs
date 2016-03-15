@@ -95,7 +95,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		{
 			lock (this)
 			{
-				if (this.map.ContainsKey(searchOID))
+				if (searchOID != null && this.map.ContainsKey(searchOID))
 				{
 					return (System.Type) this.map[searchOID];
 				}

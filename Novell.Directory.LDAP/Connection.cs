@@ -1387,9 +1387,12 @@ namespace Novell.Directory.Ldap
 					Activator.CreateInstance(tSslClientStream, consArgs);
 
 				// Register ServerCertValidationDelegate handler
-				EventInfo ei = tSslClientStream.GetEvent("ServerCertValidationDelegate");
-				ei.AddEventHandler(objSslClientStream, 
-					Delegate.CreateDelegate(ei.EventHandlerType, this, "ServerCertificateValidation"));
+//				EventInfo ei = tSslClientStream.GetEvent("ServerCertValidationDelegate");
+                                PropertyInfo ei = tSslClientStream.GetProperty("ServerCertValidationDelegate");
+                                ei.SetValue(objSslClientStream, Delegate.CreateDelegate(ei.PropertyType, this,
+                                        "ServerCertificateValidation"), null);
+//				ei.AddEventHandler(objSslClientStream, 
+//					Delegate.CreateDelegate(ei.EventHandlerType, this, "ServerCertificateValidation"));
 						
 				// Get the in and out streams
 				in_Renamed = (System.IO.Stream) objSslClientStream;
