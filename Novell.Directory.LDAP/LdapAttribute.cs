@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Net.Http;
 using ArrayEnumeration = Novell.Directory.Ldap.Utilclass.ArrayEnumeration;
 using Base64 = Novell.Directory.Ldap.Utilclass.Base64;
 
@@ -53,7 +54,7 @@ namespace Novell.Directory.Ldap
 	/// <seealso cref="LdapModification">
 	/// </seealso>
 	
-	public class LdapAttribute : System.ICloneable, System.IComparable
+	public class LdapAttribute : System.IComparable
 	{
 		class URLData
 		{
@@ -168,7 +169,7 @@ namespace Novell.Directory.Ldap
 					catch (System.IO.IOException uee)
 					{
 						// Exception should NEVER get thrown but just in case it does ...
-						throw new System.SystemException(uee.ToString());
+						throw new System.Exception(uee.ToString());
 					}
 				}
 				return sva;
@@ -207,7 +208,7 @@ namespace Novell.Directory.Ldap
 					}
 					catch (System.IO.IOException use)
 					{
-						throw new System.SystemException(use.ToString());
+						throw new System.Exception(use.ToString());
 					}
 				}
 				return rval;
@@ -297,7 +298,7 @@ namespace Novell.Directory.Ldap
 				}
 				catch (System.IO.IOException ue)
 				{
-					throw new System.SystemException(ue.ToString());
+					throw new System.Exception(ue.ToString());
 				}
 				return ;
 			}
@@ -408,7 +409,7 @@ namespace Novell.Directory.Ldap
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new System.SystemException(e.ToString());
+				throw new System.Exception(e.ToString());
 			}
 			return ;
 		}
@@ -445,7 +446,7 @@ namespace Novell.Directory.Ldap
 				}
 				catch (System.IO.IOException e)
 				{
-					throw new System.SystemException(e.ToString());
+					throw new System.Exception(e.ToString());
 				}
 			}
 			return ;
@@ -469,7 +470,7 @@ namespace Novell.Directory.Ldap
 			}
 			catch (System.Exception ce)
 			{
-				throw new System.SystemException("Internal error, cannot create clone");
+				throw new System.Exception("Internal error, cannot create clone");
 			}
 		}
 		
@@ -496,7 +497,7 @@ namespace Novell.Directory.Ldap
 			}
 			catch (System.IO.IOException ue)
 			{
-				throw new System.SystemException(ue.ToString());
+				throw new System.Exception(ue.ToString());
 			}
 			return ;
 		}
@@ -624,37 +625,40 @@ namespace Novell.Directory.Ldap
 			}
 			try
 			{
-				// Get InputStream from the URL
-				System.IO.Stream in_Renamed = System.Net.WebRequest.Create(url).GetResponse().GetResponseStream();
-				// Read the bytes into buffers and store the them in an arraylist
-				System.Collections.ArrayList bufs = new System.Collections.ArrayList();
-				sbyte[] buf = new sbyte[4096];
-				int len, totalLength = 0;
-				while ((len = SupportClass.ReadInput(in_Renamed, ref buf, 0, 4096)) != - 1)
-				{
-					bufs.Add(new URLData(this, buf, len));
-					buf = new sbyte[4096];
-					totalLength += len;
-				}
-				/*
+			    using (var httpClient = new HttpClient())
+			    {
+			        // Get InputStream from the URL
+			        System.IO.Stream in_Renamed = httpClient.GetStreamAsync(url).Result;
+                    // Read the bytes into buffers and store the them in an arraylist
+                    System.Collections.ArrayList bufs = new System.Collections.ArrayList();
+			        sbyte[] buf = new sbyte[4096];
+			        int len, totalLength = 0;
+			        while ((len = SupportClass.ReadInput(in_Renamed, ref buf, 0, 4096)) != -1)
+			        {
+			            bufs.Add(new URLData(this, buf, len));
+			            buf = new sbyte[4096];
+			            totalLength += len;
+			        }
+			        /*
 				* Now that the length is known, allocate an array to hold all
 				* the bytes of data and copy the data to that array, store
 				* it in this LdapAttribute
 				*/
-				sbyte[] data = new sbyte[totalLength];
-				int offset = 0; //
-				for (int i = 0; i < bufs.Count; i++)
-				{
-					URLData b = (URLData) bufs[i];
-					len = b.getLength();
-					Array.Copy((System.Array) b.getData(), 0, (System.Array) data, offset, len);
-					offset += len;
-				}
-				this.add(data);
+			        sbyte[] data = new sbyte[totalLength];
+			        int offset = 0; //
+			        for (int i = 0; i < bufs.Count; i++)
+			        {
+			            URLData b = (URLData) bufs[i];
+			            len = b.getLength();
+			            Array.Copy((System.Array) b.getData(), 0, (System.Array) data, offset, len);
+			            offset += len;
+			        }
+			        this.add(data);
+			    }
 			}
 			catch (System.IO.IOException ue)
 			{
-				throw new System.SystemException(ue.ToString());
+				throw new System.Exception(ue.ToString());
 			}
 			return ;
 		}
@@ -849,7 +853,7 @@ gotSubType: ;
 			catch (System.IO.IOException uee)
 			{
 				// This should NEVER happen but just in case ...
-				throw new System.SystemException(uee.ToString());
+				throw new System.Exception(uee.ToString());
 			}
 			return ;
 		}
@@ -1060,7 +1064,7 @@ gotSubType: ;
 			}
 			catch (System.Exception e)
 			{
-				throw new System.SystemException(e.ToString());
+				throw new System.Exception(e.ToString());
 			}
 			return result.ToString();
 		}

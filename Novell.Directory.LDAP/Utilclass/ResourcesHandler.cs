@@ -108,11 +108,11 @@ namespace Novell.Directory.Ldap.Utilclass
 		{
 			if (defaultMessages == null)
 			{
-				defaultMessages = new ResourceManager("Ldap2._1._2.ExceptionMessages", Assembly.GetExecutingAssembly());
+				defaultMessages = new ResourceManager("Ldap2._1._2.ExceptionMessages", typeof(ResourcesHandler).GetTypeInfo().Assembly);
 			}
-			
-			if (defaultLocale == null)
-				defaultLocale = Thread.CurrentThread.CurrentUICulture;
+
+		    if (defaultLocale == null)
+		        defaultLocale = System.Globalization.CultureInfo.CurrentUICulture;
 
 			if (locale == null)
 				locale = defaultLocale;
@@ -181,13 +181,13 @@ namespace Novell.Directory.Ldap.Utilclass
 			{
 /*
 				defaultResultCodes = ResourceManager.CreateFileBasedResourceManager("ResultCodeMessages", "Resources", null);*/
-				defaultResultCodes = new ResourceManager("ResultCodeMessages", Assembly.GetExecutingAssembly());
+				defaultResultCodes = new ResourceManager("ResultCodeMessages", typeof(ResourcesHandler).GetTypeInfo().Assembly);
 			}
 
 			if (defaultLocale == null)
-				defaultLocale = Thread.CurrentThread.CurrentUICulture;
+				defaultLocale = System.Globalization.CultureInfo.CurrentUICulture;
 
-			if (locale == null)
+            if (locale == null)
 				locale = defaultLocale;
 
 			string result;
@@ -204,7 +204,7 @@ namespace Novell.Directory.Ldap.Utilclass
 
 		static ResourcesHandler()
 		{
-			defaultLocale = Thread.CurrentThread.CurrentUICulture;
-		}
+			defaultLocale = System.Globalization.CultureInfo.CurrentUICulture;
+        }
 	} //end class ResourcesHandler
 }

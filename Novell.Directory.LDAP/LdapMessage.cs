@@ -33,6 +33,7 @@ using System;
 using Novell.Directory.Ldap.Rfc2251;
 using Novell.Directory.Ldap.Asn1;
 using Novell.Directory.Ldap.Utilclass;
+using System.Reflection;
 
 namespace Novell.Directory.Ldap
 {
@@ -297,7 +298,7 @@ namespace Novell.Directory.Ldap
 						break;
 					
 					default: 
-						throw new System.SystemException("LdapMessage: Unknown Type " + Type);
+						throw new System.Exception("LdapMessage: Unknown Type " + Type);
 					
 				}
 				return name;

@@ -95,14 +95,20 @@ namespace Novell.Directory.Ldap.Asn1
 				byte[] ibytes = new byte[content.Length];
 				foreach (char c in content)
 					ibytes[i++] = (byte)c;
-				sbyte[] sbytes = Array.ConvertAll(ibytes, b => unchecked((sbyte)b));
+
+                i = 0;
+                sbyte[] sbytes = new sbyte[ibytes.Length];
+			    foreach (var ibyte in ibytes)
+			    {
+			        sbytes[i++] = unchecked((sbyte) ibyte);
+			    }
 
 				this.content = sbytes;
 //				this.content = content.getBytes("UTF8");
 			}
 			catch (System.IO.IOException uee)
 			{
-				throw new System.SystemException(uee.ToString());
+				throw new System.Exception(uee.ToString());
 			}
 			return ;
 		}
@@ -165,15 +171,20 @@ namespace Novell.Directory.Ldap.Asn1
 			System.String s = null;
 			try
 			{
-			/* Novell code
-				System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
-				char[] dchar = encoder.GetChars(SupportClass.ToByteArray(content));
-				s = new String(dchar);
+                /* Novell code
+                    System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
+                    char[] dchar = encoder.GetChars(SupportClass.ToByteArray(content));
+                    s = new String(dchar);
 
-//				sbyte *sb=content;
-//				s = new  String(sb,0,content.Length, new System.Text.UTF8Encoding());
-			 */
-				byte[] bytes = Array.ConvertAll(content, b => unchecked((byte)b));
+    //				sbyte *sb=content;
+    //				s = new  String(sb,0,content.Length, new System.Text.UTF8Encoding());
+                 */
+                var i = 0;
+                byte[] bytes = new byte[content.Length];
+                foreach (var item in content)
+                {
+                    bytes[i++] = unchecked((byte)item);
+                }
 
 				s = "";
 				foreach (byte b in bytes)
@@ -181,7 +192,7 @@ namespace Novell.Directory.Ldap.Asn1
 			}
 			catch (System.IO.IOException uee)
 			{
-				throw new System.SystemException(uee.ToString());
+				throw new System.Exception(uee.ToString());
 			}
 			
 			return s;

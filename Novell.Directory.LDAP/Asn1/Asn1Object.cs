@@ -36,8 +36,7 @@ namespace Novell.Directory.Ldap.Asn1
 	
 	/// <summary> This is the base class for all other Asn1 types.</summary>
 	[CLSCompliantAttribute(true)]
-	[Serializable]
-	public abstract class Asn1Object : System.Runtime.Serialization.ISerializable
+	public abstract class Asn1Object 
 	{
 		
 		private Asn1Identifier id;
@@ -46,10 +45,6 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			this.id = id;
 			return ;
-		}
-		
-		public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
 		}
 		
 		/// <summary> Abstract method that must be implemented by each child
@@ -101,7 +96,7 @@ namespace Novell.Directory.Ldap.Asn1
 			{
 				// Should never happen - the current Asn1Object does not have
 				// a encode method. 
-				throw new System.SystemException("IOException while encoding to byte array: " + e.ToString());
+				throw new System.Exception("IOException while encoding to byte array: " + e.ToString());
 			}
 			return SupportClass.ToSByteArray(out_Renamed.ToArray());
 		}
