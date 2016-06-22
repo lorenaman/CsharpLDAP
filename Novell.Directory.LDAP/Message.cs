@@ -30,8 +30,10 @@
 //
 
 using System;
+using System.Diagnostics;
 using Novell.Directory.Ldap.Rfc2251;
 using Novell.Directory.Ldap.Utilclass;
+using System.Threading;
 
 namespace Novell.Directory.Ldap
 {
@@ -144,7 +146,7 @@ namespace Novell.Directory.Ldap
 		/// <returns> the next reply message on the reply queue or null
 		/// </returns>
 		/* package */
-		internal virtual System.Object waitForReply()
+		internal virtual object waitForReply()
 		{
 			if (replies == null)
 			{
@@ -153,42 +155,36 @@ namespace Novell.Directory.Ldap
 			// sync on message so don't confuse with timer thread
 			lock (replies)
 			{
-				System.Object msg = null;
+                object msg = null;
 				while (waitForReply_Renamed_Field)
 				{
 					if ((replies.Count == 0))
 					{
 						try
 						{
-							System.Threading.Monitor.Wait(replies);
+							Monitor.Wait(replies);
 						}
-						catch (System.Threading.ThreadInterruptedException ir)
-						{
-							; // do nothing
-						}
-						if (waitForReply_Renamed_Field)
+                        catch (Exception ir)
+                        {
+                             // do nothing
+                        }
+
+                        if (waitForReply_Renamed_Field)
 						{
 							continue;
 						}
-						else
-						{
-							break;
-						}
+
+					    break;
 					}
-					else
-					{
-						System.Object temp_object;
-						temp_object = replies[0];
-						replies.RemoveAt(0);
-						msg = temp_object; // Atomic get and remove
-					}
-					if ((complete || !acceptReplies) && (replies.Count == 0))
+
+				    object temp_object;
+				    temp_object = replies[0];
+				    replies.RemoveAt(0);
+				    msg = temp_object; // Atomic get and remove
+				    if ((complete || !acceptReplies) && (replies.Count == 0))
 					{
 						// Remove msg from connection queue when last reply read
 						conn.removeMessage(this);
-					}
-					else
-					{
 					}
 					return msg;
 				}
@@ -202,13 +198,13 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> the next reply message on the reply queue or null if none
 		/// </returns>
-		virtual internal System.Object Reply
+		virtual internal object Reply
 		{
 			/* package */
 			
 			get
 			{
-				System.Object msg;
+                object msg;
 				if (replies == null)
 				{
 					return null;
@@ -220,7 +216,7 @@ namespace Novell.Directory.Ldap
 					{
 						return null; // No data
 					}
-					System.Object temp_object;
+                    object temp_object;
 					temp_object = replies[0];
 					replies.RemoveAt(0);
 					msg = temp_object; // Atomic get and remove
@@ -296,7 +292,7 @@ namespace Novell.Directory.Ldap
 		private MessageAgent agent; // MessageAgent handling this request
 		private LdapMessageQueue queue; // Application message queue
 		private int mslimit; // client time limit in milliseconds
-		private SupportClass.ThreadClass timer = null; // Timeout thread
+		private SupportClass.TaskClass timer = null; // Timeout thread
 		// Note: MessageVector is synchronized
 		private MessageVector replies; // place to store replies
 		private int msgId; // message ID of this request
@@ -336,7 +332,7 @@ namespace Novell.Directory.Ldap
 					
 					default: 
 						timer = new Timeout(this, mslimit, this);
-						timer.IsBackground = true; // If this is the last thread running, allow exit.
+						//timer.IsBackground = true; // If this is the last thread running, allow exit.
 						timer.Start();
 						break;
 					
@@ -556,7 +552,7 @@ namespace Novell.Directory.Ldap
 		/// <summary> Timer class to provide timing for messages.  Only called
 		/// if time to wait is non zero.
 		/// </summary>
-		private sealed class Timeout:SupportClass.ThreadClass
+		private sealed class Timeout:SupportClass.TaskClass
 		{
 			private void  InitBlock(Message enclosingInstance)
 			{
@@ -579,7 +575,7 @@ namespace Novell.Directory.Ldap
 			{
 				InitBlock(enclosingInstance);
 				timeToWait = interval;
-				message = msg;
+				message = msg; 
 				return ;
 			}
 			
@@ -588,14 +584,21 @@ namespace Novell.Directory.Ldap
 			/// </summary>
 			override public void  Run()
 			{
-				try
-				{
-					System.Threading.Thread.Sleep(new System.TimeSpan(10000 * timeToWait));
-					message.acceptReplies = false;
-					// Note: Abandon clears the bind semaphore after failed bind.
-					message.Abandon(null, new InterThreadException("Client request timed out", null, LdapException.Ldap_TIMEOUT, null, message));
-				}
-				catch (System.Threading.ThreadInterruptedException ie)
+			    try
+			    {
+			        ThrowIfCancellationRequested();
+			        Thread.Sleep(new TimeSpan(10000*timeToWait));
+			        ThrowIfCancellationRequested();
+			        message.acceptReplies = false;
+			        // Note: Abandon clears the bind semaphore after failed bind.
+			        message.Abandon(null,
+			            new InterThreadException("Client request timed out", null, LdapException.Ldap_TIMEOUT, null, message));
+			    }
+			    catch (OperationCanceledException oce)
+			    {
+			        Debug.WriteLine("Timer was stopped by cancellation token");
+			    }
+				catch (Exception ie)
 				{
 					// the timer was stopped, do nothing
 				}

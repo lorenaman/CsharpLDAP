@@ -35,48 +35,52 @@ using Novell.Directory.Ldap.Asn1;
 using Novell.Directory.Ldap.Rfc2251;
 using Novell.Directory.Ldap.Utilclass;
 using Syscert = System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Globalization;
 using System.Reflection;
+using System.Net.Security;
+using System.Threading.Tasks;
 
 namespace Novell.Directory.Ldap
 {
-	public delegate bool CertificateValidationCallback(
-		Syscert.X509Certificate certificate,
-		int[] certificateErrors);
-	
-	/// <summary> The class that creates a connection to the Ldap server. After the
-	/// connection is made, a thread is created that reads data from the
-	/// connection.
-	/// 
-	/// The application's thread sends a request to the MessageAgent class, which
-	/// creates a Message class.  The Message class calls the writeMessage method
-	/// of this class to send the request to the server. The application thread
-	/// will then query the MessageAgent class for a response.
-	/// 
-	/// The reader thread multiplexes response messages received from the
-	/// server to the appropriate Message class. Each Message class
-	/// has its own message queue.
-	/// 
-	/// Unsolicited messages are process separately, and if the application
-	/// has registered a handler, a separate thread is created for that
-	/// application's handler to process the message.
-	/// 
-	/// Note: the reader thread must not be a "selfish" thread, since some
-	/// operating systems do not time slice.
-	/// 
-	/// </summary>
-	/*package*/
-	sealed class Connection : IDisposable 
+    //public delegate bool CertificateValidationCallback(
+    //	Syscert.X509Certificate certificate,
+    //	int[] certificateErrors);
+
+    public delegate bool CertificateValidationCallback(
+    Syscert.X509Certificate certificate,
+    SslPolicyErrors sslPolicyErrors);
+
+    /// <summary> The class that creates a connection to the Ldap server. After the
+    /// connection is made, a thread is created that reads data from the
+    /// connection.
+    /// 
+    /// The application's thread sends a request to the MessageAgent class, which
+    /// creates a Message class.  The Message class calls the writeMessage method
+    /// of this class to send the request to the server. The application thread
+    /// will then query the MessageAgent class for a response.
+    /// 
+    /// The reader thread multiplexes response messages received from the
+    /// server to the appropriate Message class. Each Message class
+    /// has its own message queue.
+    /// 
+    /// Unsolicited messages are process separately, and if the application
+    /// has registered a handler, a separate thread is created for that
+    /// application's handler to process the message.
+    /// 
+    /// Note: the reader thread must not be a "selfish" thread, since some
+    /// operating systems do not time slice.
+    /// 
+    /// </summary>
+    /*package*/
+    sealed class Connection : IDisposable 
 	{
 		public event CertificateValidationCallback OnCertificateValidation;
-		public  enum    CertificateProblem  : long
+		public enum  CertificateProblem  : long
 		{
 			CertEXPIRED                   = 0x800B0101,
 			CertVALIDITYPERIODNESTING     = 0x800B0102,
@@ -96,7 +100,7 @@ namespace Novell.Directory.Ldap
 			CertUNTRUSTEDCA               = 0x800B0112
 		}
  
-		private static String GetProblemMessage(CertificateProblem Problem)
+		private static string GetProblemMessage(CertificateProblem Problem)
 		{
 			String ProblemMessage = "";
 			String ProblemCodeName = CertificateProblem.GetName(typeof(CertificateProblem), Problem);
@@ -132,8 +136,6 @@ namespace Novell.Directory.Ldap
 			}
 			
 		}
-	
-
 
 		internal bool Ssl
 		{
@@ -147,7 +149,7 @@ namespace Novell.Directory.Ldap
 			}
 		}
 		/// <summary> gets the host used for this connection</summary>
-		internal System.String Host
+		internal string Host
 		{
 			/* package */
 			
@@ -297,7 +299,7 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> the name of this connection
 		/// </returns>
-		internal System.String ConnectionName
+		internal string ConnectionName
 		{
 			/*package*/
 			
@@ -308,7 +310,7 @@ namespace Novell.Directory.Ldap
 			
 		}
 		
-		private System.Object writeSemaphore;
+		private object writeSemaphore;
 		private int writeSemaphoreOwner = 0;
 		private int writeSemaphoreCount = 0;
 		
@@ -318,9 +320,9 @@ namespace Novell.Directory.Ldap
 		private BindProperties bindProperties = null;
 		private int bindSemaphoreId = 0; // 0 is never used by to lock a semaphore
 		
-		private Thread reader = null; // New thread that reads data from the server.
-		private Thread deadReader = null; // Identity of last reader thread
-		private System.IO.IOException deadReaderException = null; // Last exception of reader
+		private ReaderThread reader = null; // New thread that reads data from the server.
+		private ReaderThread deadReader = null; // Identity of last reader thread
+		private IOException deadReaderException = null; // Last exception of reader
 		
 		private LBEREncoder encoder;
 		private LBERDecoder decoder;
@@ -331,12 +333,12 @@ namespace Novell.Directory.Ldap
 		* if nonTLSBackup is null then startTLS has not been called,
 		* or stopTLS has been called to end TLS protection
 		*/
-		private System.Net.Sockets.Socket sock = null;
-		private System.Net.Sockets.TcpClient socket = null;
-		private System.Net.Sockets.TcpClient nonTLSBackup = null;
+		private Socket sock = null;
+		private TcpClient socket = null;
+		private TcpClient nonTLSBackup = null;
 		
-		private System.IO.Stream in_Renamed = null;
-		private System.IO.Stream out_Renamed = null;
+		private Stream in_Renamed = null;
+		private Stream out_Renamed = null;
 		// When set to true the client connection is up and running
 		private bool clientActive = true;
 		
@@ -363,20 +365,20 @@ namespace Novell.Directory.Ldap
 		private ReferralInfo activeReferral = null;
 		
 		// Place to save unsolicited message listeners
-		private System.Collections.ArrayList unsolicitedListeners;
+		private ArrayList unsolicitedListeners;
 		
 		// The LdapSocketFactory to be used as the default to create new connections
 		//		private static LdapSocketFactory socketFactory = null;
 		// The LdapSocketFactory used for this connection
 		//		private LdapSocketFactory mySocketFactory;
-		private System.String host = null;
+		private string host = null;
 		private int port = 0;
 		// Number of clones in addition to original LdapConnection using this
 		// connection.
 		private int cloneCount = 0;
 		// Connection number & name used only for debug
-		private System.String name = "";
-		private static System.Object nameLock; // protect connNum
+		private string name = "";
+		private static object nameLock; // protect connNum
 		private static int connNum = 0;
 		
 		// These attributes can be retreived using the getProperty
@@ -384,11 +386,11 @@ namespace Novell.Directory.Ldap
 		// these to be local variables that can be modified using
 		// the setProperty method.
 		/* package */
-		internal static System.String sdk;
+		internal static string sdk;
 		/* package */
-		internal static System.Int32 protocol;
+		internal static int protocol;
 		/* package */
-		internal static System.String security = "simple";
+		internal static string security = "simple";
 		
 		/// <summary> Create a new Connection object
 		/// 
@@ -416,7 +418,7 @@ namespace Novell.Directory.Ldap
 		/// <returns> a shallow copy of this object
 		/// </returns>
 		/* package */
-		internal System.Object copy()
+		internal object copy()
 		{
 			Connection c = new Connection();
 			c.host = this.host;
@@ -477,25 +479,23 @@ namespace Novell.Directory.Ldap
 						writeSemaphoreOwner = id;
 						break;
 					}
-					else
-					{
-						if (writeSemaphoreOwner == id)
-						{
-							// we already own the semahpore
-							break;
-						}
-						try
-						{
-							// Keep trying for the lock
-							System.Threading.Monitor.Wait(writeSemaphore);
-							continue;
-						}
-						catch (System.Threading.ThreadInterruptedException ex)
-						{
-							// Keep trying for the lock
-							continue;
-						}
-					}
+
+				    if (writeSemaphoreOwner == id)
+				    {
+				        // we already own the semahpore
+				        break;
+				    }
+				    try
+				    {
+				        // Keep trying for the lock
+				        Monitor.Wait(writeSemaphore);
+				        continue;
+				    }
+				    catch (Exception ex)
+				    {
+				        // Keep trying for the lock
+				        continue;
+				    }
 				}
 				writeSemaphoreCount++;
 			}
@@ -541,78 +541,46 @@ namespace Novell.Directory.Ldap
 		*
 		* @param the thread id to match
 		*/
-		private void  waitForReader(Thread thread)
+		private void  waitForReader(ReaderThread readerThread)
 		{
-			// wait for previous reader thread to terminate
-			System.Threading.Thread rInst;
-			System.Threading.Thread tInst;
-			if(reader!=null)
-			{
-				rInst=reader;
-			}
-			else
-			{
-				rInst=null;
-			}
+            // wait for previous reader thread to terminate
+		    var rInst = reader;
+			var tInst = readerThread;
 
-			if(thread!=null)
-			{
-				tInst=thread;
-			}
-			else
-			{
-				tInst=null;
-			}
-			while (!Object.Equals(rInst,tInst))
+			while (!object.Equals(rInst, tInst))
 			{
 				// Don't initialize connection while previous reader thread still
 				// active.
-				try
-				{
-					/*
+			    try
+			    {
+			        /*
 					* The reader thread may start and immediately terminate.
 					* To prevent the waitForReader from waiting forever
 					* for the dead to rise, we leave traces of the deceased.
 					* If the thread is already gone, we throw an exception.
 					*/
-					if (thread == deadReader)
-					{
-						if (thread == null)
-							/* then we wanted a shutdown */
-							return ;
-						System.IO.IOException lex = deadReaderException;
-						deadReaderException = null;
-						deadReader = null;
-						// Reader thread terminated
-						throw new LdapException(ExceptionMessages.CONNECTION_READER, LdapException.CONNECT_ERROR, null, lex);
-					}
-					lock (this)
-					{
-						System.Threading.Monitor.Wait(this, TimeSpan.FromMilliseconds(5));
-					}
-				}
-				catch (System.Threading.ThreadInterruptedException ex)
-				{
-					;
-				}
-				if(reader!=null)
-				{
-					rInst=reader;
-				}
-				else
-				{
-					rInst=null;
-				}
+			        if (readerThread == deadReader)
+			        {
+			            if (readerThread == null)
+			                /* then we wanted a shutdown */
+			                return;
+			            IOException lex = deadReaderException;
+			            deadReaderException = null;
+			            deadReader = null;
+			            // Reader thread terminated
+			            throw new LdapException(ExceptionMessages.CONNECTION_READER, LdapException.CONNECT_ERROR, null, lex);
+			        }
+			        lock (this)
+			        {
+			            Monitor.Wait(this, TimeSpan.FromMilliseconds(5));
+			        }
+			    }
+			    catch (Exception ex)
+			    {
+			    }
 
-				if(thread!=null)
-				{
-					tInst=thread;
-				}
-				else
-				{
-					tInst=null;
-				}
-
+				rInst = reader ?? null;
+				tInst = readerThread ?? null;
 			}
 			deadReaderException = null;
 			deadReader = null;
@@ -628,27 +596,51 @@ namespace Novell.Directory.Ldap
 		/// <param name="port">The port on the host to connect to.
 		/// </param>
 		/* package */
-		internal void  connect(System.String host, int port)
+		internal void  connect(string host, int port)
 		{
 			connect(host, port, 0);
 			return ;
 		}
 
 
-		/****************************************************************************/
-		public  bool ServerCertificateValidation(
-			Syscert.X509Certificate certificate,
-			int[]                   certificateErrors)
-		{
-			if (null != OnCertificateValidation)
-			{
-				return OnCertificateValidation(certificate, certificateErrors);
-			}
+        /****************************************************************************/
+        public bool ServerCertificateValidation(
+             object sender, 
+             Syscert.X509Certificate certificate, 
+             Syscert.X509Chain chain, 
+             SslPolicyErrors sslPolicyErrors)
+        {
+            if (null != OnCertificateValidation)
+            {
+                return OnCertificateValidation(certificate, sslPolicyErrors);
+            }
 
-			return DefaultCertificateValidationHandler(certificate, certificateErrors);
-		}
-	
-		public bool DefaultCertificateValidationHandler(
+            return DefaultCertificateValidationHandler(certificate, sslPolicyErrors);
+        }
+
+        public bool DefaultCertificateValidationHandler(
+                Syscert.X509Certificate certificate,
+                SslPolicyErrors sslPolicyErrors)
+        {
+            bool retFlag = false;
+
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
+                retFlag = true;
+            }
+            else
+            {
+                Console.WriteLine("Detected errors in the Server Certificate:");
+                handshakeProblemsEncountered.Add(sslPolicyErrors);
+                Console.WriteLine("SslPolicyError: {0}", sslPolicyErrors);
+                retFlag = false;
+            }
+
+            // Skip the server cert errors.
+            return retFlag;
+        }
+
+        public bool DefaultCertificateValidationHandler(
 			Syscert.X509Certificate certificate,
 			int[]                   certificateErrors)
 		{
@@ -697,7 +689,7 @@ namespace Novell.Directory.Ldap
 		/// </param>
 		/// <param name="semaphoreId">The write semaphore ID to use for the connect
 		/// </param>
-		private void  connect(System.String host, int port, int semaphoreId)
+		private void connect(string host, int port, int semaphoreId)
 		{
 			/* Synchronized so all variables are in a consistant state and
 			* so that another thread isn't doing a connect, disconnect, or clone
@@ -728,92 +720,49 @@ namespace Novell.Directory.Ldap
 						{
 							this.host = host;
 							this.port = port;
-							this.sock = 	new Socket ( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+							this.sock = new Socket ( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
 							IPAddress hostadd = Dns.GetHostEntryAsync(host).Result.AddressList[0]; 
 							IPEndPoint ephost = new IPEndPoint(hostadd,port);
 							sock.Connect(ephost);
 							NetworkStream nstream = new NetworkStream(sock,true);
 
-							// Load Mono.Security.dll
-							Assembly a;
-							try
-							{
-								a = Assembly.LoadWithPartialName("Mono.Security");
-							}
-							catch(System.IO.FileNotFoundException)
-							{
-								throw new LdapException(ExceptionMessages.SSL_PROVIDER_MISSING, LdapException.SSL_PROVIDER_NOT_FOUND, null);							
-							}
-							Type tSslClientStream = a.GetType("Mono.Security.Protocol.Tls.SslClientStream");
-							BindingFlags flags = (BindingFlags.NonPublic  | BindingFlags.Public |
-								BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                            var objSslClientStream = new SslStream(nstream, true, ServerCertificateValidation);
+						    objSslClientStream.AuthenticateAsClientAsync(host).Wait();
 
-							object[] consArgs = new object[4];
-							consArgs[0] = nstream;
-							consArgs[1] = host;
-							consArgs[2] = false;
-							Type tSecurityProtocolType = a.GetType("Mono.Security.Protocol.Tls.SecurityProtocolType");
-							Enum objSPType = (Enum)(Activator.CreateInstance(tSecurityProtocolType));
-							int nSsl3Val = (int) Enum.Parse(tSecurityProtocolType, "Ssl3");
-							int nTlsVal = (int) Enum.Parse(tSecurityProtocolType, "Tls");
-							consArgs[3] = Enum.ToObject(tSecurityProtocolType, nSsl3Val | nTlsVal);
-
-							object objSslClientStream = 
-								Activator.CreateInstance(tSslClientStream, consArgs);
-
-							// Register ServerCertValidationDelegate handler
-							PropertyInfo pi = tSslClientStream.GetProperty("ServerCertValidationDelegate");
-							pi.SetValue(objSslClientStream, 
-								Delegate.CreateDelegate(pi.PropertyType, this, "ServerCertificateValidation"),
-								null);
-						
-							// Get the in and out streams
-							in_Renamed = (System.IO.Stream) objSslClientStream;
-							out_Renamed = (System.IO.Stream) objSslClientStream;
-							/*
-							SslClientStream sslstream = new SslClientStream(
-												nstream,
-												host,
-												false,
-												Mono.Security.Protocol.Tls.SecurityProtocolType.Ssl3|Mono.Security.Protocol.Tls.SecurityProtocolType.Tls);
-							sslstream.ServerCertValidationDelegate += new CertificateValidationCallback(ServerCertificateValidation);*/
-							//						byte[] buffer = new byte[0];
-							//						sslstream.Read(buffer, 0, buffer.Length);
-							//						sslstream.doHandshake();												
-							/*
-							in_Renamed = (System.IO.Stream) sslstream;
-							out_Renamed = (System.IO.Stream) sslstream;*/
+                            // Get the in and out streams
+                            in_Renamed = objSslClientStream;
+							out_Renamed = objSslClientStream;
 						}
 						else
 						{
-							socket = new System.Net.Sockets.TcpClient();
+							socket = new TcpClient();
                             socket.ConnectAsync(host, port).Wait();
-                            in_Renamed = (System.IO.Stream) socket.GetStream();
-							out_Renamed = (System.IO.Stream) socket.GetStream();
+
+                            in_Renamed =  socket.GetStream();
+							out_Renamed = socket.GetStream();
 						}
 					}
 					else
 					{
 						Console.WriteLine( "connect input/out Stream specified");
-
 					}
 				}
-				catch (System.Net.Sockets.SocketException se)
+				catch (SocketException se)
 				{                                          
                     // Unable to connect to server host:port
                     // freeWriteSemaphore(semId); 
 					sock = null;
 					socket = null;
-					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new System.Object[] { host, port }, LdapException.CONNECT_ERROR, null, se);
+					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new object[] { host, port }, LdapException.CONNECT_ERROR, null, se);
 				}
 
-				catch (System.IO.IOException ioe)
+				catch (IOException ioe)
 				{
 					// Unable to connect to server host:port
 					// freeWriteSemaphore(semId);
 					sock = null;
 					socket = null;
-					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new System.Object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
+					throw new LdapException(ExceptionMessages.CONNECTION_ERROR, new object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
 				}
 				// Set host and port
 				this.host = host;
@@ -939,12 +888,12 @@ namespace Novell.Directory.Ldap
 		/* package */
 		internal void  writeMessage(Message info)
 		{
-            Utilclass.ExceptionMessages em = new Utilclass.ExceptionMessages();
-			System.Object [][]contents = em.getContents();
+            ExceptionMessages em = new ExceptionMessages("Strings", Assembly.GetEntryAssembly());
+            object[][]contents = em.getContents();
 			messages.Add(info);
 			
 			// For bind requests, if not connected, attempt to reconnect
-			if (info.BindRequest && (Connected == false) && ((System.Object) host != null))
+			if (info.BindRequest && (Connected == false) && ((object) host != null))
 			{
 				connect(host, port, info.MessageID);
 			}
@@ -956,14 +905,13 @@ namespace Novell.Directory.Ldap
 			}
 			else
 			{
-				int errorcount=0;
+				int errorcount;
 				for(errorcount=0;errorcount<contents.Length;errorcount++)
-					if(contents[errorcount][0]=="CONNECTION_CLOSED")
+					if(contents.Length > errorcount && (string) contents[errorcount][0] == "CONNECTION_CLOSED")
 						break;
-				throw new LdapException(ExceptionMessages.CONNECTION_CLOSED, new System.Object[]{host, port}, LdapException.CONNECT_ERROR, (String)contents[errorcount][1]);
+				throw new LdapException(ExceptionMessages.CONNECTION_CLOSED, new object[]{host, port}, LdapException.CONNECT_ERROR, (string)contents[errorcount][1]);
 			}
 		}
-		
 		
 		/// <summary> Writes an LdapMessage to the Ldap server over a socket.
 		/// 
@@ -985,14 +933,14 @@ namespace Novell.Directory.Ldap
 				// Semaphore id for sasl bind operations
 				id = bindSemaphoreId;
 			}
-			System.IO.Stream myOut = out_Renamed;
+            Stream myOut = out_Renamed;
 			
 			acquireWriteSemaphore(id);
 			try
 			{
 				if (myOut == null)
 				{
-					throw new System.IO.IOException("Output stream not initialized");
+					throw new IOException("Output stream not initialized");
 				}
 				if (!(myOut.CanWrite))
 				{
@@ -1002,7 +950,7 @@ namespace Novell.Directory.Ldap
 				myOut.Write(SupportClass.ToByteArray(ber), 0, ber.Length);
 				myOut.Flush();
 			}
-			catch (System.IO.IOException ioe)
+			catch (IOException ioe)
 			{
 				if ((msg.Type == LdapMessage.BIND_REQUEST) &&
 					(ssl))
@@ -1010,17 +958,22 @@ namespace Novell.Directory.Ldap
 					string strMsg = "Following problem(s) occurred while establishing SSL based Connection : ";
 					if (handshakeProblemsEncountered.Count > 0)
 					{
-						strMsg += GetProblemMessage((CertificateProblem)handshakeProblemsEncountered[0]); 
-						for (int nProbIndex = 1; nProbIndex < handshakeProblemsEncountered.Count; nProbIndex++)
-						{
-							strMsg += ", " + GetProblemMessage((CertificateProblem)handshakeProblemsEncountered[nProbIndex]);
-						} 
-					}
+                        //strMsg += GetProblemMessage((CertificateProblem)handshakeProblemsEncountered[0]); 
+                        //for (int nProbIndex = 1; nProbIndex < handshakeProblemsEncountered.Count; nProbIndex++)
+                        //{
+                        //	strMsg += ", " + GetProblemMessage((CertificateProblem)handshakeProblemsEncountered[nProbIndex]);
+                        //} 
+                        strMsg += string.Format("SslCertificateError {0}", handshakeProblemsEncountered[0]);
+                        for (int nProbIndex = 1; nProbIndex < handshakeProblemsEncountered.Count; nProbIndex++)
+                        {
+                            strMsg += ", " + string.Format("SslCertificateError {0}", handshakeProblemsEncountered[0]);
+                        }
+                    }
 					else
 					{
 						strMsg += "Unknown Certificate Problem";
 					}
-					throw new LdapException(strMsg, new System.Object[]{host, port}, LdapException.SSL_HANDSHAKE_FAILED, null, ioe);
+					throw new LdapException(strMsg, new object[]{host, port}, LdapException.SSL_HANDSHAKE_FAILED, null, ioe);
 				}				
 				/*
 				* IOException could be due to a server shutdown notification which
@@ -1037,11 +990,11 @@ namespace Novell.Directory.Ldap
 					if (unsolSvrShutDnNotification)
 					{
 						// got server shutdown
-						throw new LdapException(ExceptionMessages.SERVER_SHUTDOWN_REQ, new System.Object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
+						throw new LdapException(ExceptionMessages.SERVER_SHUTDOWN_REQ, new object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
 					}
 					
 					// Other I/O Exceptions on host:port are reported as is
-					throw new LdapException(ExceptionMessages.IO_EXCEPTION, new System.Object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
+					throw new LdapException(ExceptionMessages.IO_EXCEPTION, new object[]{host, port}, LdapException.CONNECT_ERROR, null, ioe);
 				}
 			}
 			finally
@@ -1098,8 +1051,7 @@ namespace Novell.Directory.Ldap
 				// remove messages from connection list and send abandon
 				try
 				{
-					System.Object temp_object;
-					temp_object = messages[0];
+				    object temp_object = messages[0];
 					messages.RemoveAt(0);
 					info = (Message) temp_object;
 				}
@@ -1123,7 +1075,7 @@ namespace Novell.Directory.Ldap
 					out_Renamed.Flush();
 					out_Renamed.Dispose();
 				}
-				catch (System.Exception ex)
+				catch (Exception ex)
 				{
 					; // don't worry about error
 				}
@@ -1133,7 +1085,7 @@ namespace Novell.Directory.Ldap
 			{
 				// Just before closing the sockets, abort the reader thread
 				if ((reader != null) && (reason != "reader: thread stopping")) 
-					reader.Abort();
+					reader.Stop();
 				// Close the socket
 				try
 				{
@@ -1144,12 +1096,11 @@ namespace Novell.Directory.Ldap
 					}
 					else
 					{
-						if(in_Renamed != null)
-							in_Renamed.Dispose();						
-						socket.Dispose();
+					    in_Renamed?.Dispose();
+					    socket?.Dispose();
 					}
 				}
-				catch (System.IO.IOException ie)
+				catch (IOException ie)
 				{
 					// ignore problem closing socket
 				}
@@ -1170,7 +1121,7 @@ namespace Novell.Directory.Ldap
 			GC.SuppressFinalize(this);
 		}
 
-		protected void Dispose(bool disposing,System.String reason, int semaphoreId, InterThreadException notifyUser)
+		protected void Dispose(bool disposing, string reason, int semaphoreId, InterThreadException notifyUser)
 		{
 			if(!disposing)
 			{
@@ -1185,7 +1136,7 @@ namespace Novell.Directory.Ldap
 					// remove messages from connection list and send abandon
 					try
 					{
-						System.Object temp_object;
+                        object temp_object;
 						temp_object = messages[0];
 						messages.RemoveAt(0);
 						info = (Message) temp_object;
@@ -1210,7 +1161,7 @@ namespace Novell.Directory.Ldap
 						out_Renamed.Flush();
 						out_Renamed.Dispose();
 					}
-					catch (System.Exception ex)
+					catch (Exception ex)
 					{
 						; // don't worry about error
 					}
@@ -1220,27 +1171,19 @@ namespace Novell.Directory.Ldap
 				{
 					// Just before closing the sockets, abort the reader thread
 					if ((reader != null) && (reason != "reader: thread stopping")) 
-						reader.Abort();
+						reader.Stop();
 					// Close the socket
                     try
                     {
-                        if (in_Renamed != null)
-                            in_Renamed.Dispose();
+                        in_Renamed?.Dispose();
 
-                        if (Ssl && out_Renamed != null)
-                            out_Renamed.Dispose();
+                        if (Ssl)
+                            out_Renamed?.Dispose();
 
-                        if (sock != null)
-                        {
-                            //sock.Shutdown(SocketShutdown.Both);
-                            sock.Dispose();
-                        }
-                        if (socket != null)
-                        {
-                            socket.Dispose();
-                        }
+                        sock?.Dispose();
+                        socket?.Dispose();
                     }
-                    catch (System.IO.IOException ie)
+                    catch (IOException ie)
                     {
                         // ignore problem closing socket
                     }
@@ -1266,7 +1209,7 @@ namespace Novell.Directory.Ldap
 		/* package */
 		internal bool areMessagesComplete()
 		{
-			System.Object[] messages = this.messages.ObjectArray;
+            object[] messages = this.messages.ObjectArray;
 			int length = messages.Length;
 			
 			// Check if SASL bind in progress
@@ -1296,7 +1239,6 @@ namespace Novell.Directory.Ldap
 		/* package */
 		internal void  stopReaderOnReply(int messageID)
 		{
-			
 			this.stopReaderMessageID = messageID;
 			return ;
 		}
@@ -1307,13 +1249,11 @@ namespace Novell.Directory.Ldap
 		/// It assumes the reader thread is not running.
 		/// </summary>
 		/* package */
-		internal void  startReader()
+		internal void startReader()
 		{
-			// Start Reader Thread
-			Thread r = new Thread(new ThreadStart(new ReaderThread(this).Run));
-			r.IsBackground = true; // If the last thread running, allow exit.
-			r.Start();
-			waitForReader(r);
+		    var readerThread = new ReaderThread(this);
+            readerThread.Start();
+            waitForReader(readerThread);
 			return ;
 		}
 		
@@ -1328,96 +1268,49 @@ namespace Novell.Directory.Ldap
 				return (this.nonTLSBackup != null);
 			}
 		}
-		
-		/// <summary> StartsTLS, in this package, assumes the caller has:
-		/// 1) Acquired the writeSemaphore
-		/// 2) Stopped the reader thread
-		/// 3) checked that no messages are outstanding on this connection.
-		/// 
-		/// After calling this method upper layers should start the reader
-		/// by calling startReader()
-		/// 
-		/// In the client.Connection, StartTLS assumes Ldap.LdapConnection will
-		/// stop and start the reader thread.  Connection.StopTLS will stop
-		/// and start the reader thread.
-		/// </summary>
-		/* package */
-		internal void  startTLS()
-		{
-			
-			try
-			{
-				waitForReader(null);
-				this.nonTLSBackup = this.socket;
-				/*				this.sock = 	new Socket ( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-								IPAddress hostadd = Dns.Resolve(host).AddressList[0];
-								IPEndPoint ephost = new IPEndPoint(hostadd,port);
-								sock.Connect(ephost);
-				*/
-				//				NetworkStream nstream = new NetworkStream(this.socket,true);
-				
-				// Load Mono.Security.dll
-				Assembly a = null;
-				try
-				{
-					a = Assembly.LoadWithPartialName("Mono.Security");
-				}
-				catch(System.IO.FileNotFoundException)
-				{
-					throw new LdapException(ExceptionMessages.SSL_PROVIDER_MISSING, LdapException.SSL_PROVIDER_NOT_FOUND, null);							
-				}
-				
-				Type tSslClientStream = a.GetType("Mono.Security.Protocol.Tls.SslClientStream");
-				BindingFlags flags = (BindingFlags.NonPublic  | BindingFlags.Public |
-					BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-				object[] consArgs = new object[4];
-				consArgs[0] = socket.GetStream();
-				consArgs[1] = host;
-				consArgs[2] = false;
-				Type tSecurityProtocolType = a.GetType("Mono.Security.Protocol.Tls.SecurityProtocolType");
-				Enum objSPType = (Enum)(Activator.CreateInstance(tSecurityProtocolType));
-				int nSsl3Val = (int) Enum.Parse(tSecurityProtocolType, "Ssl3");
-				int nTlsVal = (int) Enum.Parse(tSecurityProtocolType, "Tls");
-				consArgs[3] = Enum.ToObject(tSecurityProtocolType, nSsl3Val | nTlsVal);
+        /// <summary> StartsTLS, in this package, assumes the caller has:
+        /// 1) Acquired the writeSemaphore
+        /// 2) Stopped the reader thread
+        /// 3) checked that no messages are outstanding on this connection.
+        /// 
+        /// After calling this method upper layers should start the reader
+        /// by calling startReader()
+        /// 
+        /// In the client.Connection, StartTLS assumes Ldap.LdapConnection will
+        /// stop and start the reader thread.  Connection.StopTLS will stop
+        /// and start the reader thread.
+        /// </summary>
+        /* package */
+        internal void startTLS()
+        {
+            try
+            {
+                waitForReader(null);
+                this.nonTLSBackup = this.socket;
 
-				object objSslClientStream = 
-					Activator.CreateInstance(tSslClientStream, consArgs);
+                var objSslClientStream = new SslStream(socket.GetStream(),  true, ServerCertificateValidation);
+                objSslClientStream.AuthenticateAsClientAsync(host).Wait();
 
-				// Register ServerCertValidationDelegate handler
-				EventInfo ei = tSslClientStream.GetEvent("ServerCertValidationDelegate");
-				ei.AddEventHandler(objSslClientStream, 
-					Delegate.CreateDelegate(ei.EventHandlerType, this, "ServerCertificateValidation"));
-						
-				// Get the in and out streams
-				in_Renamed = (System.IO.Stream) objSslClientStream;
-				out_Renamed = (System.IO.Stream) objSslClientStream;
+                // Get the in and out streams
+                in_Renamed = objSslClientStream;
+                out_Renamed = objSslClientStream;
+            }
+            catch (IOException ioe)
+            {
+                this.nonTLSBackup = null;
+                throw new LdapException("Could not negotiate a secure connection", LdapException.CONNECT_ERROR, null,
+                    ioe);
+            }
+            catch (Exception uhe)
+            {
+                this.nonTLSBackup = null;
+                throw new LdapException("The host is unknown", LdapException.CONNECT_ERROR, null, uhe);
+            }
+            return;
+        }
 
-				/*
-				SslClientStream sslstream = new SslClientStream(
-									socket.GetStream(),
-									nstream,
-									host,
-									false,
-									Mono.Security.Protocol.Tls.SecurityProtocolType.Ssl3| Mono.Security.Protocol.Tls.SecurityProtocolType.Tls);
-				sslstream.ServerCertValidationDelegate = new CertificateValidationCallback(ServerCertificateValidation);
-				this.in_Renamed = (System.IO.Stream) sslstream;
-				this.out_Renamed = (System.IO.Stream) sslstream;*/
-			}
-			catch (System.IO.IOException ioe)
-			{
-				this.nonTLSBackup = null;
-				throw new LdapException("Could not negotiate a secure connection", LdapException.CONNECT_ERROR, null, ioe);
-			}
-			catch (System.Exception uhe)
-			{
-				this.nonTLSBackup = null;
-				throw new LdapException("The host is unknown", LdapException.CONNECT_ERROR, null, uhe);
-			}
-			return ;
-		}
-		
-		/*
+        /*
 		* Stops TLS.
 		*
 		* StopTLS, in this package, assumes the caller has:
@@ -1438,27 +1331,27 @@ namespace Novell.Directory.Ldap
 		* used any more, even though autoclose was false: you get an IOException.
 		* IBM's JSSE hangs when you close the JSSE socket.
 		*/
-		/* package */
-		internal void  stopTLS()
+        /* package */
+        internal void  stopTLS()
 		{
-			try
-			{
-				this.stopReaderMessageID = Connection.STOP_READING;
-				this.out_Renamed.Dispose();
-				this.in_Renamed.Dispose();
-				//				this.sock.Shutdown(SocketShutdown.Both);
-				//				this.sock.Close();
-				waitForReader(null);
-				this.socket = this.nonTLSBackup;
-				this.in_Renamed = (System.IO.Stream) this.socket.GetStream();
-				this.out_Renamed = (System.IO.Stream) this.socket.GetStream();
-				// Allow the new reader to start
-				this.stopReaderMessageID = Connection.CONTINUE_READING;
-			}
-			catch (System.IO.IOException ioe)
-			{
-				throw new LdapException(ExceptionMessages.STOPTLS_ERROR, LdapException.CONNECT_ERROR, null, ioe);
-			}
+            try
+            {
+                this.stopReaderMessageID = Connection.STOP_READING;
+                this.out_Renamed.Dispose();
+                this.in_Renamed.Dispose();
+                //				this.sock.Shutdown(SocketShutdown.Both);
+                //				this.sock.Close();
+                waitForReader(null);
+                this.socket = this.nonTLSBackup;
+                this.in_Renamed = this.socket.GetStream();
+                this.out_Renamed = this.socket.GetStream();
+                // Allow the new reader to start
+                this.stopReaderMessageID = Connection.CONTINUE_READING;
+            }
+            catch (IOException ioe)
+            {
+                throw new LdapException(ExceptionMessages.STOPTLS_ERROR, LdapException.CONNECT_ERROR, null, ioe);
+            }
 			finally
 			{
 				this.nonTLSBackup = null;
@@ -1466,89 +1359,117 @@ namespace Novell.Directory.Ldap
 			}
 			return ;
 		}
-		///TLS not supported in first release		
 
 		public class ReaderThread
 		{
-			private void  InitBlock(Connection enclosingInstance)
-			{
-				this.enclosingInstance = enclosingInstance;
-			}
+		    private readonly Task readerTask;
+		    private readonly CancellationTokenSource cancellationTokenSource;
+
 			private Connection enclosingInstance;
-			public Connection Enclosing_Instance
-			{
-				get
-				{
-					return enclosingInstance;
-				}
-				
-			}
+
 			public ReaderThread(Connection enclosingInstance)
 			{
-				InitBlock(enclosingInstance);
-				return ;
+                this.enclosingInstance = enclosingInstance;
+                this.enclosingInstance.reader = this;
+                cancellationTokenSource = new CancellationTokenSource();
+                readerTask = new Task(Run, cancellationTokenSource.Token);
 			}
-			
-			/// <summary> This thread decodes and processes RfcLdapMessage's from the server.
-			/// 
-			/// Note: This thread needs a graceful shutdown implementation.
-			/// </summary>
-			public virtual void  Run()
-			{
-				
-				System.String reason = "reader: thread stopping";
+
+            public void Start()
+            {
+                Debug.WriteLine("ReaderThread Start()");
+                readerTask.Start();
+            }
+
+		    public void Stop()
+		    {
+                Debug.WriteLine("ReaderThread Stop()");
+                cancellationTokenSource.Cancel(true);
+		    }
+
+            /// <summary> This thread decodes and processes RfcLdapMessage's from the server.
+            /// </summary>
+            private void Run()
+            {
+                Debug.WriteLine("ReaderThread Run()");
+                var token = cancellationTokenSource.Token;
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+
+                string reason = "reader: thread stopping";
 				InterThreadException notify = null;
 				Message info = null;
-				System.IO.IOException ioex = null;
-				this.enclosingInstance.reader = System.Threading.Thread.CurrentThread;				
+				IOException ioex = null;
+
 				//				Enclosing_Instance.reader = SupportClass.ThreadClass.Current();
 				//				Console.WriteLine("Inside run:" + this.enclosingInstance.reader.Name);
-				try
-				{
-					for (; ; )
-					{
-						// -------------------------------------------------------
-						// Decode an RfcLdapMessage directly from the socket.
-						// -------------------------------------------------------
-						Asn1Identifier asn1ID;
-						System.IO.Stream myIn;
-						/* get current value of in, keep value consistant
+			    try
+			    {
+			        for (;;)
+			        {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        // -------------------------------------------------------
+                        // Decode an RfcLdapMessage directly from the socket.
+                        // -------------------------------------------------------
+                        Asn1Identifier asn1ID;
+			            Stream myIn;
+			            /* get current value of in, keep value consistant
 						* though the loop, i.e. even during shutdown
 						*/
-						myIn = this.enclosingInstance.in_Renamed;
-						if (myIn == null)
-						{
-							break;
-						}
-						asn1ID = new Asn1Identifier(myIn);
-						int tag = asn1ID.Tag;
-						if (asn1ID.Tag != Asn1Sequence.TAG)
-						{
-							continue; // loop looking for an RfcLdapMessage identifier
-						}
-						
-						// Turn the message into an RfcMessage class
-						Asn1Length asn1Len = new Asn1Length(myIn);
-						
-						RfcLdapMessage msg = new RfcLdapMessage(this.enclosingInstance.decoder, myIn, asn1Len.Length);
-						
-						// ------------------------------------------------------------
-						// Process the decoded RfcLdapMessage.
-						// ------------------------------------------------------------
-						int msgId = msg.MessageID;
-						
-						// Find the message which requested this response.
-						// It is possible to receive a response for a request which
-						// has been abandoned. If abandoned, throw it away
-						try
-						{
-							info = this.enclosingInstance.messages.findMessageById(msgId);
-							info.putReply(msg); // queue & wake up waiting thread
-						}
-						catch (System.FieldAccessException ex)
-						{
-							
-							/*
+			            myIn = this.enclosingInstance.in_Renamed;
+			            if (myIn == null)
+			            {
+			                break;
+			            }
+			            asn1ID = new Asn1Identifier(myIn);
+			            int tag = asn1ID.Tag;
+			            if (asn1ID.Tag != Asn1Sequence.TAG)
+			            {
+			                continue; // loop looking for an RfcLdapMessage identifier
+			            }
+
+                        // Turn the message into an RfcMessage class
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        Asn1Length asn1Len = new Asn1Length(myIn);
+                        RfcLdapMessage msg = new RfcLdapMessage(this.enclosingInstance.decoder, myIn, asn1Len.Length);
+
+			            // ------------------------------------------------------------
+			            // Process the decoded RfcLdapMessage.
+			            // ------------------------------------------------------------
+			            int msgId = msg.MessageID;
+
+			            // Find the message which requested this response.
+			            // It is possible to receive a response for a request which
+			            // has been abandoned. If abandoned, throw it away
+			            try
+			            {
+			                if (token.IsCancellationRequested)
+			                {
+			                    token.ThrowIfCancellationRequested();
+			                }
+			                info = this.enclosingInstance.messages.findMessageById(msgId);
+			                if (token.IsCancellationRequested)
+			                {
+			                    token.ThrowIfCancellationRequested();
+			                }
+			                info.putReply(msg); // queue & wake up waiting thread
+			                if (token.IsCancellationRequested)
+			                {
+			                    token.ThrowIfCancellationRequested();
+			                }
+			            }
+			            catch (FieldAccessException ex)
+			            {
+
+			                /*
 							* We get the NoSuchFieldException when we could not find
 							* a matching message id.  First check to see if this is
 							* an unsolicited notification (msgID == 0). If it is not
@@ -1556,9 +1477,9 @@ namespace Novell.Directory.Ldap
 							* listeners that might have been registered to listen for these
 							* messages.
 							*/
-							
-							
-							/* Note the location of this code.  We could have required
+
+
+			                /* Note the location of this code.  We could have required
 							* that message ID 0 be just like other message ID's but
 							* since message ID 0 has to be treated specially we have
 							* a separate check for message ID 0.  Also note that
@@ -1568,58 +1489,67 @@ namespace Novell.Directory.Ldap
 							* notification but that would have inefficient as
 							* message ID 0 is a rare event (as of this time).
 							*/
-							if (msgId == 0)
-							{
-								
-								
-								// Notify any listeners that might have been registered
-								this.enclosingInstance.notifyAllUnsolicitedListeners(msg);
-								
-								/*
+			                if (msgId == 0)
+			                {
+			                    // Notify any listeners that might have been registered
+			                    this.enclosingInstance.notifyAllUnsolicitedListeners(msg);
+
+			                    /*
 								* Was this a server shutdown unsolicited notification.
 								* IF so we quit. Actually calling the return will
 								* first transfer control to the finally clause which
 								* will do the necessary clean up.
 								*/
-								if (this.enclosingInstance.unsolSvrShutDnNotification)
-								{
-									notify = new InterThreadException(ExceptionMessages.SERVER_SHUTDOWN_REQ, new System.Object[]{this.enclosingInstance.host, this.enclosingInstance.port}, LdapException.CONNECT_ERROR, null, null);
-									
-									return ;
-								}
-							}
-							else
-							{
-								
-							}
-						}
-						if ((this.enclosingInstance.stopReaderMessageID == msgId) || (this.enclosingInstance.stopReaderMessageID == Novell.Directory.Ldap.Connection.STOP_READING))
-						{
-							// Stop the reader Thread.
-							return ;
-						}
-					}
-				}
-				catch(ThreadAbortException tae)
-				{
-					// Abort has been called on reader
-					// before closing sockets, from shutdown
-					return;
-				}
+			                    if (this.enclosingInstance.unsolSvrShutDnNotification)
+			                    {
+			                        notify = new InterThreadException(ExceptionMessages.SERVER_SHUTDOWN_REQ,
+			                            new object[] {this.enclosingInstance.host, this.enclosingInstance.port},
+			                            LdapException.CONNECT_ERROR, null, null);
 
-				catch (System.IO.IOException ioe)
-				{
-					
-					ioex = ioe;
-					if ((this.enclosingInstance.stopReaderMessageID != Novell.Directory.Ldap.Connection.STOP_READING) && this.enclosingInstance.clientActive)
-					{
-						// Connection lost waiting for results from host:port
-						notify = new InterThreadException(ExceptionMessages.CONNECTION_WAIT, new System.Object[]{this.enclosingInstance.host, this.enclosingInstance.port}, LdapException.CONNECT_ERROR, ioe, info);
-					}
-					// The connection is no good, don't use it any more
-					this.enclosingInstance.in_Renamed = null;
-					this.enclosingInstance.out_Renamed = null;
-				}
+			                        return;
+			                    }
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+                            }
+			            }
+
+			            if ((this.enclosingInstance.stopReaderMessageID == msgId) ||
+			                (this.enclosingInstance.stopReaderMessageID == Connection.STOP_READING))
+			            {
+			                // Stop the reader Thread.
+			                return;
+			            }
+			        }
+			    }
+                catch (OperationCanceledException oce)
+                {
+                    // Abort has been called on reader
+                    // before closing sockets, from shutdown
+                    return;
+                }
+                catch (IOException ioe)
+			    {
+			        ioex = ioe;
+			        if ((this.enclosingInstance.stopReaderMessageID != Connection.STOP_READING) &&
+			            this.enclosingInstance.clientActive)
+			        {
+			            // Connection lost waiting for results from host:port
+			            notify = new InterThreadException(ExceptionMessages.CONNECTION_WAIT,
+			                new object[] {this.enclosingInstance.host, this.enclosingInstance.port},
+			                LdapException.CONNECT_ERROR, ioe, info);
+			        }
+			        // The connection is no good, don't use it any more
+			        this.enclosingInstance.in_Renamed = null;
+			        this.enclosingInstance.out_Renamed = null;
+			    }
+			    catch (Exception ex)
+			    {
+                    // Abort has been called on reader
+                    // before closing sockets, from shutdown
+                    return;
+                }
 				finally
 				{
 					/*
@@ -1648,14 +1578,16 @@ namespace Novell.Directory.Ldap
 					}
 					else
 					{
-						this.enclosingInstance.stopReaderMessageID = Novell.Directory.Ldap.Connection.CONTINUE_READING;
+						this.enclosingInstance.stopReaderMessageID = Connection.CONTINUE_READING;
 					}
-				}
-				this.enclosingInstance.deadReaderException = ioex;
-				this.enclosingInstance.deadReader = this.enclosingInstance.reader;
-				this.enclosingInstance.reader = null;
-				return ;
+
+                    this.enclosingInstance.deadReaderException = ioex;
+                    this.enclosingInstance.deadReader = this.enclosingInstance.reader;
+                    this.enclosingInstance.reader = null;
+                    Debug.WriteLine("ReaderThread Finished");
+                }
 			}
+
 		} // End class ReaderThread
 		
 		/// <summary>Add the specific object to the list of listeners that want to be
@@ -1685,7 +1617,7 @@ namespace Novell.Directory.Ldap
 		/// notification.  We use this class to spawn off the unsolicited
 		/// notification as a separate thread
 		/// </summary>
-		private class UnsolicitedListenerThread:SupportClass.ThreadClass
+		private class UnsolicitedListenerThread:SupportClass.TaskClass
 		{
 			private void  InitBlock(Connection enclosingInstance)
 			{
@@ -1714,6 +1646,7 @@ namespace Novell.Directory.Ldap
 			
 			public override void  Run()
 			{
+                ThrowIfCancellationRequested();
 				listenerObj.messageReceived(unsolicitedMsg);
 				return ;
 			}
@@ -1727,7 +1660,7 @@ namespace Novell.Directory.Ldap
 			// set a flag in the Connection class so that we can throw an
 			// appropriate LdapException to the application
 			LdapMessage extendedLdapMessage = new LdapExtendedResponse(message);
-			System.String notificationOID = ((LdapExtendedResponse) extendedLdapMessage).ID;
+			string notificationOID = ((LdapExtendedResponse) extendedLdapMessage).ID;
 			if (notificationOID.Equals(LdapConnection.SERVER_SHUTDOWN_OID))
 			{
 				
@@ -1758,14 +1691,13 @@ namespace Novell.Directory.Ldap
 				UnsolicitedListenerThread u = new UnsolicitedListenerThread(this, listener, tempLdapMessage);
 				u.Start();
 			}
-			
-			
+
 			return ;
 		}
 		static Connection()
 		{
-			nameLock = new System.Object();
-			sdk = new System.Text.StringBuilder("2.2.1").ToString();
+			nameLock = new object();
+			sdk = new StringBuilder("2.2.1").ToString();
 			protocol = 3;
 		}
 	}

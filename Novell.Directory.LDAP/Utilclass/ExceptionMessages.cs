@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Reflection;
 
 namespace Novell.Directory.Ldap.Utilclass
 {
@@ -41,7 +42,15 @@ namespace Novell.Directory.Ldap.Utilclass
 	/// </summary>
 	public class ExceptionMessages:System.Resources.ResourceManager
 	{
-		public System.Object[][] getContents()
+	    public ExceptionMessages(Type resourceSource) : base(resourceSource)
+	    {
+	    }
+
+	    public ExceptionMessages(string baseName, Assembly assembly):base(baseName, assembly)
+	    {
+	    }
+
+        public System.Object[][] getContents()
 		{
 			return contents;
 		}

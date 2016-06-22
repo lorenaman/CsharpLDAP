@@ -38,18 +38,21 @@
 
 using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>
 /// This interface should be implemented by any class whose instances are intended 
 /// to be executed by a thread.
 /// </summary>
-public interface IThreadRunnable
-	{
+public interface ITaskRunnable
+{
 		/// <summary>
 		/// This method has to be implemented in order that starting of the thread causes the object's 
 		/// run method to be called in that separately executing thread.
 		/// </summary>
 		void Run();
+        void ThrowIfCancellationRequested();
 	}
 
 
@@ -564,48 +567,35 @@ public interface IThreadRunnable
 		/// <summary>
 		/// Support class used to handle threads
 		/// </summary>
-		public class ThreadClass : IThreadRunnable
-		{
+		public class TaskClass : ITaskRunnable
+    {
 			/// <summary>
 			/// The instance of System.Threading.Thread
 			/// </summary>
-			private System.Threading.Thread threadField;
+			//private System.Threading.Thread threadField;
+
+		    private CancellationTokenSource tokenSource;
+		    private Task task;
 	      
 			/// <summary>
 			/// Initializes a new instance of the ThreadClass class
 			/// </summary>
-			public ThreadClass()
+			public TaskClass()
 			{
-				threadField = new System.Threading.Thread(new System.Threading.ThreadStart(Run));
+                tokenSource = new CancellationTokenSource();
+                task = new Task(Run, tokenSource.Token);
+                //threadField = new System.Threading.Thread(new System.Threading.ThreadStart(Run));
 			}
 	 
 			/// <summary>
 			/// Initializes a new instance of the Thread class.
 			/// </summary>
 			/// <param name="Name">The name of the thread</param>
-			public ThreadClass(string Name)
+			public TaskClass(string Name)
 			{
-				threadField = new System.Threading.Thread(new System.Threading.ThreadStart(Run));
-				this.Name = Name;
-			}
-	      
-			/// <summary>
-			/// Initializes a new instance of the Thread class.
-			/// </summary>
-			/// <param name="Start">A ThreadStart delegate that references the methods to be invoked when this thread begins executing</param>
-			public ThreadClass(System.Threading.ThreadStart Start)
-			{
-				threadField = new System.Threading.Thread(Start);
-			}
-	 
-			/// <summary>
-			/// Initializes a new instance of the Thread class.
-			/// </summary>
-			/// <param name="Start">A ThreadStart delegate that references the methods to be invoked when this thread begins executing</param>
-			/// <param name="Name">The name of the thread</param>
-			public ThreadClass(System.Threading.ThreadStart Start, string Name)
-			{
-				threadField = new System.Threading.Thread(Start);
+				//threadField = new System.Threading.Thread(new System.Threading.ThreadStart(Run));
+                tokenSource = new CancellationTokenSource();
+                task = new Task(Run, tokenSource.Token);
 				this.Name = Name;
 			}
 	      
@@ -615,13 +605,22 @@ public interface IThreadRunnable
 			public virtual void Run()
 			{
 			}
-	      
-			/// <summary>
-			/// Causes the operating system to change the state of the current thread instance to ThreadState.Running
-			/// </summary>
-			public virtual void Start()
+
+		    public void ThrowIfCancellationRequested()
+		    {
+		        if (tokenSource.Token.IsCancellationRequested)
+		        {
+		            tokenSource.Token.ThrowIfCancellationRequested();
+		        }
+		    }
+
+            /// <summary>
+            /// Causes the operating system to change the state of the current thread instance to ThreadState.Running
+            /// </summary>
+            public virtual void Start()
 			{
-				threadField.Start();
+				//threadField.Start();
+                task.Start();
 			}
 	      
 			/// <summary>
@@ -629,37 +628,22 @@ public interface IThreadRunnable
 			/// </summary>
 			public virtual void Interrupt()
 			{
-				threadField.Interrupt();
-			}
-	      
-			/// <summary>
-			/// Gets the current thread instance
-			/// </summary>
-			public System.Threading.Thread Instance
-			{
-				get
-				{
-					return threadField;
-				}
-				set
-				{
-					threadField = value;
-				}
+                tokenSource.Cancel();
+				//threadField.Interrupt();
 			}
 	      
 			/// <summary>
 			/// Gets or sets the name of the thread
 			/// </summary>
-			public System.String Name
+			public string Name
 			{
 				get
 				{
-					return threadField.Name;
+					return this.Name;
 				}
 				set
 				{
-					if (threadField.Name == null)
-						threadField.Name = value; 
+					if (this.Name == null) this.Name = value; 
 				}
 			}
 	      
@@ -670,31 +654,8 @@ public interface IThreadRunnable
 			{
 				get
 				{
-					return threadField.IsAlive;
+					return task.Status == TaskStatus.Running;
 				}
-			}
-	      
-			/// <summary>
-			/// Gets or sets a value indicating whether or not a thread is a background thread.
-			/// </summary>
-			public bool IsBackground
-			{
-				get
-				{
-					return threadField.IsBackground;
-				} 
-				set
-				{
-					threadField.IsBackground = value;
-				}
-			}
-	      
-			/// <summary>
-			/// Blocks the calling thread until a thread terminates
-			/// </summary>
-			public void Join()
-			{
-				threadField.Join();
 			}
 	      
 			/// <summary>
@@ -703,21 +664,9 @@ public interface IThreadRunnable
 			/// <returns>A String that represents the current Object</returns>
 			public override System.String ToString()
 			{
-				return "Thread[" + Name + "," + "" + "]";
-			}
-	     
-			/// <summary>
-			/// Gets the currently running thread
-			/// </summary>
-			/// <returns>The currently running thread</returns>
-			public static ThreadClass Current()
-			{
-				ThreadClass CurrentThread = new ThreadClass();
-				CurrentThread.Instance = System.Threading.Thread.CurrentThread;
-				return CurrentThread;
+				return "Task[" + Name + "," + "" + "]";
 			}
 		}
-
 
 		/*******************************/
 		/// <summary>
@@ -1735,12 +1684,13 @@ public interface IThreadRunnable
 				if (algorithm.Equals("SHA-1"))
 				{
 					this.algorithmName = "SHA";
+				    this.Algorithm = System.Security.Cryptography.SHA1.Create();
+
 				}
 				else 
 				{
-					this.algorithmName = algorithm;
+                    throw new NotImplementedException($"{algorithm} is not implemented");
 				}
-				this.Algorithm = (System.Security.Cryptography.HashAlgorithm) System.Security.Cryptography.CryptoConfig.CreateFromName(this.algorithmName);			
 				this.position  = 0;
 			}
 

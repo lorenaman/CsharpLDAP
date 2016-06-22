@@ -93,6 +93,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		*/
 		public System.Type findResponseExtension(System.String searchOID)
 		{
+		    if (searchOID == null) return null;
 			lock (this)
 			{
 				if (this.map.ContainsKey(searchOID))

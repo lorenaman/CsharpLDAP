@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using Novell.Directory.Ldap.Utilclass;
 
 namespace Novell.Directory.Ldap
@@ -415,10 +416,11 @@ namespace Novell.Directory.Ldap
 						{
 							System.Threading.Monitor.Wait(messages);
 						}
-						catch (System.Threading.ThreadInterruptedException ex)
-						{
-						}
-					} /* end while */
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
+                    } /* end while */
 				} /* end synchronized */
 			}
 		}

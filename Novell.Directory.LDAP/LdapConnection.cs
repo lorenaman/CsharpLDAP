@@ -30,12 +30,7 @@
 //
 
 using System;
-using Novell.Directory.Ldap;
-using Novell.Directory.Ldap.Asn1;
-using Novell.Directory.Ldap.Rfc2251;
 using Novell.Directory.Ldap.Utilclass;
-//using Mono.Security.Protocol.Tls;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Novell.Directory.Ldap
 {
@@ -63,7 +58,7 @@ namespace Novell.Directory.Ldap
 		private void  InitBlock()
 		{
 			defSearchCons = new LdapSearchConstraints();
-			responseCtlSemaphore = new System.Object();
+			responseCtlSemaphore = new object();
 		}
 		/// <summary> Returns the protocol version uses to authenticate.
 		/// 
@@ -96,7 +91,7 @@ namespace Novell.Directory.Ldap
 		/// <returns> The distinguished name if authenticated; otherwise, null.
 		/// 
 		/// </returns>
-		virtual public System.String AuthenticationDN
+		virtual public string AuthenticationDN
 		{
 			get
 			{
@@ -129,7 +124,7 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> The method used to authenticate the connection.
 		/// </returns>
-		virtual public System.String AuthenticationMethod
+		virtual public string AuthenticationMethod
 		{
 			get
 			{
@@ -177,7 +172,7 @@ namespace Novell.Directory.Ldap
 		/// object is not present or not authenticated.
 		/// 
 		/// </returns>
-		virtual public System.Object SaslBindCallbackHandler
+		virtual public object SaslBindCallbackHandler
 		{
 			get
 			{
@@ -260,7 +255,7 @@ namespace Novell.Directory.Ldap
 		/// connected or null if the object has never connected.
 		/// 
 		/// </returns>
-		virtual public System.String Host
+		virtual public string Host
 		{
 			get
 			{
@@ -403,7 +398,6 @@ namespace Novell.Directory.Ldap
 					return null;
 				}
 				
-				
 				// We have to clone the control just in case
 				// we have two client threads that end up retreiving the
 				// same control.
@@ -448,7 +442,7 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> the Connection object name
 		/// </returns>
-		virtual internal System.String ConnectionName
+		virtual internal string ConnectionName
 		{
 			/* package */
 			
@@ -462,13 +456,13 @@ namespace Novell.Directory.Ldap
 		private LdapControl[] responseCtls = null;
 		
 		// Synchronization Object used to synchronize access to responseCtls
-		private System.Object responseCtlSemaphore;
+		private object responseCtlSemaphore;
 		
 		private Connection conn = null;
 		
-		private static System.Object nameLock; // protect agentNum
+		private static object nameLock; // protect agentNum
 		private static int lConnNum = 0; // Debug, LdapConnection number
-		private System.String name; // String name for debug
+		private string name; // String name for debug
 		
 		/// <summary> Used with search to specify that the scope of entrys to search is to
 		/// search only the base obect.
@@ -496,14 +490,14 @@ namespace Novell.Directory.Ldap
 		/// 
 		/// NO_ATTRS = "1.1"
 		/// </summary>
-		public const System.String NO_ATTRS = "1.1";
+		public const string NO_ATTRS = "1.1";
 		
 		/// <summary> Used with search instead of an attribute list to indicate that all
 		/// attributes are to be returned.
 		/// 
 		/// ALL_USER_ATTRS = "*"
 		/// </summary>
-		public const System.String ALL_USER_ATTRS = "*";
+		public const string ALL_USER_ATTRS = "*";
 		
 		/// <summary> Specifies the Ldapv3 protocol version when performing a bind operation.
 		/// 
@@ -544,7 +538,7 @@ namespace Novell.Directory.Ldap
 		/// 
 		/// You can use this string to request the version of the SDK.
 		/// </summary>
-		public const System.String Ldap_PROPERTY_SDK = "version.sdk";
+		public const string Ldap_PROPERTY_SDK = "version.sdk";
 		
 		/// <summary> A string that can be passed in to the getProperty method.
 		/// 
@@ -644,18 +638,18 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> A of the object.
 		/// </returns>
-		public System.Object Clone()
+		public object Clone()
 		{
 			LdapConnection newClone;
-			System.Object newObj;
+            object newObj;
 			try
 			{
 				newObj = base.MemberwiseClone();
 				newClone = (LdapConnection) newObj;
 			}
-			catch (System.Exception ce)
+			catch (Exception ce)
 			{
-				throw new System.Exception("Internal error, cannot create clone");
+				throw new Exception("Internal error, cannot create clone");
 			}
 			newClone.conn = conn; // same underlying connection
 			
@@ -765,8 +759,6 @@ namespace Novell.Directory.Ldap
 				conn.AddUnsolicitedNotificationListener(listener);
 		}
 		
-		
-		
 		/// <summary> Deregisters an object so that it will no longer be notified on
 		/// arrival of an unsolicited message from a server. If the object is
 		/// null or was not previously registered for unsolicited notifications,
@@ -851,7 +843,6 @@ namespace Novell.Directory.Ldap
         /// </summary>
         public virtual void  stopTLS()
         {
-                                                                                
             if (!TLS)
             {
                 throw new LdapLocalException(ExceptionMessages.NO_STARTTLS, LdapException.OPERATIONS_ERROR);
@@ -971,7 +962,7 @@ namespace Novell.Directory.Ldap
 				agent.Abandon(id, cons);
 				return ;
 			}
-			catch (System.FieldAccessException ex)
+			catch (FieldAccessException ex)
 			{
 				return ; // Ignore error
 			}
@@ -1748,13 +1739,13 @@ namespace Novell.Directory.Ldap
 		/// message and an Ldap error code.
 		/// 
 		/// </exception>
-		public virtual void  Connect(System.String host, int port)
+		public virtual void  Connect(string host, int port)
 		{
 			// connect doesn't affect other clones
 			// If not a clone, destroys old connection.
 			// Step through the space-delimited list
 			SupportClass.Tokenizer hostList = new SupportClass.Tokenizer(host, " ");
-			System.String address = null;
+            string address = null;
 			
 			int specifiedPort;
 			int colonIndex; //after the colon is the port
@@ -1764,18 +1755,18 @@ namespace Novell.Directory.Ldap
 				{
 					specifiedPort = port;
 					address = hostList.NextToken();
-					colonIndex = address.IndexOf((System.Char) ':');
+					colonIndex = address.IndexOf(':');
 					if (colonIndex != - 1 && colonIndex + 1 != address.Length)
 					{
 						//parse Port out of address
 						try
 						{
-							specifiedPort = System.Int32.Parse(address.Substring(colonIndex + 1));
+							specifiedPort = int.Parse(address.Substring(colonIndex + 1));
 							address = address.Substring(0, (colonIndex) - (0));
 						}
-						catch (System.Exception e)
+						catch (Exception e)
 						{
-							throw new System.ArgumentException(ExceptionMessages.INVALID_ADDRESS);
+							throw new ArgumentException(ExceptionMessages.INVALID_ADDRESS);
 						}
 					}
 					// This may return a different conn object

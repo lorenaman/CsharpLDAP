@@ -205,15 +205,15 @@ namespace Novell.Directory.Ldap.Events
       if ( (queue == null)
 	   || (conn == null))
       {
-	throw new ArgumentException("No parameter can be Null.");
+	    throw new ArgumentException("No parameter can be Null.");
       }
 
       if (null == m_objEventsGenerator)
       {
-	m_objEventsGenerator =  new EventsGenerator(this, queue, conn, msgid);
-	m_objEventsGenerator.SleepTime = sleep_interval;
+	    m_objEventsGenerator =  new EventsGenerator(this, queue, conn, msgid);
+	    m_objEventsGenerator.SleepTime = sleep_interval;
 
-	m_objEventsGenerator.StartEventPolling();
+	    m_objEventsGenerator.StartEventPolling();
       }
     } // end of method StartEventPolling
 
@@ -221,8 +221,8 @@ namespace Novell.Directory.Ldap.Events
     {
       if (null != m_objEventsGenerator)
       {
-	m_objEventsGenerator.StopEventPolling();
-	m_objEventsGenerator = null;
+	    m_objEventsGenerator.StopEventPolling();
+	    m_objEventsGenerator = null;
       }
     } // end of method StopEventPolling
 
@@ -244,9 +244,9 @@ namespace Novell.Directory.Ldap.Events
 
       if (!bListenersNotified)
       {
-	// Actual EventSource could not recognize the event
-	// Just notify the listeners for generic directory events
-	NotifyDirectoryListeners(sourceMessage, aClassification);
+	    // Actual EventSource could not recognize the event
+	    // Just notify the listeners for generic directory events
+	    NotifyDirectoryListeners(sourceMessage, aClassification);
       }
     }
 
@@ -261,7 +261,7 @@ namespace Novell.Directory.Ldap.Events
     {
       if (null != directory_event)
       {
-	directory_event(this, objDirectoryEventArgs);
+	    directory_event(this, objDirectoryEventArgs);
       }
     }
 
@@ -269,7 +269,7 @@ namespace Novell.Directory.Ldap.Events
     {
       if (null != directory_exception_event)
       {
-	directory_exception_event(this, new DirectoryExceptionEventArgs(sourceMessage, ldapException));
+	    directory_exception_event(this, new DirectoryExceptionEventArgs(sourceMessage, ldapException));
       }
     }
 
@@ -292,102 +292,101 @@ namespace Novell.Directory.Ldap.Events
       /// </summary>
       public int SleepTime
       {
-	get
-	{
-	  return sleep_time;
-	}
-	set
-	{
-	  sleep_time = value;
-	}
+	    get
+	    {
+	      return sleep_time;
+	    }
+	    set
+	    {
+	      sleep_time = value;
+	    }
       }
-      
-      
+
       public EventsGenerator(LdapEventSource objEventSource,
 			     LdapMessageQueue queue,
 			     LdapConnection conn,
 			     int msgid)
       {
-	m_objLdapEventSource = objEventSource;
-	searchqueue = queue;
-	ldapconnection = conn;
-	messageid = msgid;
-	sleep_time = DEFAULT_SLEEP_TIME;
+	    m_objLdapEventSource = objEventSource;
+	    searchqueue = queue;
+	    ldapconnection = conn;
+	    messageid = msgid;
+	    sleep_time = DEFAULT_SLEEP_TIME;
       } // end of Constructor
       
       protected void Run() 
       {
-	while (isrunning) 
-	{
-	  LdapMessage response = null;
-	  try 
-	  {
-	    while ((isrunning)
-		   && (!searchqueue.isResponseReceived(messageid))) 
+	    while (isrunning) 
 	    {
+	      LdapMessage response = null;
 	      try 
 	      {
-		Thread.Sleep(sleep_time);
+	        while ((isrunning)
+		       && (!searchqueue.isResponseReceived(messageid))) 
+	        {
+	          try 
+	          {
+		        Thread.Sleep(sleep_time);
+	          } 
+              catch (Exception e) 
+	          {
+		        Console.WriteLine("EventsGenerator::Run Got ThreadInterruptedException e = {0}", e);
+	          }
+	        }
+
+	        if (isrunning) 
+	        {
+	          response = searchqueue.getResponse(messageid);
+	        }
+
+	        if (response != null) 
+	        {
+	          processmessage(response);
+	        }
 	      } 
-	      catch (ThreadInterruptedException e) 
+	      catch (LdapException e) 
 	      {
-		Console.WriteLine("EventsGenerator::Run Got ThreadInterruptedException e = {0}", e);
+	        m_objLdapEventSource.NotifyExceptionListeners(response, e);
 	      }
 	    }
-	    
-	    if (isrunning) 
-	    {
-	      response = searchqueue.getResponse(messageid);
-	    }
-	    
-	    if (response != null) 
-	    {
-	      processmessage(response);
-	    }
-	  } 
-	  catch (LdapException e) 
-	  {
-	    m_objLdapEventSource.NotifyExceptionListeners(response, e);
-	  }
-	}
       } // end of method run
       
       protected void processmessage(LdapMessage response) 
       {
-	if (response is LdapResponse) 
-	{
-	  try 
-	  {
-	    ((LdapResponse) response).chkResultCode();
+	    if (response is LdapResponse) 
+	    {
+	      try 
+	      {
+	        ((LdapResponse) response).chkResultCode();
 	    
-	    m_objLdapEventSource.NotifyEventListeners(response, 
-						      EventClassifiers.CLASSIFICATION_UNKNOWN, 
-						      EVENT_TYPE_UNKNOWN);
-	  } 
-	  catch (LdapException e) 
-	  {
-	    m_objLdapEventSource.NotifyExceptionListeners(response, e);
-	  }
-	} 
-	else 
-	{
-	  m_objLdapEventSource.NotifyEventListeners(response, 
-						    EventClassifiers.CLASSIFICATION_UNKNOWN, 
-						    EVENT_TYPE_UNKNOWN);
-	}
+	        m_objLdapEventSource.NotifyEventListeners(response, 
+						          EventClassifiers.CLASSIFICATION_UNKNOWN, 
+						          EVENT_TYPE_UNKNOWN);
+	      } 
+	      catch (LdapException e) 
+	      {
+	        m_objLdapEventSource.NotifyExceptionListeners(response, e);
+	      }
+	    } 
+	    else 
+	    {
+	      m_objLdapEventSource.NotifyEventListeners(response, 
+						        EventClassifiers.CLASSIFICATION_UNKNOWN, 
+						        EVENT_TYPE_UNKNOWN);
+	    }
       } // end of method processmessage
       
-      public void StartEventPolling()
-      {
-	isrunning = true;
-	new Thread( new ThreadStart( Run ) ).Start();
-      }
+    public void StartEventPolling()
+    {
+        isrunning = true;
+        new Thread( new ThreadStart( Run ) ).Start();
+    }
       
-      public void StopEventPolling() 
-      {
-	isrunning = false;
-      } // end of method stopEventGeneration
-    } // end of class EventsGenerator
+    public void StopEventPolling() 
+    {
+        isrunning = false;
+    } // end of method stopEventGeneration
+} // end of class EventsGenerator
     
   } // end of class LdapEventSource
   
