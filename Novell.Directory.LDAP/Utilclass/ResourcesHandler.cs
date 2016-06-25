@@ -181,7 +181,7 @@ namespace Novell.Directory.Ldap.Utilclass
 			{
 /*
 				defaultResultCodes = ResourceManager.CreateFileBasedResourceManager("ResultCodeMessages", "Resources", null);*/
-				defaultResultCodes = new ResourceManager("ResultCodeMessages", typeof(ResourcesHandler).GetTypeInfo().Assembly);
+				defaultResultCodes = new ResourceManager("Novell.Directory.LDAP.Properties.ResultCodeMessages", typeof(ResultCodeMessages).GetTypeInfo().Assembly);
 			}
 
 			if (defaultLocale == null)
