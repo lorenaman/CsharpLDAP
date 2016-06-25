@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using Novell.Directory.Ldap.Asn1;
 using Novell.Directory.Ldap.Rfc2251;
 using Novell.Directory.Ldap.Utilclass;
@@ -57,7 +58,7 @@ namespace Novell.Directory.Ldap
 		/// </summary>
 		/// <returns> Any error message in the response.
 		/// </returns>
-		virtual public System.String ErrorMessage
+		virtual public string ErrorMessage
 		{
 			get
 			{
@@ -79,7 +80,6 @@ namespace Novell.Directory.Ldap
 */
 				return ((RfcResponse) message.Response).getErrorMessage().stringValue();
 			}
-			
 		}
 		/// <summary> Returns the partially matched DN field from the server response,
 		/// if the response contains one.
@@ -88,7 +88,7 @@ namespace Novell.Directory.Ldap
 		/// <returns> The partially matched DN field, if the response contains one.
 		/// 
 		/// </returns>
-		virtual public System.String MatchedDN
+		virtual public string MatchedDN
 		{
 			get
 			{
@@ -98,50 +98,49 @@ namespace Novell.Directory.Ldap
 				}
 				return ((RfcResponse) message.Response).getMatchedDN().stringValue();
 			}
-			
 		}
 		/// <summary> Returns all referrals in a server response, if the response contains any.
 		/// 
 		/// </summary>
 		/// <returns> All the referrals in the server response.
 		/// </returns>
-		virtual public System.String[] Referrals
+		virtual public string[] Referrals
 		{
 			get
 			{
-				System.String[] referrals = null;
+				string[] referrals = null;
 				RfcReferral ref_Renamed = ((RfcResponse) message.Response).getReferral();
 				
 				if (ref_Renamed == null)
 				{
-					referrals = new System.String[0];
+					referrals = new string[0];
 				}
 				else
 				{
 					// convert RFC 2251 Referral to String[]
 					int size = ref_Renamed.size();
-					referrals = new System.String[size];
+					referrals = new string[size];
 					for (int i = 0; i < size; i++)
 					{
-						System.String aRef = ((Asn1OctetString) ref_Renamed.get_Renamed(i)).stringValue();
+						string aRef = ((Asn1OctetString) ref_Renamed.get_Renamed(i)).stringValue();
 						try
 						{
 							// get the referral URL
 							LdapUrl urlRef = new LdapUrl(aRef);
-							if ((System.Object) urlRef.getDN() == null)
+							if ((object) urlRef.getDN() == null)
 							{
 								RfcLdapMessage origMsg = base.Asn1Object.RequestingMessage.Asn1Object;
-								System.String dn;
-								if ((System.Object) (dn = origMsg.RequestDN) != null)
+								string dn;
+								if ((object) (dn = origMsg.RequestDN) != null)
 								{
 									urlRef.setDN(dn);
 									aRef = urlRef.ToString();
 								}
 							}
 						}
-						catch (System.UriFormatException mex)
+						catch (UriFormatException mex)
 						{
-							;
+                            Debug.WriteLine(mex.Message);
 						}
 						finally
 						{
@@ -151,7 +150,6 @@ namespace Novell.Directory.Ldap
 				}
 				return referrals;
 			}
-			
 		}
 		/// <summary> Returns the result code in a server response.
 		/// 
@@ -180,20 +178,18 @@ namespace Novell.Directory.Ldap
 		virtual internal LdapException ResultException
 		{
 			/* package */
-			
 			get
 			{
 				LdapException ex = null;
 				switch (ResultCode)
 				{
-					
 					case LdapException.SUCCESS: 
 					case LdapException.COMPARE_TRUE: 
 					case LdapException.COMPARE_FALSE: 
 						break;
 					
 					case LdapException.REFERRAL: 
-						System.String[] refs = Referrals;
+						string[] refs = Referrals;
 						ex = new LdapReferralException("Automatic referral following not enabled", LdapException.REFERRAL, ErrorMessage);
 						((LdapReferralException) ex).setReferrals(refs);
 						break;
@@ -201,11 +197,9 @@ namespace Novell.Directory.Ldap
 					default: 
 						ex = new LdapException(LdapException.resultCodeToString(ResultCode), ResultCode, ErrorMessage, MatchedDN);
 						break;
-					
 				}
 				return ex;
 			}
-			
 		}
 		/// <summary> Returns any controls in the message.
 		/// 
@@ -222,7 +216,6 @@ namespace Novell.Directory.Ldap
 				}
 				return base.Controls;
 			}
-			
 		}
 		/// <summary> Returns the message ID.
 		/// 
@@ -239,7 +232,6 @@ namespace Novell.Directory.Ldap
 				}
 				return base.MessageID;
 			}
-			
 		}
 		/// <summary> Returns the Ldap operation type of the message.
 		/// 
@@ -269,12 +261,10 @@ namespace Novell.Directory.Ldap
 		virtual internal LdapException Exception
 		{
 			/*package*/
-			
 			get
 			{
 				return exception;
 			}
-			
 		}
 		/// <summary> Indicates the referral instance being followed if the
 		/// connection created to follow referrals.
@@ -285,12 +275,10 @@ namespace Novell.Directory.Ldap
 		virtual internal ReferralInfo ActiveReferral
 		{
 			/*package*/
-			
 			get
 			{
 				return activeReferral;
 			}
-			
 		}
 		private InterThreadException exception = null;
 		private ReferralInfo activeReferral;
@@ -314,8 +302,6 @@ namespace Novell.Directory.Ldap
 		{
 			exception = ex;
 			this.activeReferral = activeReferral;
-			
-			return ;
 		}
 		
 		/// <summary> Creates a response LdapMessage when receiving an asynchronous
@@ -327,7 +313,6 @@ namespace Novell.Directory.Ldap
 		/*package*/
 		internal LdapResponse(RfcLdapMessage message):base(message)
 		{
-			return ;
 		}
 		
 		/// <summary> Creates a SUCCESS response LdapMessage. Typically the response
@@ -343,7 +328,6 @@ namespace Novell.Directory.Ldap
 		/// </seealso>
 		public LdapResponse(int type):this(type, LdapException.SUCCESS, null, null, null, null)
 		{
-			return ;
 		}
 		
 		/// <summary> Creates a response LdapMessage from parameters. Typically the data
@@ -378,24 +362,21 @@ namespace Novell.Directory.Ldap
 		/// </seealso>
 		/// <seealso cref="LdapException">
 		/// </seealso>
-		public LdapResponse(int type, int resultCode, System.String matchedDN, System.String serverMessage, System.String[] referrals, LdapControl[] controls):base(new RfcLdapMessage(RfcResultFactory(type, resultCode, matchedDN, serverMessage, referrals)))
+		public LdapResponse(int type, int resultCode, string matchedDN, string serverMessage, string[] referrals, LdapControl[] controls):base(new RfcLdapMessage(RfcResultFactory(type, resultCode, matchedDN, serverMessage, referrals)))
 		{
-			
-			return ;
 		}
 		
-		private static Asn1Sequence RfcResultFactory(int type, int resultCode, System.String matchedDN, System.String serverMessage, System.String[] referrals)
+		private static Asn1Sequence RfcResultFactory(int type, int resultCode, string matchedDN, string serverMessage, string[] referrals)
 		{
 			Asn1Sequence ret;
 			
-			if ((System.Object) matchedDN == null)
+			if ((object) matchedDN == null)
 				matchedDN = "";
-			if ((System.Object) serverMessage == null)
+			if ((object) serverMessage == null)
 				serverMessage = "";
 			
 			switch (type)
 			{
-				
 				case SEARCH_RESULT: 
 					ret = new RfcSearchResultDone(new Asn1Enumerated(resultCode), new RfcLdapDN(matchedDN), new RfcLdapString(serverMessage), null);
 					break;
@@ -437,9 +418,9 @@ namespace Novell.Directory.Ldap
 					break;
 				
 				default: 
-					throw new System.Exception("Type " + type + " Not Supported");
-				
+					throw new Exception("Type " + type + " Not Supported");
 			}
+
 			return ret;
 		}
 		
@@ -456,15 +437,11 @@ namespace Novell.Directory.Ldap
 			{
 				throw exception;
 			}
-			else
-			{
-				LdapException ex = ResultException;
-				if (ex != null)
-				{
-					throw ex;
-				}
-				return ;
-			}
+		    LdapException ex = ResultException;
+		    if (ex != null)
+		    {
+		        throw ex;
+		    }
 		}
 		
 		/* Methods from LdapMessage */
