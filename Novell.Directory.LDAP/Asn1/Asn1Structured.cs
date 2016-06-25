@@ -30,10 +30,10 @@
 //
 
 using System;
+using System.IO;
 
 namespace Novell.Directory.Ldap.Asn1
 {
-	
 	/// <summary> This class serves as the base type for all ASN.1
 	/// structured types.
 	/// </summary>
@@ -51,7 +51,6 @@ namespace Novell.Directory.Ldap.Asn1
 		*/
 		protected internal Asn1Structured(Asn1Identifier id):this(id, 10)
 		{
-			return ;
 		}
 		
 		/*
@@ -64,7 +63,6 @@ namespace Novell.Directory.Ldap.Asn1
 		protected internal Asn1Structured(Asn1Identifier id, int size):base(id)
 		{
 			content = new Asn1Object[size];
-			return ;
 		}
 		
 		/*
@@ -80,7 +78,6 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			content = newContent;
 			contentIndex = size;
-			return ;
 		}
 		
 		/// <summary> Encodes the contents of this Asn1Structured directly to an output
@@ -89,12 +86,11 @@ namespace Novell.Directory.Ldap.Asn1
 		public override void  encode(Asn1Encoder enc, System.IO.Stream out_Renamed)
 		{
 			enc.encode(this, out_Renamed);
-			return ;
 		}
 		
 		/// <summary> Decode an Asn1Structured type from an InputStream.</summary>
 		[CLSCompliantAttribute(false)]
-		protected internal void  decodeStructured(Asn1Decoder dec, System.IO.Stream in_Renamed, int len)
+		protected internal void  decodeStructured(Asn1Decoder dec, Stream in_Renamed, int len)
 		{
 			int[] componentLen = new int[1]; // collects length of component
 			
@@ -103,7 +99,6 @@ namespace Novell.Directory.Ldap.Asn1
 				add(dec.decode(in_Renamed, componentLen));
 				len -= componentLen[0];
 			}
-			return ;
 		}
 		
 		/// <summary> Returns an array containing the individual ASN.1 elements
@@ -115,7 +110,7 @@ namespace Novell.Directory.Ldap.Asn1
 		public Asn1Object[] toArray()
 		{
 			Asn1Object[] cloneArray = new Asn1Object[contentIndex];
-			Array.Copy((System.Array) content, 0, (System.Array) cloneArray, 0, contentIndex);
+			Array.Copy(content, 0, cloneArray, 0, contentIndex);
 			return cloneArray;
 		}
 		
@@ -133,11 +128,10 @@ namespace Novell.Directory.Ldap.Asn1
 				// Array too small, need to expand it, double length
 				int newSize = contentIndex + contentIndex;
 				Asn1Object[] newArray = new Asn1Object[newSize];
-				Array.Copy((System.Array) content, 0, (System.Array) newArray, 0, contentIndex);
+				Array.Copy(content, 0, newArray, 0, contentIndex);
 				content = newArray;
 			}
 			content[contentIndex++] = value_Renamed;
-			return ;
 		}
 		
 		/// <summary> Replaces the Asn1Object in the specified index position of
@@ -155,10 +149,9 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			if ((index >= contentIndex) || (index < 0))
 			{
-				throw new System.IndexOutOfRangeException("Asn1Structured: get: index " + index + ", size " + contentIndex);
+				throw new IndexOutOfRangeException("Asn1Structured: get: index " + index + ", size " + contentIndex);
 			}
 			content[index] = value_Renamed;
-			return ;
 		}
 		
 		/// <summary> Gets a specific Asn1Object in this structred object.
@@ -171,7 +164,7 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			if ((index >= contentIndex) || (index < 0))
 			{
-				throw new System.IndexOutOfRangeException("Asn1Structured: set: index " + index + ", size " + contentIndex);
+				throw new IndexOutOfRangeException("Asn1Structured: set: index " + index + ", size " + contentIndex);
 			}
 			return content[index];
 		}
@@ -194,7 +187,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// <returns> the String representation of this object.
 		/// </returns>
 		[CLSCompliantAttribute(false)]
-		public virtual System.String toString(System.String type)
+		public virtual string ToString(string type)
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			
