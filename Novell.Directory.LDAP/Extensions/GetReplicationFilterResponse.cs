@@ -55,7 +55,7 @@ namespace Novell.Directory.Ldap.Extensions
 		/// <returns> String array contining a two dimensional array of strings.  The first
 		/// element of each array is the class name the others are the attribute names
 		/// </returns>
-		virtual public System.String[][] ReplicationFilter
+		virtual public String[][] ReplicationFilter
 		{
 			get
 			{
@@ -67,7 +67,7 @@ namespace Novell.Directory.Ldap.Extensions
 		
 		
 		// Replication filter returned by the server goes here
-		internal System.String[][] returnedFilter;
+		internal String[][] returnedFilter;
 		
 		/// <summary> Constructs an object from the responseValue which contains the replication
 		/// filter.
@@ -90,16 +90,16 @@ namespace Novell.Directory.Ldap.Extensions
 			
 			if (ResultCode != LdapException.SUCCESS)
 			{
-				returnedFilter = new System.String[0][];
+				returnedFilter = new String[0][];
 				for (int i = 0; i < 0; i++)
 				{
-					returnedFilter[i] = new System.String[0];
+					returnedFilter[i] = new String[0];
 				}
 			}
 			else
 			{
 				// parse the contents of the reply
-				sbyte[] returnedValue = this.Value;
+				sbyte[] returnedValue = Value;
 				if (returnedValue == null)
 					throw new System.IO.IOException("No returned value");
 				
@@ -116,7 +116,7 @@ namespace Novell.Directory.Ldap.Extensions
 				
 				// How many sequences in this list
 				int numberOfSequences = returnedSequence.size();
-				returnedFilter = new System.String[numberOfSequences][];
+				returnedFilter = new String[numberOfSequences][];
 				
 				// Parse each returned sequence object
 				for (int classNumber = 0; classNumber < numberOfSequences; classNumber++)
@@ -138,11 +138,11 @@ namespace Novell.Directory.Ldap.Extensions
 						throw new System.IO.IOException("Decoding error");
 					
 					int numberOfAttributes = asn1_attributeList.size();
-					returnedFilter[classNumber] = new System.String[numberOfAttributes + 1];
+					returnedFilter[classNumber] = new String[numberOfAttributes + 1];
 					
 					// Get the classname
 					returnedFilter[classNumber][0] = asn1_className.stringValue();
-					if ((System.Object) returnedFilter[classNumber][0] == null)
+					if ((object) returnedFilter[classNumber][0] == null)
 						throw new System.IO.IOException("Decoding error");
 					
 					for (int attributeNumber = 0; attributeNumber < numberOfAttributes; attributeNumber++)
@@ -155,7 +155,7 @@ namespace Novell.Directory.Ldap.Extensions
 						
 						// Get attributename string
 						returnedFilter[classNumber][attributeNumber + 1] = asn1_attributeName.stringValue();
-						if ((System.Object) returnedFilter[classNumber][attributeNumber + 1] == null)
+						if ((object) returnedFilter[classNumber][attributeNumber + 1] == null)
 							throw new System.IO.IOException("Decoding error");
 					}
 				}

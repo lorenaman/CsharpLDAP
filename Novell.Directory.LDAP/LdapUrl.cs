@@ -112,7 +112,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		virtual public System.String[] AttributeArray
+		virtual public String[] AttributeArray
 
 		{
 
@@ -170,7 +170,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		virtual public System.String[] Extensions
+		virtual public String[] Extensions
 
 		{
 
@@ -196,7 +196,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		virtual public System.String Filter
+		virtual public String Filter
 
 		{
 
@@ -222,7 +222,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		virtual public System.String Host
+		virtual public String Host
 
 		{
 
@@ -338,19 +338,19 @@ namespace Novell.Directory.Ldap
 
 		private bool ipV6 = false; // TCP/IP V6
 
-		private System.String host = null; // Host
+		private String host = null; // Host
 
 		private int port = 0; // Port
 
-		private System.String dn = null; // Base DN
+		private String dn = null; // Base DN
 
-		private System.String[] attrs = null; // Attributes
+		private String[] attrs = null; // Attributes
 
-		private System.String filter = null; // Filter
+		private String filter = null; // Filter
 
 		private int scope; // Scope
 
-		private System.String[] extensions = null; // Extensions
+		private String[] extensions = null; // Extensions
 
 		
 
@@ -374,7 +374,7 @@ namespace Novell.Directory.Ldap
 
 		/// </exception>
 
-		public LdapUrl(System.String url)
+		public LdapUrl(String url)
 
 		{
 
@@ -424,7 +424,7 @@ namespace Novell.Directory.Ldap
 
 		/// </param>
 
-		public LdapUrl(System.String host, int port, System.String dn)
+		public LdapUrl(String host, int port, String dn)
 
 		{
 
@@ -524,7 +524,7 @@ namespace Novell.Directory.Ldap
 
 		/// </param>
 
-		public LdapUrl(System.String host, int port, System.String dn, System.String[] attrNames, int scope, System.String filter, System.String[] extensions)
+		public LdapUrl(String host, int port, String dn, String[] attrNames, int scope, String filter, String[] extensions)
 
 		{
 
@@ -536,15 +536,15 @@ namespace Novell.Directory.Ldap
 
 			this.dn = dn;
 
-			this.attrs = new System.String[attrNames.Length];
+			attrs = new String[attrNames.Length];
 
-			attrNames.CopyTo(this.attrs, 0);
+			attrNames.CopyTo(attrs, 0);
 
 			this.scope = scope;
 
 			this.filter = filter;
 
-			this.extensions = new System.String[extensions.Length];
+			this.extensions = new String[extensions.Length];
 
 			extensions.CopyTo(this.extensions, 0);
 
@@ -650,7 +650,7 @@ namespace Novell.Directory.Ldap
 
 		/// </param>
 
-		public LdapUrl(System.String host, int port, System.String dn, System.String[] attrNames, int scope, System.String filter, System.String[] extensions, bool secure)
+		public LdapUrl(String host, int port, String dn, String[] attrNames, int scope, String filter, String[] extensions, bool secure)
 
 		{
 
@@ -662,13 +662,13 @@ namespace Novell.Directory.Ldap
 
 			this.dn = dn;
 
-			this.attrs = attrNames;
+			attrs = attrNames;
 
 			this.scope = scope;
 
 			this.filter = filter;
 
-			this.extensions = new System.String[extensions.Length];
+			this.extensions = new String[extensions.Length];
 
 			extensions.CopyTo(this.extensions, 0);
 
@@ -690,7 +690,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		public System.Object Clone()
+		public object Clone()
 
 		{
 
@@ -698,15 +698,15 @@ namespace Novell.Directory.Ldap
 
 			{
 
-				return base.MemberwiseClone();
+				return MemberwiseClone();
 
 			}
 
-			catch (System.Exception ce)
+			catch (Exception ce)
 
 			{
 
-				throw new System.Exception("Internal error, cannot create clone");
+				throw new Exception("Internal error, cannot create clone");
 
 			}
 
@@ -742,7 +742,7 @@ namespace Novell.Directory.Ldap
 
 		/// </exception>
 
-		public static System.String decode(System.String URLEncoded)
+		public static String decode(String URLEncoded)
 
 		{
 
@@ -790,7 +790,7 @@ namespace Novell.Directory.Ldap
 
 				{
 
-					throw new System.UriFormatException("LdapUrl.decode: must be two hex characters following escape character '%'");
+					throw new UriFormatException("LdapUrl.decode: must be two hex characters following escape character '%'");
 
 				}
 
@@ -814,15 +814,15 @@ namespace Novell.Directory.Ldap
 
 				{
 
-					decoded.Append((char) System.Convert.ToInt32(URLEncoded.Substring(fieldStart, (fieldEnd) - (fieldStart)), 16));
+					decoded.Append((char) Convert.ToInt32(URLEncoded.Substring(fieldStart, (fieldEnd) - (fieldStart)), 16));
 
 				}
 
-				catch (System.FormatException ex)
+				catch (FormatException ex)
 
 				{
 
-					throw new System.UriFormatException("LdapUrl.decode: error converting hex characters to integer \"" + ex.Message + "\"");
+					throw new UriFormatException("LdapUrl.decode: error converting hex characters to integer \"" + ex.Message + "\"");
 
 				}
 
@@ -868,13 +868,13 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		public static System.String encode(System.String toEncode)
+		public static String encode(String toEncode)
 
 		{
 
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder(toEncode.Length); //empty but initial capicity of 'length'
 
-			System.String temp;
+			String temp;
 
 			char currChar;
 
@@ -888,7 +888,7 @@ namespace Novell.Directory.Ldap
 
 				{
 
-					temp = System.Convert.ToString(currChar, 16);
+					temp = Convert.ToString(currChar, 16);
 
 					if (temp.Length == 1)
 
@@ -898,7 +898,7 @@ namespace Novell.Directory.Ldap
 
 					else
 
-						buffer.Append("%" + System.Convert.ToString(currChar, 16));
+						buffer.Append("%" + Convert.ToString(currChar, 16));
 
 				}
 
@@ -924,7 +924,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		public virtual System.String getDN()
+		public virtual String getDN()
 
 		{
 
@@ -938,7 +938,7 @@ namespace Novell.Directory.Ldap
 
 		/* package */
 
-		internal virtual void  setDN(System.String dn)
+		internal virtual void  setDN(String dn)
 
 		{
 
@@ -960,7 +960,7 @@ namespace Novell.Directory.Ldap
 
 		/// </returns>
 
-		public override System.String ToString()
+		public override String ToString()
 
 		{
 
@@ -1016,7 +1016,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if (((System.Object) dn == null) && (attrs == null) && (scope == DEFAULT_SCOPE) && ((System.Object) filter == null) && (extensions == null))
+			if (((object) dn == null) && (attrs == null) && (scope == DEFAULT_SCOPE) && ((object) filter == null) && (extensions == null))
 
 			{
 
@@ -1030,7 +1030,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if ((System.Object) dn != null)
+			if ((object) dn != null)
 
 			{
 
@@ -1040,7 +1040,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if ((attrs == null) && (scope == DEFAULT_SCOPE) && ((System.Object) filter == null) && (extensions == null))
+			if ((attrs == null) && (scope == DEFAULT_SCOPE) && ((object) filter == null) && (extensions == null))
 
 			{
 
@@ -1080,7 +1080,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if ((scope == DEFAULT_SCOPE) && ((System.Object) filter == null) && (extensions == null))
+			if ((scope == DEFAULT_SCOPE) && ((object) filter == null) && (extensions == null))
 
 			{
 
@@ -1118,7 +1118,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if (((System.Object) filter == null) && (extensions == null))
+			if (((object) filter == null) && (extensions == null))
 
 			{
 
@@ -1130,7 +1130,7 @@ namespace Novell.Directory.Ldap
 
 			// filter
 
-			if ((System.Object) filter == null)
+			if ((object) filter == null)
 
 			{
 
@@ -1190,13 +1190,13 @@ namespace Novell.Directory.Ldap
 
 		
 
-		private System.String[] parseList(System.String listStr, char delimiter, int listStart, int listEnd)
+		private String[] parseList(String listStr, char delimiter, int listStart, int listEnd)
 
 		// end of list + 1
 
 		{
 
-			System.String[] list;
+			String[] list;
 
 			// Check for and empty string
 
@@ -1224,7 +1224,7 @@ namespace Novell.Directory.Ldap
 
 				itemCount += 1;
 
-				itemEnd = listStr.IndexOf((System.Char) delimiter, itemStart);
+				itemEnd = listStr.IndexOf((Char) delimiter, itemStart);
 
 				if ((itemEnd > 0) && (itemEnd < listEnd))
 
@@ -1248,7 +1248,7 @@ namespace Novell.Directory.Ldap
 
 			itemStart = listStart;
 
-			list = new System.String[itemCount];
+			list = new String[itemCount];
 
 			itemCount = 0;
 
@@ -1256,7 +1256,7 @@ namespace Novell.Directory.Ldap
 
 			{
 
-				itemEnd = listStr.IndexOf((System.Char) delimiter, itemStart);
+				itemEnd = listStr.IndexOf((Char) delimiter, itemStart);
 
 				if (itemStart <= listEnd)
 
@@ -1296,7 +1296,7 @@ namespace Novell.Directory.Ldap
 
 		
 
-		private void  parseURL(System.String url)
+		private void  parseURL(String url)
 
 		{
 
@@ -1306,9 +1306,9 @@ namespace Novell.Directory.Ldap
 
 			
 
-			if ((System.Object) url == null)
+			if ((object) url == null)
 
-				throw new System.UriFormatException("LdapUrl: URL cannot be null");
+				throw new UriFormatException("LdapUrl: URL cannot be null");
 
 			
 
@@ -1320,7 +1320,7 @@ namespace Novell.Directory.Ldap
 
 				if (url[scanEnd - 1] != '>')
 
-					throw new System.UriFormatException("LdapUrl: URL bad enclosure");
+					throw new UriFormatException("LdapUrl: URL bad enclosure");
 
 				scanStart += 1;
 
@@ -1366,7 +1366,7 @@ namespace Novell.Directory.Ldap
 
 			{
 
-				throw new System.UriFormatException("LdapUrl: URL scheme is not ldap");
+				throw new UriFormatException("LdapUrl: URL scheme is not ldap");
 
 			}
 
@@ -1448,13 +1448,13 @@ namespace Novell.Directory.Ldap
 
 			{
 
-				hostEnd = url.IndexOf((System.Char) ']', scanStart + 1);
+				hostEnd = url.IndexOf((Char) ']', scanStart + 1);
 
 				if ((hostEnd >= hostPortEnd) || (hostEnd == - 1))
 
 				{
 
-					throw new System.UriFormatException("LdapUrl: \"]\" is missing on IPV6 host name");
+					throw new UriFormatException("LdapUrl: \"]\" is missing on IPV6 host name");
 
 				}
 
@@ -1470,7 +1470,7 @@ namespace Novell.Directory.Ldap
 
 					// port is specified
 
-					port = System.Int32.Parse(url.Substring(portStart + 1, (hostPortEnd) - (portStart + 1)));
+					port = Int32.Parse(url.Substring(portStart + 1, (hostPortEnd) - (portStart + 1)));
 
 				}
 
@@ -1508,7 +1508,7 @@ namespace Novell.Directory.Ldap
 
 					host = url.Substring(scanStart, (portStart) - (scanStart));
 
-					port = System.Int32.Parse(url.Substring(portStart + 1, (hostPortEnd) - (portStart + 1)));
+					port = Int32.Parse(url.Substring(portStart + 1, (hostPortEnd) - (portStart + 1)));
 
 				}
 
@@ -1530,7 +1530,7 @@ namespace Novell.Directory.Ldap
 
 			
 
-			int attrsStart = url.IndexOf((System.Char) '?', scanStart);
+			int attrsStart = url.IndexOf((Char) '?', scanStart);
 
 			if (attrsStart < 0)
 
@@ -1562,7 +1562,7 @@ namespace Novell.Directory.Ldap
 
 			// Parse out the attributes
 
-			int scopeStart = url.IndexOf((System.Char) '?', scanStart);
+			int scopeStart = url.IndexOf((Char) '?', scanStart);
 
 			if (scopeStart < 0)
 
@@ -1582,9 +1582,9 @@ namespace Novell.Directory.Ldap
 
 			// Parse out the scope
 
-			int filterStart = url.IndexOf((System.Char) '?', scanStart);
+			int filterStart = url.IndexOf((Char) '?', scanStart);
 
-			System.String scopeStr;
+			String scopeStr;
 
 			if (filterStart < 0)
 
@@ -1638,7 +1638,7 @@ namespace Novell.Directory.Ldap
 
 			{
 
-				throw new System.UriFormatException("LdapUrl: URL invalid scope");
+				throw new UriFormatException("LdapUrl: URL invalid scope");
 
 			}
 
@@ -1660,9 +1660,9 @@ namespace Novell.Directory.Ldap
 
 			
 
-			System.String filterStr;
+			String filterStr;
 
-			int extStart = url.IndexOf((System.Char) '?', scanStart);
+			int extStart = url.IndexOf((Char) '?', scanStart);
 
 			if (extStart < 0)
 
@@ -1704,11 +1704,11 @@ namespace Novell.Directory.Ldap
 
 			// Parse out the extensions
 
-			int end = url.IndexOf((System.Char) '?', scanStart);
+			int end = url.IndexOf((Char) '?', scanStart);
 
 			if (end > 0)
 
-				throw new System.UriFormatException("LdapUrl: URL has too many ? fields");
+				throw new UriFormatException("LdapUrl: URL has too many ? fields");
 
 			extensions = parseList(url, ',', scanStart, scanEnd);
 

@@ -81,7 +81,7 @@ namespace Novell.Directory.Ldap.Asn1
 		[CLSCompliantAttribute(false)]
 		public Asn1Boolean(Asn1Decoder dec, System.IO.Stream in_Renamed, int len):base(ID)
 		{
-			content = ((System.Boolean) dec.decodeBoolean(in_Renamed, len));
+			content = ((Boolean) dec.decodeBoolean(in_Renamed, len));
 			return ;
 		}
 		
@@ -114,7 +114,7 @@ namespace Novell.Directory.Ldap.Asn1
 		}
 		
 		/// <summary> Returns a String representation of this Asn1Boolean object.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString() + "BOOLEAN: " + content;
 		}

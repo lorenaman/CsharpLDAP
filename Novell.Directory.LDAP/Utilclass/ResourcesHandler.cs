@@ -52,14 +52,14 @@ namespace Novell.Directory.Ldap.Utilclass
 		/*
 		*  Initialized when the first result string is requested
 		*/
-		private static System.Resources.ResourceManager defaultResultCodes = null;
+		private static ResourceManager defaultResultCodes = null;
 		
 		/// <summary>  Initialized when the first Exception message string is requested</summary>
-		private static System.Resources.ResourceManager defaultMessages = null;
+		private static ResourceManager defaultMessages = null;
 		
 		
 		/// <summary> Package where resources are found</summary>
-		private static System.String pkg = "Novell.Directory.Ldap.Utilclass.";
+		private static String pkg = "Novell.Directory.Ldap.Utilclass.";
 		
 		/// <summary> The default Locale</summary>
 		private static System.Globalization.CultureInfo defaultLocale;
@@ -79,7 +79,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		/// <returns> the text for the message specified by the MessageKey or the Key
 		/// if it there is no message for that key.
 		/// </returns>
-		public static System.String getMessage(System.String messageOrKey, System.Object[] arguments)
+		public static String getMessage(String messageOrKey, object[] arguments)
 		{
 			return getMessage(messageOrKey, arguments, null);
 		}
@@ -104,7 +104,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		/// <returns> the text for the message specified by the MessageKey or the Key
 		/// if it there is no message for that key.
 		/// </returns>
-		public static System.String getMessage(System.String messageOrKey, System.Object[] arguments, System.Globalization.CultureInfo locale)
+		public static String getMessage(String messageOrKey, object[] arguments, System.Globalization.CultureInfo locale)
 		{
 			if (defaultMessages == null)
 			{
@@ -127,7 +127,7 @@ namespace Novell.Directory.Ldap.Utilclass
 			{
 				pattern = defaultMessages.GetString(messageOrKey, locale);
 			}
-			catch (System.Resources.MissingManifestResourceException mre)
+			catch (MissingManifestResourceException mre)
 			{
 				pattern = messageOrKey;
 			}
@@ -157,7 +157,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		/// </param>
 		/// <returns>        the String representing the result code.
 		/// </returns>
-		public static System.String getResultString(int code)
+		public static String getResultString(int code)
 		{
 			return getResultString(code, null);
 		}
@@ -175,7 +175,7 @@ namespace Novell.Directory.Ldap.Utilclass
 		/// </param>
 		/// <returns>        the String representing the result code.
 		/// </returns>
-		public static System.String getResultString(int code, System.Globalization.CultureInfo locale)
+		public static String getResultString(int code, System.Globalization.CultureInfo locale)
 		{
 			if (defaultResultCodes == null)
 			{

@@ -62,7 +62,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// <summary> Convenience constructor. This constructor will construct an
 		/// AttributeDescriptionList using the supplied array of Strings.
 		/// </summary>
-		public RfcAttributeDescriptionList(System.String[] attrs):base(attrs == null?0:attrs.Length)
+		public RfcAttributeDescriptionList(String[] attrs):base(attrs == null?0:attrs.Length)
 		{
 			
 			if (attrs != null)

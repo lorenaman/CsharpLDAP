@@ -46,7 +46,7 @@ namespace Novell.Directory.Ldap.Controls
 
 		}
 
-		virtual public System.String Cookie
+		virtual public String Cookie
 		{
 			get
 			{
@@ -57,10 +57,10 @@ namespace Novell.Directory.Ldap.Controls
 
 		/* The parsed fields are stored in these private variables */
 		private int m_size;
-		private System.String m_cookie;
+		private String m_cookie;
 
 		[CLSCompliantAttribute(false)]
-		public LdapPagedResultsResponse(System.String oid, bool critical, sbyte[] values):base(oid, critical, values)
+		public LdapPagedResultsResponse(String oid, bool critical, sbyte[] values):base(oid, critical, values)
 		{
 		
 			/* Create a decoder object */

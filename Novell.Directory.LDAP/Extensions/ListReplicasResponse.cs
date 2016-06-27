@@ -54,7 +54,7 @@ namespace Novell.Directory.Ldap.Extensions
 		/// </summary>
 		/// <returns> String value specifying the identity returned by the server
 		/// </returns>
-		virtual public System.String[] ReplicaList
+		virtual public String[] ReplicaList
 		{
 			get
 			{
@@ -64,7 +64,7 @@ namespace Novell.Directory.Ldap.Extensions
 		}
 		
 		// Identity returned by the server
-		private System.String[] replicaList;
+		private String[] replicaList;
 		
 		/// <summary> Constructs an object from the responseValue which contains the list
 		/// of replicas.
@@ -83,12 +83,12 @@ namespace Novell.Directory.Ldap.Extensions
 			
 			if (ResultCode != LdapException.SUCCESS)
 			{
-				replicaList = new System.String[0];
+				replicaList = new String[0];
 			}
 			else
 			{
 				// parse the contents of the reply
-				sbyte[] returnedValue = this.Value;
+				sbyte[] returnedValue = Value;
 				if (returnedValue == null)
 					throw new System.IO.IOException("No returned value");
 				
@@ -104,7 +104,7 @@ namespace Novell.Directory.Ldap.Extensions
 				
 				// How many replicas were returned
 				int len = returnedSequence.size();
-				replicaList = new System.String[len];
+				replicaList = new String[len];
 				
 				// Copy each one into our String array
 				for (int i = 0; i < len; i++)
@@ -116,7 +116,7 @@ namespace Novell.Directory.Ldap.Extensions
 					
 					// Convert to a string
 					replicaList[i] = asn1_nextReplica.stringValue();
-					if ((System.Object) replicaList[i] == null)
+					if ((object) replicaList[i] == null)
 						throw new System.IO.IOException("Decoding error");
 				}
 			}

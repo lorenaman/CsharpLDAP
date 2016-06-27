@@ -117,7 +117,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		}
 		
 		[CLSCompliantAttribute(false)]
-		public RfcBindRequest(int version, System.String dn, System.String mechanism, sbyte[] credentials):this(new Asn1Integer(version), new RfcLdapDN(dn), new RfcAuthenticationChoice(mechanism, credentials))
+		public RfcBindRequest(int version, String dn, String mechanism, sbyte[] credentials):this(new Asn1Integer(version), new RfcLdapDN(dn), new RfcAuthenticationChoice(mechanism, credentials))
 		{
 		}
 		
@@ -125,10 +125,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// an existing request.
 		/// </summary>
 		/* package */
-		internal RfcBindRequest(Asn1Object[] origRequest, System.String base_Renamed):base(origRequest, origRequest.Length)
+		internal RfcBindRequest(Asn1Object[] origRequest, String base_Renamed):base(origRequest, origRequest.Length)
 		{
 			// Replace the dn if specified, otherwise keep original base
-			if ((System.Object) base_Renamed != null)
+			if ((object) base_Renamed != null)
 			{
 				set_Renamed(1, new RfcLdapDN(base_Renamed));
 			}
@@ -154,11 +154,11 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return ID;
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
 			return new RfcBindRequest(toArray(), base_Renamed);
 		}
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
 			return ((RfcLdapDN) get_Renamed(1)).stringValue();
 		}

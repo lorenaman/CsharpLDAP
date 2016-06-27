@@ -101,7 +101,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <returns>  the previous DN of the entry if the entry was renamed (ie. if the
 		/// change type is LdapersistSearchControl.MODDN.
 		/// </returns>
-		virtual public System.String PreviousDN
+		virtual public String PreviousDN
 		{
 			get
 			{
@@ -110,7 +110,7 @@ namespace Novell.Directory.Ldap.Controls
 			
 		}
 		private int m_changeType;
-		private System.String m_previousDN;
+		private String m_previousDN;
 		private bool m_hasChangeNumber;
 		private int m_changeNumber;
 		
@@ -142,7 +142,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <param name="value">    The control-specific data.
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public LdapEntryChangeControl(System.String oid, bool critical, sbyte[] value_Renamed):base(oid, critical, value_Renamed)
+		public LdapEntryChangeControl(String oid, bool critical, sbyte[] value_Renamed):base(oid, critical, value_Renamed)
 		{
 			
 			// Create a decoder objet
@@ -198,7 +198,7 @@ namespace Novell.Directory.Ldap.Controls
 		}
 		
 		/// <summary>  Returns a string representation of the control for debugging.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString();
 		}

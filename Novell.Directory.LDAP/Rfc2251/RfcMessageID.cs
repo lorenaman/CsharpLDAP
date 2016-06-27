@@ -63,14 +63,14 @@ namespace Novell.Directory.Ldap.Rfc2251
 			{
 				lock (lock_Renamed)
 				{
-					return (messageID < System.Int32.MaxValue)?++messageID:(messageID = 1);
+					return (messageID < Int32.MaxValue)?++messageID:(messageID = 1);
 				}
 			}
 			
 		}
 		
 		private static int messageID = 0;
-		private static System.Object lock_Renamed;
+		private static object lock_Renamed;
 		
 		/// <summary> Creates a MessageID with an auto incremented Asn1Integer value.
 		/// 
@@ -89,7 +89,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		}
 		static RfcMessageID()
 		{
-			lock_Renamed = new System.Object();
+			lock_Renamed = new object();
 		}
 	}
 }

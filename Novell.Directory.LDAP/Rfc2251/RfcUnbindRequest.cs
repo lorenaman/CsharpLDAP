@@ -70,12 +70,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return new Asn1Identifier(Asn1Identifier.APPLICATION, false, LdapMessage.UNBIND_REQUEST);
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
-			throw new LdapException(ExceptionMessages.NO_DUP_REQUEST, new System.Object[]{"unbind"}, LdapException.Ldap_NOT_SUPPORTED, (System.String) null);
+			throw new LdapException(ExceptionMessages.NO_DUP_REQUEST, new object[]{"unbind"}, LdapException.Ldap_NOT_SUPPORTED, (String) null);
 		}
 		
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
 			return null;
 		}

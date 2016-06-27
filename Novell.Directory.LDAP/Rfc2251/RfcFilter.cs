@@ -115,7 +115,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		//*************************************************************************
 		
 		/// <summary> Constructs a Filter object by parsing an RFC 2254 Search Filter String.</summary>
-		public RfcFilter(System.String filter):base(null)
+		public RfcFilter(String filter):base(null)
 		{
 			ChoiceValue = parse(filter);
 			return ;
@@ -134,15 +134,15 @@ namespace Novell.Directory.Ldap.Rfc2251
 		//*************************************************************************
 		
 		/// <summary> Parses an RFC 2251 filter string into an ASN.1 Ldap Filter object.</summary>
-		private Asn1Tagged parse(System.String filterExpr)
+		private Asn1Tagged parse(String filterExpr)
 		{
 
-			if ((System.Object) filterExpr == null || filterExpr.Equals(""))
+			if ((object) filterExpr == null || filterExpr.Equals(""))
 			{
 				filterExpr = new System.Text.StringBuilder("(objectclass=*)").ToString();
 			}
 			int idx;
-			if ((idx = filterExpr.IndexOf((System.Char) '\\')) != - 1)
+			if ((idx = filterExpr.IndexOf((Char) '\\')) != - 1)
 			{
 				System.Text.StringBuilder sb = new System.Text.StringBuilder(filterExpr);
 				int i = idx;
@@ -158,7 +158,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 						{
 							// Ldap v2 filter, convert them into hex chars
 							sb.Remove(i, i + 1 - i);
-							sb.Insert(i, System.Convert.ToString((int) c, 16));
+							sb.Insert(i, Convert.ToString((int) c, 16));
 							i += 2;
 						}
 					}
@@ -248,7 +248,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				
 				default: 
 					int filterType = ft.FilterType;
-					System.String value_Renamed = ft.Value;
+					String value_Renamed = ft.Value;
 					
 					switch (filterType)
 					{
@@ -265,7 +265,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 								// present
 								tag = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, false, PRESENT), new RfcAttributeDescription(ft.Attr), false);
 							}
-							else if (value_Renamed.IndexOf((System.Char) '*') != - 1)
+							else if (value_Renamed.IndexOf((Char) '*') != - 1)
 							{
 								// substrings parse:
 								//    [initial], *any*, [final] into an Asn1SequenceOf
@@ -275,11 +275,11 @@ namespace Novell.Directory.Ldap.Rfc2251
 								int tokCnt = sub.Count;
 								int cnt = 0;
 								
-								System.String lastTok = new System.Text.StringBuilder("").ToString();
+								String lastTok = new System.Text.StringBuilder("").ToString();
 								
 								while (sub.HasMoreTokens())
 								{
-									System.String subTok = sub.NextToken();
+									String subTok = sub.NextToken();
 									cnt++;
 									if (subTok.Equals("*"))
 									{
@@ -323,7 +323,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 							break;
 						
 						case EXTENSIBLE_MATCH: 
-							System.String type = null, matchingRule = null;
+							String type = null, matchingRule = null;
 							bool dnAttributes = false;
 //							SupportClass.Tokenizer st = new StringTokenizer(ft.Attr, ":", true);
 							SupportClass.Tokenizer st = new SupportClass.Tokenizer(ft.Attr, ":");//, true);
@@ -331,7 +331,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 							bool first = true;
 							while (st.HasMoreTokens())
 							{
-								System.String s = st.NextToken().Trim();
+								String s = st.NextToken().Trim();
 								if (first && !s.Equals(":"))
 								{
 									type = s;
@@ -348,7 +348,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 								first = false;
 							}
 							
-							tag = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, EXTENSIBLE_MATCH), new RfcMatchingRuleAssertion(((System.Object) matchingRule == null)?null:new RfcMatchingRuleId(matchingRule), ((System.Object) type == null)?null:new RfcAttributeDescription(type), new RfcAssertionValue(unescapeString(value_Renamed)), (dnAttributes == false)?null:new Asn1Boolean(true)), false);
+							tag = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, EXTENSIBLE_MATCH), new RfcMatchingRuleAssertion(((object) matchingRule == null)?null:new RfcMatchingRuleId(matchingRule), ((object) type == null)?null:new RfcAttributeDescription(type), new RfcAssertionValue(unescapeString(value_Renamed)), (dnAttributes == false)?null:new Asn1Boolean(true)), false);
 							break;
 						}
 					break;
@@ -391,7 +391,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// </param>
 		/// <returns> octet-string encoding of the specified string.
 		/// </returns>
-		private sbyte[] unescapeString(System.String string_Renamed)
+		private sbyte[] unescapeString(String string_Renamed)
 		{
 			// give octets enough space to grow
 			sbyte[] octets = new sbyte[string_Renamed.Length * 3];
@@ -418,7 +418,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 					if ((ival = hex2int(ch)) < 0)
 					{
 						// Invalid escape value(not a hex character)
-						throw new LdapLocalException(ExceptionMessages.INVALID_ESCAPE, new System.Object[]{ch}, LdapException.FILTER_ERROR);
+						throw new LdapLocalException(ExceptionMessages.INVALID_ESCAPE, new object[]{ch}, LdapException.FILTER_ERROR);
 					}
 					else
 					{
@@ -458,12 +458,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 								// char > 0x7f, could be encoded in 2 or 3 bytes
 								ca[0] = ch;
 								System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
-								byte[] ibytes = encoder.GetBytes(new System.String(ca));
+								byte[] ibytes = encoder.GetBytes(new String(ca));
 								utf8Bytes=SupportClass.ToSByteArray(ibytes);
 
 //								utf8Bytes = new System.String(ca).getBytes("UTF-8");
 								// copy utf8 encoded character into octets
-								Array.Copy((System.Array) (utf8Bytes), 0, (System.Array) octets, iOctets, utf8Bytes.Length);
+								Array.Copy((Array) (utf8Bytes), 0, (Array) octets, iOctets, utf8Bytes.Length);
 								iOctets = iOctets + utf8Bytes.Length;
 							}
 							escape = false;
@@ -471,10 +471,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 						else
 						{
 							// found invalid character
-							System.String escString = "";
+							String escString = "";
 							ca[0] = ch;
 							System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
-							byte[] ibytes = encoder.GetBytes(new System.String(ca));
+							byte[] ibytes = encoder.GetBytes(new String(ca));
 							utf8Bytes=SupportClass.ToSByteArray(ibytes);
 
 //							utf8Bytes = new System.String(ca).getBytes("UTF-8");
@@ -483,19 +483,19 @@ namespace Novell.Directory.Ldap.Rfc2251
 								sbyte u = utf8Bytes[i];
 								if ((u >= 0) && (u < 0x10))
 								{
-									escString = escString + "\\0" + System.Convert.ToString(u & 0xff, 16);
+									escString = escString + "\\0" + Convert.ToString(u & 0xff, 16);
 								}
 								else
 								{
-									escString = escString + "\\" + System.Convert.ToString(u & 0xff, 16);
+									escString = escString + "\\" + Convert.ToString(u & 0xff, 16);
 								}
 							}
-							throw new LdapLocalException(ExceptionMessages.INVALID_CHAR_IN_FILTER, new System.Object[]{ch, escString}, LdapException.FILTER_ERROR);
+							throw new LdapLocalException(ExceptionMessages.INVALID_CHAR_IN_FILTER, new object[]{ch, escString}, LdapException.FILTER_ERROR);
 						}
 					}
 					catch (System.IO.IOException ue)
 					{
-						throw new System.Exception("UTF-8 String encoding not supported by JVM");
+						throw new Exception("UTF-8 String encoding not supported by JVM");
 					}
 				}
 			}
@@ -508,7 +508,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 			
 			sbyte[] toReturn = new sbyte[iOctets];
 //			Array.Copy((System.Array)SupportClass.ToByteArray(octets), 0, (System.Array)SupportClass.ToByteArray(toReturn), 0, iOctets);
-			Array.Copy((System.Array)octets, 0, (System.Array)toReturn, 0, iOctets);
+			Array.Copy((Array)octets, 0, (Array)toReturn, 0, iOctets);
 
 			octets = null;
 			return toReturn;
@@ -581,7 +581,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// @throws Novell.Directory.Ldap.LdapLocalException
 		/// Occurs when this component is created out of sequence.
 		/// </summary>
-		public virtual void  startSubstrings(System.String attrName)
+		public virtual void  startSubstrings(String attrName)
 		{
 			finalFound = false;
 			Asn1SequenceOf seq = new Asn1SequenceOf(5);
@@ -633,7 +633,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				}
 				substringSeq.add(new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, false, type), new RfcLdapString(value_Renamed), false));
 			}
-			catch (System.InvalidCastException e)
+			catch (InvalidCastException e)
 			{
 				throw new LdapLocalException("A call to addSubstring occured " + "without calling startSubstring", LdapException.FILTER_ERROR);
 			}
@@ -656,7 +656,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 					throw new LdapLocalException("Empty substring filter", LdapException.FILTER_ERROR);
 				}
 			}
-			catch (System.InvalidCastException e)
+			catch (InvalidCastException e)
 			{
 				throw new LdapLocalException("Missmatched ending of substrings", LdapException.FILTER_ERROR);
 			}
@@ -677,7 +677,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// Occurs when the filter type is not a valid attribute assertion.
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public virtual void  addAttributeValueAssertion(int rfcType, System.String attrName, sbyte[] value_Renamed)
+		public virtual void  addAttributeValueAssertion(int rfcType, String attrName, sbyte[] value_Renamed)
 		{
 			if (filterStack != null && !(filterStack.Count == 0) && filterStack.Peek() is Asn1SequenceOf)
 			{
@@ -700,7 +700,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// @throws LdapLocalException
 		/// Occurs if addPresent is called out of sequence.
 		/// </param>
-		public virtual void  addPresent(System.String attrName)
+		public virtual void  addPresent(String attrName)
 		{
 			Asn1Object current = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, false, PRESENT), new RfcAttributeDescription(attrName), false);
 			addObject(current);
@@ -722,9 +722,9 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// Occurs when addExtensibleMatch is called out of sequence.
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public virtual void  addExtensibleMatch(System.String matchingRule, System.String attrName, sbyte[] value_Renamed, bool useDNMatching)
+		public virtual void  addExtensibleMatch(String matchingRule, String attrName, sbyte[] value_Renamed, bool useDNMatching)
 		{
-			Asn1Object current = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, EXTENSIBLE_MATCH), new RfcMatchingRuleAssertion(((System.Object) matchingRule == null)?null:new RfcMatchingRuleId(matchingRule), ((System.Object) attrName == null)?null:new RfcAttributeDescription(attrName), new RfcAssertionValue(value_Renamed), (useDNMatching == false)?null:new Asn1Boolean(true)), false);
+			Asn1Object current = new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, EXTENSIBLE_MATCH), new RfcMatchingRuleAssertion(((object) matchingRule == null)?null:new RfcMatchingRuleId(matchingRule), ((object) attrName == null)?null:new RfcAttributeDescription(attrName), new RfcAssertionValue(value_Renamed), (useDNMatching == false)?null:new Asn1Boolean(true)), false);
 			addObject(current);
 			return ;
 		}
@@ -792,14 +792,14 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// </returns>
 		public virtual System.Collections.IEnumerator getFilterIterator()
 		{
-			return new FilterIterator(this, (Asn1Tagged) this.choiceValue());
+			return new FilterIterator(this, (Asn1Tagged) choiceValue());
 		}
 		
 		/// <summary> Creates and returns a String representation of this filter.</summary>
-		public virtual System.String filterToString()
+		public virtual String filterToString()
 		{
 			System.Text.StringBuilder filter = new System.Text.StringBuilder();
-			stringFilter(this.getFilterIterator(), filter);
+			stringFilter(getFilterIterator(), filter);
 			return filter.ToString();
 		}
 		
@@ -818,10 +818,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 			filter.Append('(');
 			while (itr.MoveNext())
 			{
-				System.Object filterpart = itr.Current;
-				if (filterpart is System.Int32)
+				object filterpart = itr.Current;
+				if (filterpart is Int32)
 				{
-					op = ((System.Int32) filterpart);
+					op = ((Int32) filterpart);
 					switch (op)
 					{
 						
@@ -838,7 +838,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 							break;
 						
 						case EQUALITY_MATCH:  {
-								filter.Append((System.String) itr.Current);
+								filter.Append((String) itr.Current);
 								filter.Append('=');
 								sbyte[] value_Renamed = (sbyte[]) itr.Current;
 								filter.Append(byteString(value_Renamed));
@@ -846,7 +846,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 							}
 						
 						case GREATER_OR_EQUAL:  {
-								filter.Append((System.String) itr.Current);
+								filter.Append((String) itr.Current);
 								filter.Append(">=");
 								sbyte[] value_Renamed = (sbyte[]) itr.Current;
 								filter.Append(byteString(value_Renamed));
@@ -854,7 +854,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 							}
 						
 						case LESS_OR_EQUAL:  {
-								filter.Append((System.String) itr.Current);
+								filter.Append((String) itr.Current);
 								filter.Append("<=");
 								sbyte[] value_Renamed = (sbyte[]) itr.Current;
 								filter.Append(byteString(value_Renamed));
@@ -862,39 +862,39 @@ namespace Novell.Directory.Ldap.Rfc2251
 							}
 						
 						case PRESENT: 
-							filter.Append((System.String) itr.Current);
+							filter.Append((String) itr.Current);
 							filter.Append("=*");
 							break;
 						
 						case APPROX_MATCH: 
-							filter.Append((System.String) itr.Current);
+							filter.Append((String) itr.Current);
 							filter.Append("~=");
 							sbyte[] value_Renamed2 = (sbyte[]) itr.Current;
 							filter.Append(byteString(value_Renamed2));
 							break;
 						
 						case EXTENSIBLE_MATCH: 
-							System.String oid = (System.String) itr.Current;
+							String oid = (String) itr.Current;
 							
-							filter.Append((System.String) itr.Current);
+							filter.Append((String) itr.Current);
 							filter.Append(':');
 							filter.Append(oid);
 							filter.Append(":=");
-							filter.Append((System.String) itr.Current);
+							filter.Append((String) itr.Current);
 							break;
 						
 						case SUBSTRINGS:  {
-								filter.Append((System.String) itr.Current);
+								filter.Append((String) itr.Current);
 								filter.Append('=');
 								bool noStarLast = false;
 								while (itr.MoveNext())
 								{
-									op = ((System.Int32) itr.Current);
+									op = ((Int32) itr.Current);
 									switch (op)
 									{
 										
 										case INITIAL: 
-											filter.Append((System.String) itr.Current);
+											filter.Append((String) itr.Current);
 											filter.Append('*');
 											noStarLast = false;
 											break;
@@ -902,7 +902,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 										case ANY: 
 											if (noStarLast)
 												filter.Append('*');
-											filter.Append((System.String) itr.Current);
+											filter.Append((String) itr.Current);
 											filter.Append('*');
 											noStarLast = false;
 											break;
@@ -910,7 +910,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 										case FINAL: 
 											if (noStarLast)
 												filter.Append('*');
-											filter.Append((System.String) itr.Current);
+											filter.Append((String) itr.Current);
 											break;
 										}
 								}
@@ -929,10 +929,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// <summary> Convert a UTF8 encoded string, or binary data, into a String encoded for
 		/// a string filter.
 		/// </summary>
-		private static System.String byteString(sbyte[] value_Renamed)
+		private static String byteString(sbyte[] value_Renamed)
 		{
-			System.String toReturn = null;
-			if (Novell.Directory.Ldap.Utilclass.Base64.isValidUTF8(value_Renamed, true))
+			String toReturn = null;
+			if (Base64.isValidUTF8(value_Renamed, true))
 			{
 				try
 				{
@@ -944,7 +944,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				}
 				catch (System.IO.IOException e)
 				{
-					throw new System.Exception("Default JVM does not support UTF-8 encoding" + e);
+					throw new Exception("Default JVM does not support UTF-8 encoding" + e);
 				}
 			}
 			else
@@ -958,12 +958,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 					{
 						//one character hex string
 						binary.Append("\\0");
-						binary.Append(System.Convert.ToString(value_Renamed[i], 16));
+						binary.Append(Convert.ToString(value_Renamed[i], 16));
 					}
 					else
 					{
 						//negative (eight character) hex string
-						binary.Append("\\" + System.Convert.ToString(value_Renamed[i], 16).Substring(6));
+						binary.Append("\\" + Convert.ToString(value_Renamed[i], 16).Substring(6));
 					}
 				}
 				toReturn = binary.ToString();
@@ -990,11 +990,11 @@ namespace Novell.Directory.Ldap.Rfc2251
 			/// The first object returned is an Integer identifying
 			/// its type.
 			/// </summary>
-			public virtual System.Object Current
+			public virtual object Current
 			{
 				get
 				{
-					System.Object toReturn = null;
+					object toReturn = null;
 					if (!tagReturned)
 					{
 						tagReturned = true;
@@ -1084,14 +1084,14 @@ namespace Novell.Directory.Ldap.Rfc2251
 							toReturn = new FilterIterator(enclosingInstance,(Asn1Tagged) set_Renamed.get_Renamed(index++));
 							if (index >= set_Renamed.size())
 							{
-								this.hasMore = false;
+								hasMore = false;
 							}
 						}
 						else if (asn1 is Asn1Tagged)
 						{
 							//NOT nested component.
 							toReturn = new FilterIterator(enclosingInstance,(Asn1Tagged) asn1);
-							this.hasMore = false;
+							hasMore = false;
 						}
 					}
 					return toReturn;
@@ -1125,7 +1125,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 			
 			public void  remove()
 			{
-				throw new System.NotSupportedException("Remove is not supported on a filter iterator");
+				throw new NotSupportedException("Remove is not supported on a filter iterator");
 			}
 		}
 		
@@ -1162,17 +1162,17 @@ namespace Novell.Directory.Ldap.Rfc2251
 					if (testChar == '&')
 					{
 						offset++;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.AND;
+						ret = AND;
 					}
 					else if (testChar == '|')
 					{
 						offset++;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.OR;
+						ret = OR;
 					}
 					else if (testChar == '!')
 					{
 						offset++;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.NOT;
+						ret = NOT;
 					}
 					else
 					{
@@ -1188,10 +1188,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 						
 						
 						// get first component of 'item' (attr or :dn or :matchingrule)
-						System.String delims = "=~<>()";
+						String delims = "=~<>()";
 						System.Text.StringBuilder sb = new System.Text.StringBuilder();
 						
-						while (delims.IndexOf((System.Char) filter[offset]) == - 1 && filter.Substring(offset).StartsWith(":=") == false)
+						while (delims.IndexOf((Char) filter[offset]) == - 1 && filter.Substring(offset).StartsWith(":=") == false)
 						{
 							sb.Append(filter[offset++]);
 						}
@@ -1207,7 +1207,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 						for (index = 0; index < attr.Length; index++)
 						{
 							char atIndex = attr[index];
-							if (!(System.Char.IsLetterOrDigit(atIndex) || atIndex == '-' || atIndex == '.' || atIndex == ';' || atIndex == ':'))
+							if (!(Char.IsLetterOrDigit(atIndex) || atIndex == '-' || atIndex == '.' || atIndex == ';' || atIndex == ':'))
 							{
 								
 								if (atIndex == '\\')
@@ -1216,13 +1216,13 @@ namespace Novell.Directory.Ldap.Rfc2251
 								}
 								else
 								{
-									throw new LdapLocalException(ExceptionMessages.INVALID_CHAR_IN_DESCR, new System.Object[]{atIndex}, LdapException.FILTER_ERROR);
+									throw new LdapLocalException(ExceptionMessages.INVALID_CHAR_IN_DESCR, new object[]{atIndex}, LdapException.FILTER_ERROR);
 								}
 							}
 						}
 						
 						// is there an option specified in the filter ?
-						index = attr.IndexOf((System.Char) ';');
+						index = attr.IndexOf((Char) ';');
 						if (index != - 1 && index == attr.Length - 1)
 						{
 							throw new LdapLocalException(ExceptionMessages.NO_OPTION, LdapException.FILTER_ERROR);
@@ -1249,27 +1249,27 @@ namespace Novell.Directory.Ldap.Rfc2251
 					if (filter.Substring(offset).StartsWith(">="))
 					{
 						offset += 2;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.GREATER_OR_EQUAL;
+						ret = GREATER_OR_EQUAL;
 					}
 					else if (filter.Substring(offset).StartsWith("<="))
 					{
 						offset += 2;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.LESS_OR_EQUAL;
+						ret = LESS_OR_EQUAL;
 					}
 					else if (filter.Substring(offset).StartsWith("~="))
 					{
 						offset += 2;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.APPROX_MATCH;
+						ret = APPROX_MATCH;
 					}
 					else if (filter.Substring(offset).StartsWith(":="))
 					{
 						offset += 2;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.EXTENSIBLE_MATCH;
+						ret = EXTENSIBLE_MATCH;
 					}
 					else if (filter[offset] == '=')
 					{
 						offset++;
-						ret = Novell.Directory.Ldap.Rfc2251.RfcFilter.EQUALITY_MATCH;
+						ret = EQUALITY_MATCH;
 					}
 					else
 					{
@@ -1281,7 +1281,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				
 			}
 			/// <summary> Reads a value from a filter string.</summary>
-			virtual public System.String Value
+			virtual public String Value
 			{
 				get
 				{
@@ -1291,12 +1291,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 						throw new LdapLocalException(ExceptionMessages.UNEXPECTED_END, LdapException.FILTER_ERROR);
 					}
 					
-					int idx = filter.IndexOf((System.Char) ')', offset);
+					int idx = filter.IndexOf((Char) ')', offset);
 					if (idx == - 1)
 					{
 						idx = filterLength;
 					}
-					System.String ret = filter.Substring(offset, (idx) - (offset));
+					String ret = filter.Substring(offset, (idx) - (offset));
 					offset = idx;
 					
 					return ret;
@@ -1304,7 +1304,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				
 			}
 			/// <summary> Returns the current attribute identifier.</summary>
-			virtual public System.String Attr
+			virtual public String Attr
 			{
 				get
 				{
@@ -1325,8 +1325,8 @@ namespace Novell.Directory.Ldap.Rfc2251
 			// Private variables
 			//*************************************************************************
 			
-			private System.String filter; // The filter string to parse
-			private System.String attr; // Name of the attribute just parsed
+			private String filter; // The filter string to parse
+			private String attr; // Name of the attribute just parsed
 			private int offset; // Offset pointer into the filter string
 			private int filterLength; // Length of the filter string to parse
 			
@@ -1335,12 +1335,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 			//*************************************************************************
 			
 			/// <summary> Constructs a FilterTokenizer for a filter.</summary>
-			public FilterTokenizer(RfcFilter enclosingInstance, System.String filter)
+			public FilterTokenizer(RfcFilter enclosingInstance, String filter)
 			{
 				InitBlock(enclosingInstance);
 				this.filter = filter;
-				this.offset = 0;
-				this.filterLength = filter.Length;
+				offset = 0;
+				filterLength = filter.Length;
 				return ;
 			}
 			
@@ -1361,7 +1361,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				if (filter[offset++] != '(')
 				{
 					//"Missing left paren",
-					throw new LdapLocalException(ExceptionMessages.EXPECTING_LEFT_PAREN, new System.Object[]{filter[offset -= 1]}, LdapException.FILTER_ERROR);
+					throw new LdapLocalException(ExceptionMessages.EXPECTING_LEFT_PAREN, new object[]{filter[offset -= 1]}, LdapException.FILTER_ERROR);
 				}
 				return ;
 			}
@@ -1379,7 +1379,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				if (filter[offset++] != ')')
 				{
 					//"Missing right paren",
-					throw new LdapLocalException(ExceptionMessages.EXPECTING_RIGHT_PAREN, new System.Object[]{filter[offset - 1]}, LdapException.FILTER_ERROR);
+					throw new LdapLocalException(ExceptionMessages.EXPECTING_RIGHT_PAREN, new object[]{filter[offset - 1]}, LdapException.FILTER_ERROR);
 				}
 				return ;
 			}

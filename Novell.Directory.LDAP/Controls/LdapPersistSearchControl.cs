@@ -146,10 +146,10 @@ namespace Novell.Directory.Ldap.Controls
 		private Asn1Sequence m_sequence;
 		
 		/// <summary> The requestOID of the persistent search control</summary>
-		private static System.String requestOID = "2.16.840.1.113730.3.4.3";
+		private static String requestOID = "2.16.840.1.113730.3.4.3";
 		
 		/// <summary> The responseOID of the psersistent search - entry change control</summary>
-		private static System.String responseOID = "2.16.840.1.113730.3.4.7";
+		private static String responseOID = "2.16.840.1.113730.3.4.7";
 		
 		/// <summary>  Change type specifying that you want to track additions of new entries
 		/// to the directory.
@@ -235,7 +235,7 @@ namespace Novell.Directory.Ldap.Controls
 			return ;
 		}
 		
-		public override System.String ToString()
+		public override String ToString()
 		{
 			sbyte[] data = m_sequence.getEncoding(s_encoder);
 			
@@ -270,9 +270,9 @@ namespace Novell.Directory.Ldap.Controls
 				try
 				{
 					// Register LdapEntryChangeControl
-					LdapControl.register(responseOID, System.Type.GetType("Novell.Directory.Ldap.Controls.LdapEntryChangeControl"));
+					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapEntryChangeControl"));
 				}
-				catch (System.Exception e)
+				catch (Exception e)
 				{
 				}
 			}

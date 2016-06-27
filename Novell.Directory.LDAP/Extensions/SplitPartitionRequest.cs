@@ -72,14 +72,14 @@ namespace Novell.Directory.Ldap.Extensions
 		/// <exception> LdapException A general exception which includes an error message
 		/// and an Ldap error code.
 		/// </exception>
-		public SplitPartitionRequest(System.String dn, int flags):base(ReplicationConstants.CREATE_NAMING_CONTEXT_REQ, null)
+		public SplitPartitionRequest(String dn, int flags):base(ReplicationConstants.CREATE_NAMING_CONTEXT_REQ, null)
 		{
 			
 			try
 			{
 				
-				if ((System.Object) dn == null)
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if ((object) dn == null)
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
 				LBEREncoder encoder = new LBEREncoder();
@@ -94,7 +94,7 @@ namespace Novell.Directory.Ldap.Extensions
 			}
 			catch (System.IO.IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

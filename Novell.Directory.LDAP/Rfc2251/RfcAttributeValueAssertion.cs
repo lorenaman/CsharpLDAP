@@ -50,7 +50,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// </summary>
 		/// <returns> the attribute description
 		/// </returns>
-		virtual public System.String AttributeDescription
+		virtual public String AttributeDescription
 		{
 			get
 			{

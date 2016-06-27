@@ -112,7 +112,7 @@ namespace Novell.Directory.Ldap.Extensions
 					break;
 				
 				default: 
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 			}
 		}

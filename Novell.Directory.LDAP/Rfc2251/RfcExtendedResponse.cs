@@ -94,7 +94,7 @@ namespace Novell.Directory.Ldap.Rfc2251
                     {
                         case RfcLdapResult.REFERRAL:
                             sbyte[] content = ((Asn1OctetString)obj.taggedValue()).byteValue();
-                            System.IO.MemoryStream bais = new System.IO.MemoryStream(SupportClass.ToByteArray(content));
+                            MemoryStream bais = new MemoryStream(SupportClass.ToByteArray(content));
                             set_Renamed(i, new RfcReferral(dec, bais, content.Length));
                             referralIndex = i;
                             break;

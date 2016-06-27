@@ -42,17 +42,17 @@ namespace Novell.Directory.Ldap.Asn1
 	public abstract class Asn1Numeric:Asn1Object
 	{
 		
-		private System.Int64 content;
+		private Int64 content;
 		
 		internal Asn1Numeric(Asn1Identifier id, int value_Renamed):base(id)
 		{
-			content = (System.Int64) value_Renamed;
+			content = (Int64) value_Renamed;
 			return ;
 		}
 		
 		internal Asn1Numeric(Asn1Identifier id, long value_Renamed):base(id)
 		{
-			content = (System.Int64) value_Renamed;
+			content = (Int64) value_Renamed;
 			return ;
 		}
 		

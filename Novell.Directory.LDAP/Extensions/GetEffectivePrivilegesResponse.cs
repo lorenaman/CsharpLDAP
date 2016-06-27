@@ -87,7 +87,7 @@ namespace Novell.Directory.Ldap.Extensions
 			if (ResultCode == LdapException.SUCCESS)
 			{
 				// parse the contents of the reply
-				sbyte[] returnedValue = this.Value;
+				sbyte[] returnedValue = Value;
 				if (returnedValue == null)
 					throw new System.IO.IOException("No returned value");
 				

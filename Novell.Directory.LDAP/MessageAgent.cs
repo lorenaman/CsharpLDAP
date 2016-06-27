@@ -110,7 +110,7 @@ namespace Novell.Directory.Ldap
         private int indexLastRead = 0;
         private static object nameLock; // protect agentNum
         private static int agentNum = 0; // Debug, agent number
-        private string name; // String name for debug
+        private string name; // string name for debug
 
         /* package */
         internal MessageAgent()

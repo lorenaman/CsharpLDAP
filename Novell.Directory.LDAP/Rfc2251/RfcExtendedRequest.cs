@@ -107,12 +107,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return new Asn1Identifier(Asn1Identifier.APPLICATION, true, LdapMessage.EXTENDED_REQUEST);
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
 			// Just dup the original request
 			return new RfcExtendedRequest(toArray());
 		}
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
 			return null;
 		}

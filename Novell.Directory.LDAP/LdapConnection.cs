@@ -149,7 +149,7 @@ namespace Novell.Directory.Ldap
         /// the connection is not present or not authenticated.
         /// 
         /// </returns>
-        virtual public System.Collections.IDictionary SaslBindProperties
+        virtual public IDictionary SaslBindProperties
         {
             get
             {
@@ -212,7 +212,7 @@ namespace Novell.Directory.Ldap
         {
             get
             {
-                return (LdapConstraints)(this.defSearchCons).Clone();
+                return (LdapConstraints)(defSearchCons).Clone();
             }
             set
             {
@@ -291,7 +291,7 @@ namespace Novell.Directory.Ldap
         {
             get
             {
-                return (LdapSearchConstraints)this.defSearchCons.Clone();
+                return (LdapSearchConstraints)defSearchCons.Clone();
             }
         }
 
@@ -554,12 +554,12 @@ namespace Novell.Directory.Ldap
         {
             add
             {
-                this.conn.OnCertificateValidation += value;
+                conn.OnCertificateValidation += value;
             }
 
             remove
             {
-                this.conn.OnCertificateValidation -= value;
+                conn.OnCertificateValidation -= value;
             }
         }
 
@@ -621,7 +621,7 @@ namespace Novell.Directory.Ldap
             object newObj;
             try
             {
-                newObj = base.MemberwiseClone();
+                newObj = MemberwiseClone();
                 newClone = (LdapConnection)newObj;
             }
             catch (Exception ce)
@@ -765,7 +765,7 @@ namespace Novell.Directory.Ldap
 
         public virtual void startTLS()
         {
-            LdapMessage startTLS = MakeExtendedOperation(new LdapExtendedOperation(LdapConnection.START_TLS_OID, null), null);
+            LdapMessage startTLS = MakeExtendedOperation(new LdapExtendedOperation(START_TLS_OID, null), null);
 
             int tlsID = startTLS.MessageID;
 
@@ -834,7 +834,7 @@ namespace Novell.Directory.Ldap
 
                 /* Now that the TLS socket is closed, reset everything.  This next
                 line is temporary until JSSE is fixed to properly handle TLS stop */
-                this.Connect(this.Host, this.Port);
+                Connect(Host, Port);
             }
         }
 
@@ -2068,7 +2068,7 @@ namespace Novell.Directory.Ldap
             if ((object)op.getID() == null)
             {
                 // Invalid extended operation parameter, no OID specified
-                throw new System.ArgumentException(ExceptionMessages.OP_PARAM_ERROR);
+                throw new ArgumentException(ExceptionMessages.OP_PARAM_ERROR);
             }
 
             return new LdapExtendedRequest(op, cons.getControls());
@@ -3230,7 +3230,7 @@ namespace Novell.Directory.Ldap
         private ReferralInfo getReferralConnection(string[] referrals)
         {
             ReferralInfo refInfo = null;
-            System.Exception ex = null;
+            Exception ex = null;
             LdapConnection rconn = null;
             LdapReferralHandler rh = defSearchCons.getReferralHandler();
             int i = 0;
@@ -3717,7 +3717,7 @@ namespace Novell.Directory.Ldap
 
             /* Read the entries subschemaSubentry attribute. Throws an exception if
 			* no entries are returned. */
-            LdapEntry ent = this.Read(dn, attrSubSchema);
+            LdapEntry ent = Read(dn, attrSubSchema);
 
             LdapAttribute attr = ent.getAttribute(attrSubSchema[0]);
             string[] values = attr.StringValueArray;

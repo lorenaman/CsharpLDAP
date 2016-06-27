@@ -55,9 +55,9 @@ namespace Novell.Directory.Ldap.Controls
 	public class LdapPagedResultsControl:LdapControl
 	{
 		/// <summary> The Request OID for a Paged Results Request</summary>
-		private static System.String requestOID = "1.2.840.113556.1.4.319";
+		private static String requestOID = "1.2.840.113556.1.4.319";
 		/// <summary> The Response stOID for a Paged Results Response</summary>
-		private static System.String responseOID = "1.2.840.113556.1.4.319";
+		private static String responseOID = "1.2.840.113556.1.4.319";
 
 		/*
 		 * The encoded ASN.1 Paged Search Request Control is stored in this variable
@@ -72,10 +72,10 @@ namespace Novell.Directory.Ldap.Controls
 		 * However that would have complicated and slowed down the code.
 		 */
 		private int m_pageSize;
-		private System.String m_cookie;
+		private String m_cookie;
 
 		// Put together search control value and have the base class - LdapControl package the request.
-		public LdapPagedResultsControl (int pageSize, System.String cookie):base(requestOID, true, null)
+		public LdapPagedResultsControl (int pageSize, String cookie):base(requestOID, true, null)
 		{
 			m_pageSize = pageSize;
 			m_cookie = cookie;
@@ -113,12 +113,12 @@ namespace Novell.Directory.Ldap.Controls
 				// in response to a Paged Results Request - same OID
 				try
 				{
-					LdapControl.register(responseOID, System.Type.GetType("Novell.Directory.Ldap.Controls.LdapPagedResultsResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapPagedResultsResponse"));
 				}
-				catch (System.Exception e)
+				catch (Exception e)
 				{
-					System.Console.Error.WriteLine ("Could not register response control for LdapPagedResultsControl"); 
-					System.Console.Error.WriteLine ("Error message: " + e.Message);
+					Console.Error.WriteLine ("Could not register response control for LdapPagedResultsControl"); 
+					Console.Error.WriteLine ("Error message: " + e.Message);
 				}
 			}
 		}

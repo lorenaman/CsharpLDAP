@@ -98,7 +98,7 @@ namespace Novell.Directory.Ldap.Asn1
 		
 		/// <summary> Returns a String representation of this Asn1Set.</summary>
 		[CLSCompliantAttribute(false)]
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString("SET: { ");
 		}

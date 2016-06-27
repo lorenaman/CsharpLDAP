@@ -65,11 +65,11 @@ namespace Novell.Directory.Ldap.Extensions
 				*/
 			try
 			{
-				LdapExtendedResponse.register(ReplicationConstants.GET_IDENTITY_NAME_RES, System.Type.GetType("Novell.Directory.Ldap.Extensions.GetBindDNResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.GET_IDENTITY_NAME_RES, Type.GetType("Novell.Directory.Ldap.Extensions.GetBindDNResponse"));
 			}
-			catch (System.Exception e)
+			catch (Exception e)
 			{
-				System.Console.Error.WriteLine("Could not register Extended Response -" + " Class not found");
+				Console.Error.WriteLine("Could not register Extended Response -" + " Class not found");
 			}
 		}
 		

@@ -54,7 +54,7 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			set
 			{
-				this.content = value;
+				content = value;
 				return ;
 			}
 			
@@ -83,7 +83,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// </summary>
 		protected internal Asn1Choice():base(null)
 		{
-			this.content = null;
+			content = null;
 			return ;
 		}
 		
@@ -141,7 +141,7 @@ namespace Novell.Directory.Ldap.Asn1
 		}
 		
 		/// <summary> Return a String representation of this Asn1Object.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return content.ToString();
 		}

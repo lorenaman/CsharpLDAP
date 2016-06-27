@@ -77,14 +77,14 @@ namespace Novell.Directory.Ldap.Extensions
 		/// <exception> LdapException A general exception which includes an error message
 		/// and an Ldap error code.
 		/// </exception>
-		public RemoveReplicaRequest(System.String dn, System.String serverDN, int flags):base(ReplicationConstants.DELETE_REPLICA_REQ, null)
+		public RemoveReplicaRequest(String dn, String serverDN, int flags):base(ReplicationConstants.DELETE_REPLICA_REQ, null)
 		{
 			
 			try
 			{
 				
-				if (((System.Object) dn == null) || ((System.Object) serverDN == null))
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if (((object) dn == null) || ((object) serverDN == null))
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
 				LBEREncoder encoder = new LBEREncoder();
@@ -101,7 +101,7 @@ namespace Novell.Directory.Ldap.Extensions
 			}
 			catch (System.IO.IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

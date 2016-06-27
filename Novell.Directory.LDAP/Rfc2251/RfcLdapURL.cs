@@ -48,7 +48,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		//*************************************************************************
 		
 		/// <summary> </summary>
-		public RfcLdapURL(System.String s):base(s)
+		public RfcLdapURL(String s):base(s)
 		{
 		}
 	}

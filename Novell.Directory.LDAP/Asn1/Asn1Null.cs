@@ -81,7 +81,7 @@ namespace Novell.Directory.Ldap.Asn1
 		*/
 		
 		/// <summary> Return a String representation of this Asn1Null object.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString() + "NULL: \"\"";
 		}

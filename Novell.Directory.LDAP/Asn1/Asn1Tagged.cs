@@ -55,11 +55,11 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			set
 			{
-				this.content = value;
+				content = value;
 				if (!explicit_Renamed && value != null)
 				{
 					// replace object's id with new tag.
-					value.setIdentifier(this.getIdentifier());
+					value.setIdentifier(getIdentifier());
 				}
 			}
 			
@@ -95,7 +95,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// <summary> Constructs an Asn1Tagged object.</summary>
 		public Asn1Tagged(Asn1Identifier identifier, Asn1Object object_Renamed, bool explicit_Renamed):base(identifier)
 		{
-			this.content = object_Renamed;
+			content = object_Renamed;
 			this.explicit_Renamed = explicit_Renamed;
 			
 			if (!explicit_Renamed && content != null)
@@ -159,7 +159,7 @@ namespace Novell.Directory.Ldap.Asn1
 		}
 		
 		/// <summary> Return a String representation of this Asn1Object.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			if (explicit_Renamed)
 			{

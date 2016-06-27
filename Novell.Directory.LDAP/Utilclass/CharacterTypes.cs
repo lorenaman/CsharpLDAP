@@ -33,20 +33,20 @@ using System;
 
 namespace Novell.Directory.Ldap.Utilclass
 {
-	
-	/// <summary>
-	/// Specifies the types of Characters.
-	/// </summary>
+
+    /// <summary>
+    /// Specifies the types of Characters.
+    /// </summary>
     //	[Flags]
-	[CLSCompliantAttribute(false)]
-	public enum CharacterTypes:sbyte
-	{
-		WHITESPACE = 1,
-		NUMERIC = 2,
-		ALPHABETIC = 4,
-		STRINGQUOTE = 8,
-		COMMENTCHAR = 16	
-	}
+    [CLSCompliantAttribute(false)]
+    public enum CharacterTypes : sbyte
+    {
+        WHITESPACE = 1,
+        NUMERIC = 2,
+        ALPHABETIC = 4,
+        STRINGQUOTE = 8,
+        COMMENTCHAR = 16
+    }
 
 }
 

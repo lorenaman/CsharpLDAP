@@ -41,7 +41,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 	public class RfcLdapOID:Asn1OctetString
 	{
 		/// <summary> </summary>
-		public RfcLdapOID(System.String s):base(s)
+		public RfcLdapOID(String s):base(s)
 		{
 		}
 		

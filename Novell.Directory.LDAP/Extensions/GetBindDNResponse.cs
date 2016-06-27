@@ -54,7 +54,7 @@ namespace Novell.Directory.Ldap.Extensions
 		/// </summary>
 		/// <returns> A string value specifying the bind dn returned by the server.
 		/// </returns>
-		virtual public System.String Identity
+		virtual public String Identity
 		{
 			get
 			{
@@ -64,7 +64,7 @@ namespace Novell.Directory.Ldap.Extensions
 		}
 		
 		// Identity returned by the server
-		private System.String identity;
+		private String identity;
 		
 		/// <summary> Constructs an object from the responseValue which contains the bind dn.
 		/// 
@@ -82,7 +82,7 @@ namespace Novell.Directory.Ldap.Extensions
 			if (ResultCode == LdapException.SUCCESS)
 			{
 				// parse the contents of the reply
-				sbyte[] returnedValue = this.Value;
+				sbyte[] returnedValue = Value;
 				if (returnedValue == null)
 					throw new System.IO.IOException("No returned value");
 				
@@ -98,7 +98,7 @@ namespace Novell.Directory.Ldap.Extensions
 				
 				// Convert to normal string object
 				identity = asn1_identity.stringValue();
-				if ((System.Object) identity == null)
+				if ((object) identity == null)
 					throw new System.IO.IOException("Decoding error");
 			}
 			else

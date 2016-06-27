@@ -66,7 +66,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 			add(ava);
 			if (ava.AssertionValue == null)
 			{
-				throw new System.ArgumentException("compare: Attribute must have an assertion value");
+				throw new ArgumentException("compare: Attribute must have an assertion value");
 			}
 			return ;
 		}
@@ -75,10 +75,10 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// an existing request.
 		/// </summary>
 		/* package */
-		internal RfcCompareRequest(Asn1Object[] origRequest, System.String base_Renamed):base(origRequest, origRequest.Length)
+		internal RfcCompareRequest(Asn1Object[] origRequest, String base_Renamed):base(origRequest, origRequest.Length)
 		{
 			// Replace the base if specified, otherwise keep original base
-			if ((System.Object) base_Renamed != null)
+			if ((object) base_Renamed != null)
 			{
 				set_Renamed(0, new RfcLdapDN(base_Renamed));
 			}
@@ -94,11 +94,11 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return new Asn1Identifier(Asn1Identifier.APPLICATION, true, LdapMessage.COMPARE_REQUEST);
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
 			return new RfcCompareRequest(toArray(), base_Renamed);
 		}
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
 			return ((RfcLdapDN) get_Renamed(0)).stringValue();
 		}

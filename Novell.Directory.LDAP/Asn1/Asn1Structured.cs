@@ -83,7 +83,7 @@ namespace Novell.Directory.Ldap.Asn1
         /// <summary> Encodes the contents of this Asn1Structured directly to an output
         /// stream.
         /// </summary>
-        public override void encode(Asn1Encoder enc, System.IO.Stream out_Renamed)
+        public override void encode(Asn1Encoder enc, Stream out_Renamed)
         {
             enc.encode(this, out_Renamed);
         }

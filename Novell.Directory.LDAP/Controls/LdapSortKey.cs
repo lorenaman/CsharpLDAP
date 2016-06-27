@@ -42,7 +42,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// </summary>
 		/// <returns> The name of the attribute used for sorting.
 		/// </returns>
-		virtual public System.String Key
+		virtual public String Key
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <returns> The OID to be used as matching rule, or null if none is to be
 		/// used.
 		/// </returns>
-		virtual public System.String MatchRule
+		virtual public String MatchRule
 		{
 			get
 			{
@@ -79,9 +79,9 @@ namespace Novell.Directory.Ldap.Controls
 			
 		}
 		
-		private System.String key;
+		private String key;
 		private bool reverse;
-		private System.String matchRule;
+		private String matchRule;
 		
 		// Constructors
 		
@@ -102,25 +102,25 @@ namespace Novell.Directory.Ldap.Controls
 		/// using the matching rule 1.2.3.4.5) </li>
 		/// </ul>
 		/// </param>
-		public LdapSortKey(System.String keyDescription)
+		public LdapSortKey(String keyDescription)
 		{
 			matchRule = null;
 			reverse = false;
-			System.String myKey = keyDescription;
+			String myKey = keyDescription;
 			if (myKey[0] == '-')
 			{
 				myKey = myKey.Substring(1);
-				this.reverse = true;
+				reverse = true;
 			}
 			int pos = myKey.IndexOf(":");
 			if (pos != - 1)
 			{
-				this.key = myKey.Substring(0, (pos) - (0));
-				this.matchRule = myKey.Substring(pos + 1);
+				key = myKey.Substring(0, (pos) - (0));
+				matchRule = myKey.Substring(pos + 1);
 			}
 			else
 			{
-				this.key = myKey;
+				key = myKey;
 			}
 			return ;
 		}
@@ -135,7 +135,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <param name="reverse">If true, sorting is done in descending order. If false,
 		/// sorting is done in ascending order.
 		/// </param>
-		public LdapSortKey(System.String key, bool reverse):this(key, reverse, null)
+		public LdapSortKey(String key, bool reverse):this(key, reverse, null)
 		{
 			return ;
 		}
@@ -157,7 +157,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// be the OID of a matching rule known to be
 		/// supported by that server.
 		/// </param>
-		public LdapSortKey(System.String key, bool reverse, System.String matchRule)
+		public LdapSortKey(String key, bool reverse, String matchRule)
 		{
 			this.key = key;
 			this.reverse = reverse;

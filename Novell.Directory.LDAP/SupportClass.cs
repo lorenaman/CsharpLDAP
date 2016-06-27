@@ -262,9 +262,9 @@ public class SupportClass
         /// <param name="source">String to tokenize</param>
         public Tokenizer(string source)
         {
-            this.elements = new ArrayList();
-            this.elements.AddRange(source.Split(this.delimiters.ToCharArray()));
-            this.RemoveEmptyStrings();
+            elements = new ArrayList();
+            elements.AddRange(source.Split(delimiters.ToCharArray()));
+            RemoveEmptyStrings();
             this.source = source;
         }
 
@@ -276,45 +276,45 @@ public class SupportClass
         /// <param name="delimiters">String containing the delimiters</param>
         public Tokenizer(string source, string delimiters)
         {
-            this.elements = new ArrayList();
+            elements = new ArrayList();
             this.delimiters = delimiters;
-            this.elements.AddRange(source.Split(this.delimiters.ToCharArray()));
-            this.RemoveEmptyStrings();
+            elements.AddRange(source.Split(this.delimiters.ToCharArray()));
+            RemoveEmptyStrings();
             this.source = source;
         }
 
         public Tokenizer(string source, string delimiters, bool retDel)
         {
-            this.elements = new ArrayList();
+            elements = new ArrayList();
             this.delimiters = delimiters;
             this.source = source;
-            this.returnDelims = retDel;
+            returnDelims = retDel;
             if (returnDelims)
                 Tokenize();
             else
-                this.elements.AddRange(source.Split(this.delimiters.ToCharArray()));
-            this.RemoveEmptyStrings();
+                elements.AddRange(source.Split(this.delimiters.ToCharArray()));
+            RemoveEmptyStrings();
         }
 
         private void Tokenize()
         {
-            string tempstr = this.source;
+            string tempstr = source;
             string toks = "";
-            if (tempstr.IndexOfAny(this.delimiters.ToCharArray()) < 0 && tempstr.Length > 0)
+            if (tempstr.IndexOfAny(delimiters.ToCharArray()) < 0 && tempstr.Length > 0)
             {
-                this.elements.Add(tempstr);
+                elements.Add(tempstr);
             }
-            else if (tempstr.IndexOfAny(this.delimiters.ToCharArray()) < 0 && tempstr.Length <= 0)
+            else if (tempstr.IndexOfAny(delimiters.ToCharArray()) < 0 && tempstr.Length <= 0)
             {
                 return;
             }
-            while (tempstr.IndexOfAny(this.delimiters.ToCharArray()) >= 0)
+            while (tempstr.IndexOfAny(delimiters.ToCharArray()) >= 0)
             {
-                if (tempstr.IndexOfAny(this.delimiters.ToCharArray()) == 0)
+                if (tempstr.IndexOfAny(delimiters.ToCharArray()) == 0)
                 {
                     if (tempstr.Length > 1)
                     {
-                        this.elements.Add(tempstr.Substring(0, 1));
+                        elements.Add(tempstr.Substring(0, 1));
                         tempstr = tempstr.Substring(1);
                     }
                     else
@@ -322,9 +322,9 @@ public class SupportClass
                 }
                 else
                 {
-                    toks = tempstr.Substring(0, tempstr.IndexOfAny(this.delimiters.ToCharArray()));
-                    this.elements.Add(toks);
-                    this.elements.Add(tempstr.Substring(toks.Length, 1));
+                    toks = tempstr.Substring(0, tempstr.IndexOfAny(delimiters.ToCharArray()));
+                    elements.Add(toks);
+                    elements.Add(tempstr.Substring(toks.Length, 1));
                     if (tempstr.Length > (toks.Length + 1))
                     {
                         tempstr = tempstr.Substring(toks.Length + 1);
@@ -335,7 +335,7 @@ public class SupportClass
             }
             if (tempstr.Length > 0)
             {
-                this.elements.Add(tempstr);
+                elements.Add(tempstr);
             }
         }
 
@@ -346,7 +346,7 @@ public class SupportClass
         {
             get
             {
-                return (this.elements.Count);
+                return (elements.Count);
             }
         }
 
@@ -356,7 +356,7 @@ public class SupportClass
         /// <returns>True or false, depending if there are more tokens</returns>
         public bool HasMoreTokens()
         {
-            return (this.elements.Count > 0);
+            return (elements.Count > 0);
         }
 
         /// <summary>
@@ -371,17 +371,17 @@ public class SupportClass
             {
                 //						Tokenize();
                 RemoveEmptyStrings();
-                result = (string)this.elements[0];
-                this.elements.RemoveAt(0);
+                result = (string)elements[0];
+                elements.RemoveAt(0);
                 return result;
             }
-            this.elements = new ArrayList();
-            this.elements.AddRange(this.source.Split(delimiters.ToCharArray()));
+            elements = new ArrayList();
+            elements.AddRange(source.Split(delimiters.ToCharArray()));
             RemoveEmptyStrings();
-            result = (string)this.elements[0];
-            this.elements.RemoveAt(0);
-            this.source = this.source.Remove(this.source.IndexOf(result), result.Length);
-            this.source = this.source.TrimStart(this.delimiters.ToCharArray());
+            result = (string)elements[0];
+            elements.RemoveAt(0);
+            source = source.Remove(source.IndexOf(result), result.Length);
+            source = source.TrimStart(delimiters.ToCharArray());
             return result;
         }
 
@@ -402,10 +402,10 @@ public class SupportClass
         /// </summary>
         private void RemoveEmptyStrings()
         {
-            for (int index = 0; index < this.elements.Count; index++)
-                if ((string)this.elements[index] == "")
+            for (int index = 0; index < elements.Count; index++)
+                if ((string)elements[index] == "")
                 {
-                    this.elements.RemoveAt(index);
+                    elements.RemoveAt(index);
                     index--;
                 }
         }
@@ -631,11 +631,11 @@ public class SupportClass
         {
             get
             {
-                return this.Name;
+                return Name;
             }
             set
             {
-                if (this.Name == null) this.Name = value;
+                if (Name == null) Name = value;
             }
         }
 
@@ -680,7 +680,7 @@ public class SupportClass
         /// <returns>Returns true if the element was successfuly added. Otherwise returns false.</returns>
         public virtual bool Add(object element)
         {
-            return (this.List.Add(element) != -1);
+            return (List.Add(element) != -1);
         }
 
         /// <summary>
@@ -697,7 +697,7 @@ public class SupportClass
                 while (tempEnumerator.MoveNext())
                 {
                     if (tempEnumerator.Current != null)
-                        result = this.Add(tempEnumerator.Current);
+                        result = Add(tempEnumerator.Current);
                 }
             }
             return result;
@@ -710,7 +710,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly added. Otherwise returns false.</returns>
         public virtual bool AddAll(CollectionSupport collection)
         {
-            return this.AddAll((ICollection)collection);
+            return AddAll((ICollection)collection);
         }
 
         /// <summary>
@@ -720,7 +720,7 @@ public class SupportClass
         /// <returns>Returns true if the element is contained in the collection. Otherwise returns false.</returns>
         public virtual bool Contains(object element)
         {
-            return this.List.Contains(element);
+            return List.Contains(element);
         }
 
         /// <summary>
@@ -733,7 +733,7 @@ public class SupportClass
             bool result = false;
             IEnumerator tempEnumerator = new ArrayList(collection).GetEnumerator();
             while (tempEnumerator.MoveNext())
-                if (!(result = this.Contains(tempEnumerator.Current)))
+                if (!(result = Contains(tempEnumerator.Current)))
                     break;
             return result;
         }
@@ -745,7 +745,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements are contained in the collection. Otherwise returns false.</returns>
         public virtual bool ContainsAll(CollectionSupport collection)
         {
-            return this.ContainsAll((ICollection)collection);
+            return ContainsAll((ICollection)collection);
         }
 
         /// <summary>
@@ -754,7 +754,7 @@ public class SupportClass
         /// <returns>Returns true if the collection is empty. Otherwise returns false.</returns>
         public virtual bool IsEmpty()
         {
-            return (this.Count == 0);
+            return (Count == 0);
         }
 
         /// <summary>
@@ -765,9 +765,9 @@ public class SupportClass
         public virtual bool Remove(object element)
         {
             bool result = false;
-            if (this.Contains(element))
+            if (Contains(element))
             {
-                this.List.Remove(element);
+                List.Remove(element);
                 result = true;
             }
             return result;
@@ -784,8 +784,8 @@ public class SupportClass
             IEnumerator tempEnumerator = new ArrayList(collection).GetEnumerator();
             while (tempEnumerator.MoveNext())
             {
-                if (this.Contains(tempEnumerator.Current))
-                    result = this.Remove(tempEnumerator.Current);
+                if (Contains(tempEnumerator.Current))
+                    result = Remove(tempEnumerator.Current);
             }
             return result;
         }
@@ -797,7 +797,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly removed. Otherwise returns false.</returns>
         public virtual bool RemoveAll(CollectionSupport collection)
         {
-            return this.RemoveAll((ICollection)collection);
+            return RemoveAll((ICollection)collection);
         }
 
         /// <summary>
@@ -808,17 +808,17 @@ public class SupportClass
         public virtual bool RetainAll(ICollection collection)
         {
             bool result = false;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             CollectionSupport tempCollection = new CollectionSupport();
             tempCollection.AddAll(collection);
             while (tempEnumerator.MoveNext())
                 if (!tempCollection.Contains(tempEnumerator.Current))
                 {
-                    result = this.Remove(tempEnumerator.Current);
+                    result = Remove(tempEnumerator.Current);
 
                     if (result == true)
                     {
-                        tempEnumerator = this.GetEnumerator();
+                        tempEnumerator = GetEnumerator();
                     }
                 }
             return result;
@@ -831,7 +831,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfully removed. Otherwise returns false.</returns>
         public virtual bool RetainAll(CollectionSupport collection)
         {
-            return this.RetainAll((ICollection)collection);
+            return RetainAll((ICollection)collection);
         }
 
         /// <summary>
@@ -841,8 +841,8 @@ public class SupportClass
         public virtual object[] ToArray()
         {
             int index = 0;
-            object[] objects = new object[this.Count];
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            object[] objects = new object[Count];
+            IEnumerator tempEnumerator = GetEnumerator();
             while (tempEnumerator.MoveNext())
                 objects[index++] = tempEnumerator.Current;
             return objects;
@@ -856,7 +856,7 @@ public class SupportClass
         public virtual object[] ToArray(object[] objects)
         {
             int index = 0;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             while (tempEnumerator.MoveNext())
                 objects[index++] = tempEnumerator.Current;
             return objects;
@@ -911,7 +911,7 @@ public class SupportClass
         /// <returns>Returns true after adding the value.</returns>
         public virtual bool Add(object valueToInsert)
         {
-            base.Insert(this.Count, valueToInsert);
+            Insert(Count, valueToInsert);
             return true;
         }
 
@@ -930,7 +930,7 @@ public class SupportClass
                 int tempIndex = index;
                 while (tempEnumerator.MoveNext())
                 {
-                    base.Insert(tempIndex++, tempEnumerator.Current);
+                    Insert(tempIndex++, tempEnumerator.Current);
                     result = true;
                 }
             }
@@ -944,7 +944,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly added. Otherwise returns false.</returns>
         public virtual bool AddAll(IList collection)
         {
-            return this.AddAll(this.Count, collection);
+            return AddAll(Count, collection);
         }
 
         /// <summary>
@@ -954,7 +954,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly added. Otherwise returns false.</returns>
         public virtual bool AddAll(CollectionSupport collection)
         {
-            return this.AddAll(this.Count, collection);
+            return AddAll(Count, collection);
         }
 
         /// <summary>
@@ -965,7 +965,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly added. Otherwise returns false.</returns>
         public virtual bool AddAll(int index, CollectionSupport collection)
         {
-            return this.AddAll(index, (IList)collection);
+            return AddAll(index, (IList)collection);
         }
 
         /// <summary>
@@ -983,7 +983,7 @@ public class SupportClass
         /// <returns>An IEnumerator.</returns>
         public virtual IEnumerator ListIterator()
         {
-            return base.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -998,8 +998,8 @@ public class SupportClass
             while (tempEnumerator.MoveNext())
             {
                 result = true;
-                if (base.Contains(tempEnumerator.Current))
-                    base.Remove(tempEnumerator.Current);
+                if (Contains(tempEnumerator.Current))
+                    Remove(tempEnumerator.Current);
             }
             return result;
         }
@@ -1011,7 +1011,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly removed. Otherwise returns false.</returns>
         public virtual bool RemoveAll(CollectionSupport collection)
         {
-            return this.RemoveAll((ICollection)collection);
+            return RemoveAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1022,7 +1022,7 @@ public class SupportClass
         public virtual object RemoveElement(int index)
         {
             object objectRemoved = this[index];
-            this.RemoveAt(index);
+            RemoveAt(index);
             return objectRemoved;
         }
 
@@ -1034,9 +1034,9 @@ public class SupportClass
         public virtual bool RemoveElement(object element)
         {
             bool result = false;
-            if (this.Contains(element))
+            if (Contains(element))
             {
-                base.Remove(element);
+                Remove(element);
                 result = true;
             }
             return result;
@@ -1049,7 +1049,7 @@ public class SupportClass
         public virtual object RemoveFirst()
         {
             object objectRemoved = this[0];
-            this.RemoveAt(0);
+            RemoveAt(0);
             return objectRemoved;
         }
 
@@ -1059,8 +1059,8 @@ public class SupportClass
         /// <returns>Returns the value removed.</returns>
         public virtual object RemoveLast()
         {
-            object objectRemoved = this[this.Count - 1];
-            base.RemoveAt(this.Count - 1);
+            object objectRemoved = this[Count - 1];
+            RemoveAt(Count - 1);
             return objectRemoved;
         }
 
@@ -1072,16 +1072,16 @@ public class SupportClass
         public virtual bool RetainAll(ICollection collection)
         {
             bool result = false;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             ListCollectionSupport tempCollection = new ListCollectionSupport(collection);
             while (tempEnumerator.MoveNext())
                 if (!tempCollection.Contains(tempEnumerator.Current))
                 {
-                    result = this.RemoveElement(tempEnumerator.Current);
+                    result = RemoveElement(tempEnumerator.Current);
 
                     if (result == true)
                     {
-                        tempEnumerator = this.GetEnumerator();
+                        tempEnumerator = GetEnumerator();
                     }
                 }
             return result;
@@ -1094,7 +1094,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfully removed. Otherwise returns false.</returns>
         public virtual bool RetainAll(CollectionSupport collection)
         {
-            return this.RetainAll((ICollection)collection);
+            return RetainAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1107,7 +1107,7 @@ public class SupportClass
             bool result = false;
             IEnumerator tempEnumerator = new ArrayList(collection).GetEnumerator();
             while (tempEnumerator.MoveNext())
-                if (!(result = this.Contains(tempEnumerator.Current)))
+                if (!(result = Contains(tempEnumerator.Current)))
                     break;
             return result;
         }
@@ -1119,7 +1119,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements are contained in the collection. Otherwise returns false.</returns>
         public virtual bool ContainsAll(CollectionSupport collection)
         {
-            return this.ContainsAll((ICollection)collection);
+            return ContainsAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1131,7 +1131,7 @@ public class SupportClass
         public virtual ListCollectionSupport SubList(int startIndex, int endIndex)
         {
             int index = 0;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             ListCollectionSupport result = new ListCollectionSupport();
             for (index = startIndex; index < endIndex; index++)
                 result.Add(this[index]);
@@ -1145,10 +1145,10 @@ public class SupportClass
         /// <returns>The array containing all the elements of the collection.</returns>
         public virtual object[] ToArray(object[] objects)
         {
-            if (objects.Length < this.Count)
-                objects = new object[this.Count];
+            if (objects.Length < Count)
+                objects = new object[Count];
             int index = 0;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             while (tempEnumerator.MoveNext())
                 objects[index++] = tempEnumerator.Current;
             return objects;
@@ -1161,8 +1161,8 @@ public class SupportClass
         /// <returns>An IEnumerator at the specified position.</returns>
         public virtual IEnumerator ListIterator(int index)
         {
-            if ((index < 0) || (index > this.Count)) throw new IndexOutOfRangeException();
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            if ((index < 0) || (index > Count)) throw new IndexOutOfRangeException();
+            IEnumerator tempEnumerator = GetEnumerator();
             if (index > 0)
             {
                 int i = 0;
@@ -1178,8 +1178,8 @@ public class SupportClass
         /// <returns>Returns the last element of the list.</returns>
         public virtual object GetLast()
         {
-            if (this.Count == 0) throw new ArgumentOutOfRangeException();
-            return this[this.Count - 1];
+            if (Count == 0) throw new ArgumentOutOfRangeException();
+            return this[Count - 1];
         }
 
         /// <summary>
@@ -1188,7 +1188,7 @@ public class SupportClass
         /// <returns>True if the list is empty, false if it isn't.</returns>
         public virtual bool IsEmpty()
         {
-            return (this.Count == 0);
+            return (Count == 0);
         }
 
         /// <summary>
@@ -1309,7 +1309,7 @@ public class SupportClass
         /// <returns>True if the object was added, false otherwise.</returns>
         public new virtual bool Add(object objectToAdd)
         {
-            if (this.Contains(objectToAdd))
+            if (Contains(objectToAdd))
                 return false;
             base.Add(objectToAdd);
             return true;
@@ -1329,7 +1329,7 @@ public class SupportClass
                 while (tempEnumerator.MoveNext())
                 {
                     if (tempEnumerator.Current != null)
-                        result = this.Add(tempEnumerator.Current);
+                        result = Add(tempEnumerator.Current);
                 }
             }
             return result;
@@ -1342,7 +1342,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly added. Otherwise returns false.</returns>
         public virtual bool AddAll(CollectionSupport collection)
         {
-            return this.AddAll((ICollection)collection);
+            return AddAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1355,7 +1355,7 @@ public class SupportClass
             bool result = false;
             IEnumerator tempEnumerator = collection.GetEnumerator();
             while (tempEnumerator.MoveNext())
-                if (!(result = this.Contains(tempEnumerator.Current)))
+                if (!(result = Contains(tempEnumerator.Current)))
                     break;
             return result;
         }
@@ -1367,7 +1367,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements are contained in the collection. Otherwise returns false.</returns>
         public virtual bool ContainsAll(CollectionSupport collection)
         {
-            return this.ContainsAll((ICollection)collection);
+            return ContainsAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1376,7 +1376,7 @@ public class SupportClass
         /// <returns>True if the collection is empty, false otherwise.</returns>
         public virtual bool IsEmpty()
         {
-            return (this.Count == 0);
+            return (Count == 0);
         }
 
         /// <summary>
@@ -1386,7 +1386,7 @@ public class SupportClass
         /// <returns>True if the element was removed.</returns>
         public new virtual bool Remove(object elementToRemove)
         {
-            bool result = this.Contains(elementToRemove);
+            bool result = Contains(elementToRemove);
             base.Remove(elementToRemove);
             return result;
         }
@@ -1402,9 +1402,9 @@ public class SupportClass
             IEnumerator tempEnumerator = collection.GetEnumerator();
             while (tempEnumerator.MoveNext())
             {
-                if ((result == false) && (this.Contains(tempEnumerator.Current)))
+                if ((result == false) && (Contains(tempEnumerator.Current)))
                     result = true;
-                this.Remove(tempEnumerator.Current);
+                Remove(tempEnumerator.Current);
             }
             return result;
         }
@@ -1416,7 +1416,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfuly removed. Otherwise returns false.</returns>
         public virtual bool RemoveAll(CollectionSupport collection)
         {
-            return this.RemoveAll((ICollection)collection);
+            return RemoveAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1432,8 +1432,8 @@ public class SupportClass
             while (tempEnumerator.MoveNext())
                 if (!tempSet.Contains(tempEnumerator.Current))
                 {
-                    result = this.Remove(tempEnumerator.Current);
-                    tempEnumerator = this.GetEnumerator();
+                    result = Remove(tempEnumerator.Current);
+                    tempEnumerator = GetEnumerator();
                 }
             return result;
         }
@@ -1445,7 +1445,7 @@ public class SupportClass
         /// <returns>Returns true if all the elements were successfully removed. Otherwise returns false.</returns>
         public virtual bool RetainAll(CollectionSupport collection)
         {
-            return this.RetainAll((ICollection)collection);
+            return RetainAll((ICollection)collection);
         }
 
         /// <summary>
@@ -1455,8 +1455,8 @@ public class SupportClass
         public new virtual object[] ToArray()
         {
             int index = 0;
-            object[] tempObject = new object[this.Count];
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            object[] tempObject = new object[Count];
+            IEnumerator tempEnumerator = GetEnumerator();
             while (tempEnumerator.MoveNext())
                 tempObject[index++] = tempEnumerator.Current;
             return tempObject;
@@ -1470,7 +1470,7 @@ public class SupportClass
         public virtual object[] ToArray(object[] objects)
         {
             int index = 0;
-            IEnumerator tempEnumerator = this.GetEnumerator();
+            IEnumerator tempEnumerator = GetEnumerator();
             while (tempEnumerator.MoveNext())
                 objects[index++] = tempEnumerator.Current;
             return objects;
@@ -1617,11 +1617,11 @@ public class SupportClass
         {
             get
             {
-                return this.algorithm;
+                return algorithm;
             }
             set
             {
-                this.algorithm = value;
+                algorithm = value;
             }
         }
 
@@ -1632,11 +1632,11 @@ public class SupportClass
         {
             get
             {
-                return this.data;
+                return data;
             }
             set
             {
-                this.data = value;
+                data = value;
             }
         }
 
@@ -1647,7 +1647,7 @@ public class SupportClass
         {
             get
             {
-                return this.algorithmName;
+                return algorithmName;
             }
         }
 
@@ -1659,15 +1659,15 @@ public class SupportClass
         {
             if (algorithm.Equals("SHA-1"))
             {
-                this.algorithmName = "SHA";
-                this.Algorithm = System.Security.Cryptography.SHA1.Create();
+                algorithmName = "SHA";
+                Algorithm = System.Security.Cryptography.SHA1.Create();
 
             }
             else
             {
                 throw new NotImplementedException($"{algorithm} is not implemented");
             }
-            this.position = 0;
+            position = 0;
         }
 
         /// <summary>
@@ -1677,8 +1677,8 @@ public class SupportClass
         [CLSCompliantAttribute(false)]
         public sbyte[] DigestData()
         {
-            sbyte[] result = ToSByteArray(this.Algorithm.ComputeHash(this.data));
-            this.Reset();
+            sbyte[] result = ToSByteArray(Algorithm.ComputeHash(data));
+            Reset();
             return result;
         }
 
@@ -1691,8 +1691,8 @@ public class SupportClass
         [CLSCompliantAttribute(false)]
         public sbyte[] DigestData(byte[] newData)
         {
-            this.Update(newData);
-            return this.DigestData();
+            Update(newData);
+            return DigestData();
         }
 
         /// <summary>
@@ -1704,17 +1704,17 @@ public class SupportClass
         {
             if (position == 0)
             {
-                this.Data = newData;
-                this.position = this.Data.Length - 1;
+                Data = newData;
+                position = Data.Length - 1;
             }
             else
             {
-                byte[] oldData = this.Data;
-                this.Data = new byte[newData.Length + position + 1];
-                oldData.CopyTo(this.Data, 0);
-                newData.CopyTo(this.Data, oldData.Length);
+                byte[] oldData = Data;
+                Data = new byte[newData.Length + position + 1];
+                oldData.CopyTo(Data, 0);
+                newData.CopyTo(Data, oldData.Length);
 
-                this.position = this.Data.Length - 1;
+                position = Data.Length - 1;
             }
         }
 
@@ -1726,7 +1726,7 @@ public class SupportClass
         {
             byte[] newDataArray = new byte[1];
             newDataArray[0] = newData;
-            this.Update(newDataArray);
+            Update(newDataArray);
         }
 
         /// <summary>
@@ -1740,7 +1740,7 @@ public class SupportClass
         {
             byte[] newDataArray = new byte[count];
             Array.Copy(newData, offset, newDataArray, 0, count);
-            this.Update(newDataArray);
+            Update(newDataArray);
         }
 
         /// <summary>
@@ -1748,8 +1748,8 @@ public class SupportClass
         /// </summary>
         public void Reset()
         {
-            this.data = null;
-            this.position = 0;
+            data = null;
+            position = 0;
         }
 
         /// <summary>
@@ -1758,7 +1758,7 @@ public class SupportClass
         /// <returns>A string representation of the object</returns>
         public override string ToString()
         {
-            return this.Algorithm.ToString();
+            return Algorithm.ToString();
         }
 
         /// <summary>

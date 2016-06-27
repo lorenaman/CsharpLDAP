@@ -50,10 +50,10 @@ namespace Novell.Directory.Ldap.Controls
 		private static int ORDERING_RULE = 0;
 		private static int REVERSE_ORDER = 1;
 		/// <summary> The requestOID of the sort control</summary>
-		private static System.String requestOID = "1.2.840.113556.1.4.473";
+		private static String requestOID = "1.2.840.113556.1.4.473";
 		
 		/// <summary> The responseOID of the sort control</summary>
-		private static System.String responseOID = "1.2.840.113556.1.4.474";
+		private static String responseOID = "1.2.840.113556.1.4.474";
 		/// <summary> Constructs a sort control with a single key.
 		/// 
 		/// </summary>
@@ -91,7 +91,7 @@ namespace Novell.Directory.Ldap.Controls
 				
 				key.add(new Asn1OctetString(keys[i].Key));
 				
-				if ((System.Object) keys[i].MatchRule != null)
+				if ((object) keys[i].MatchRule != null)
 				{
 					key.add(new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, false, ORDERING_RULE), new Asn1OctetString(keys[i].MatchRule), false));
 				}
@@ -120,9 +120,9 @@ namespace Novell.Directory.Ldap.Controls
 				*/
 				try
 				{
-					LdapControl.register(responseOID, System.Type.GetType("Novell.Directory.Ldap.Controls.LdapSortResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapSortResponse"));
 				}
-				catch (System.Exception e)
+				catch (Exception e)
 				{
 				}
 			}

@@ -73,14 +73,14 @@ namespace Novell.Directory.Ldap.Extensions
 		/// <exception> LdapException A general exception which includes an error message
 		/// and an Ldap error code.
 		/// </exception>
-		public PartitionSyncRequest(System.String serverName, System.String partitionRoot, int delay):base(ReplicationConstants.NAMING_CONTEXT_SYNC_REQ, null)
+		public PartitionSyncRequest(String serverName, String partitionRoot, int delay):base(ReplicationConstants.NAMING_CONTEXT_SYNC_REQ, null)
 		{
 			
 			try
 			{
 				
-				if (((System.Object) serverName == null) || ((System.Object) partitionRoot == null))
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if (((object) serverName == null) || ((object) partitionRoot == null))
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
 				LBEREncoder encoder = new LBEREncoder();
@@ -97,7 +97,7 @@ namespace Novell.Directory.Ldap.Extensions
 			}
 			catch (System.IO.IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

@@ -47,7 +47,7 @@ namespace Novell.Directory.Ldap.Utilclass
         {
             get
             {
-                return this.map.Count;
+                return map.Count;
             }
 
         }
@@ -59,7 +59,6 @@ namespace Novell.Directory.Ldap.Utilclass
             map = new System.Collections.Hashtable();
         }
 
-
         /* Adds a responseExtension to the current list of registered responses.
 		*
 		*/
@@ -67,9 +66,9 @@ namespace Novell.Directory.Ldap.Utilclass
         {
             lock (this)
             {
-                if (!this.map.ContainsKey(oid))
+                if (!map.ContainsKey(oid))
                 {
-                    this.map.Add(oid, (Type)extClass);
+                    map.Add(oid, (Type)extClass);
                 }
             }
         }
@@ -82,7 +81,7 @@ namespace Novell.Directory.Ldap.Utilclass
         /// </returns>
         public override System.Collections.IEnumerator GetEnumerator()
         {
-            return this.map.Values.GetEnumerator();
+            return map.Values.GetEnumerator();
         }
 
         /* Searches the list of registered responses for a mathcing response.  We
@@ -94,9 +93,9 @@ namespace Novell.Directory.Ldap.Utilclass
             if (searchOID == null) return null;
             lock (this)
             {
-                if (this.map.ContainsKey(searchOID))
+                if (map.ContainsKey(searchOID))
                 {
-                    return (Type)this.map[searchOID];
+                    return (Type)map[searchOID];
                 }
                 /* The requested extension does not have a registered response class */
                 return null;

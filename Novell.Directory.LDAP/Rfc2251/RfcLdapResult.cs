@@ -154,7 +154,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 			{
 				Asn1Tagged obj = (Asn1Tagged) get_Renamed(3);
 				Asn1Identifier id = obj.getIdentifier();
-				if (id.Tag == RfcLdapResult.REFERRAL)
+				if (id.Tag == REFERRAL)
 				{
 					sbyte[] content = ((Asn1OctetString) obj.taggedValue()).byteValue();
 					System.IO.MemoryStream bais = new System.IO.MemoryStream(SupportClass.ToByteArray(content));

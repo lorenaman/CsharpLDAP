@@ -117,7 +117,7 @@ namespace Novell.Directory.Ldap.Asn1
 		
 		/// <summary> Returns a String representation of this Asn1SequenceOf object</summary>
 		[CLSCompliantAttribute(false)]
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString("SEQUENCE OF: { ");
 		}

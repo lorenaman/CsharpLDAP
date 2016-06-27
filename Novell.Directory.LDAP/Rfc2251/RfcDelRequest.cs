@@ -54,7 +54,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		/// </summary>
 		/// <param name="dn">The Distinguished Name of the entry to delete.
 		/// </param>
-		public RfcDelRequest(System.String dn):base(dn)
+		public RfcDelRequest(String dn):base(dn)
 		{
 		}
 		
@@ -79,9 +79,9 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return new Asn1Identifier(Asn1Identifier.APPLICATION, false, LdapMessage.DEL_REQUEST);
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
-			if ((System.Object) base_Renamed == null)
+			if ((object) base_Renamed == null)
 			{
 				return new RfcDelRequest(byteValue());
 			}
@@ -90,9 +90,9 @@ namespace Novell.Directory.Ldap.Rfc2251
 				return new RfcDelRequest(base_Renamed);
 			}
 		}
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
-			return base.stringValue();
+			return stringValue();
 		}
 	}
 }

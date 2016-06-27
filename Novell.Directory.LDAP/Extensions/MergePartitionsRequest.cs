@@ -73,14 +73,14 @@ namespace Novell.Directory.Ldap.Extensions
 		/// message and an Ldap error code.
 		/// </exception>
 		
-		public MergePartitionsRequest(System.String dn, int flags):base(ReplicationConstants.MERGE_NAMING_CONTEXT_REQ, null)
+		public MergePartitionsRequest(String dn, int flags):base(ReplicationConstants.MERGE_NAMING_CONTEXT_REQ, null)
 		{
 			
 			try
 			{
 				
-				if ((System.Object) dn == null)
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if ((object) dn == null)
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
 				LBEREncoder encoder = new LBEREncoder();
@@ -95,7 +95,7 @@ namespace Novell.Directory.Ldap.Extensions
 			}
 			catch (System.IO.IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

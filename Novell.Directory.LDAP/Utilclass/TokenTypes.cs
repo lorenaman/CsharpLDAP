@@ -33,20 +33,19 @@ using System;
 
 namespace Novell.Directory.Ldap.Utilclass
 {
-	
-	/// <summary>
-	/// Specifies the types of Tokens.
-	/// </summary>
 
-	public enum TokenTypes
-	{
-		EOL = '\n',
-		EOF = -1,
-		NUMBER = -2,
-		WORD	= -3,
-		REAL	= -4,
-		STRING = -5
-	}
+    /// <summary>
+    /// Specifies the types of Tokens.
+    /// </summary>
 
+    public enum TokenTypes
+    {
+        EOL = '\n',
+        EOF = -1,
+        NUMBER = -2,
+        WORD = -3,
+        REAL = -4,
+        STRING = -5
+    }
 }
 

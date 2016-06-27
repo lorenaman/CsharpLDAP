@@ -195,7 +195,7 @@ namespace Novell.Directory.Ldap.Asn1
 		*/
 		
 		/// <summary> Decode a boolean directly from a stream.</summary>
-		public System.Object decodeBoolean(System.IO.Stream in_Renamed, int len)
+		public object decodeBoolean(System.IO.Stream in_Renamed, int len)
 		{
 			sbyte[] lber = new sbyte[len];
 			
@@ -210,7 +210,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// <summary> Decode a Numeric type directly from a stream. Decodes INTEGER
 		/// and ENUMERATED types.
 		/// </summary>
-		public System.Object decodeNumeric(System.IO.Stream in_Renamed, int len)
+		public object decodeNumeric(System.IO.Stream in_Renamed, int len)
 		{
 			long l = 0;
 			int r = in_Renamed.ReadByte();
@@ -233,11 +233,11 @@ namespace Novell.Directory.Ldap.Asn1
 					throw new System.IO.EndOfStreamException("LBER: NUMERIC: decode error: EOF");
 				l = (l << 8) | r;
 			}
-			return (System.Int64) l;
+			return (Int64) l;
 		}
 		
 		/// <summary> Decode an OctetString directly from a stream.</summary>
-		public System.Object decodeOctetString(System.IO.Stream in_Renamed, int len)
+		public object decodeOctetString(System.IO.Stream in_Renamed, int len)
 		{
 			sbyte[] octets = new sbyte[len];
 			int totalLen = 0;
@@ -253,7 +253,7 @@ namespace Novell.Directory.Ldap.Asn1
 		}
 		
 		/// <summary> Decode a CharacterString directly from a stream.</summary>
-		public System.Object decodeCharacterString(System.IO.Stream in_Renamed, int len)
+		public object decodeCharacterString(System.IO.Stream in_Renamed, int len)
 		{
 			sbyte[] octets = new sbyte[len];
 			

@@ -306,7 +306,7 @@ namespace Novell.Directory.Ldap.Asn1
         {
             try
             {
-                return base.MemberwiseClone();
+                return MemberwiseClone();
             }
             catch (Exception ce)
             {

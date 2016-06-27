@@ -66,11 +66,11 @@ namespace Novell.Directory.Ldap.Extensions
 		{
 			try 
 			{
-				LdapExtendedResponse.register(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_RES,System.Type.GetType("Novell.Directory.Ldap.Extensions.GetEffectivePrivilegesListResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_RES,Type.GetType("Novell.Directory.Ldap.Extensions.GetEffectivePrivilegesListResponse"));
 			}
-			catch (System.Exception e)
+			catch (Exception e)
 			{
-				System.Console.Error.WriteLine("Could not register Extended Response -" + " Class not found");
+				Console.Error.WriteLine("Could not register Extended Response -" + " Class not found");
 			}
 	        
 		}
@@ -93,15 +93,15 @@ namespace Novell.Directory.Ldap.Extensions
 		/// message and an Ldap error code.
 		/// </exception>
 		
-		public GetEffectivePrivilegesListRequest(System.String dn, System.String trusteeDN, System.String[] attrName):base(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_REQ, null)
+		public GetEffectivePrivilegesListRequest(String dn, String trusteeDN, String[] attrName):base(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_REQ, null)
 		{
 
 			try 
 			{
-				if ( ((System.Object)dn == null) )
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if ( ((object)dn == null) )
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 
-				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
+				MemoryStream encodedData = new MemoryStream();
 				LBEREncoder encoder  = new LBEREncoder();
 
 				Asn1OctetString asn1_trusteeDN = new Asn1OctetString(trusteeDN);
@@ -119,9 +119,9 @@ namespace Novell.Directory.Ldap.Extensions
 				setValue(SupportClass.ToSByteArray(encodedData.ToArray()));
 
 			}
-			catch(System.IO.IOException ioe)
+			catch(IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

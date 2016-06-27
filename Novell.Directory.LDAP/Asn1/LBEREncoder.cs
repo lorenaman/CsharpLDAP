@@ -81,7 +81,7 @@ namespace Novell.Directory.Ldap.Asn1
 			encode(b.getIdentifier(), out_Renamed);
 			
 			/* Encode the length */
-			out_Renamed.WriteByte((System.Byte) 0x01);
+			out_Renamed.WriteByte((Byte) 0x01);
 			
 			/* Encode the boolean content*/
 			out_Renamed.WriteByte((byte) (b.booleanValue()?(sbyte) SupportClass.Identity(0xff):(sbyte) 0x00));
@@ -131,7 +131,7 @@ namespace Novell.Directory.Ldap.Asn1
 		public void  encode(Asn1Null n, System.IO.Stream out_Renamed)
 		{
 			encode(n.getIdentifier(), out_Renamed);
-			out_Renamed.WriteByte((System.Byte) 0x00); // Length (with no Content)
+			out_Renamed.WriteByte((Byte) 0x00); // Length (with no Content)
 			return ;
 		}
 		
@@ -241,12 +241,12 @@ namespace Novell.Directory.Ldap.Asn1
 			if (t < 30)
 			{
 				/* single octet */
-				out_Renamed.WriteByte((System.Byte) (ccf | t));
+				out_Renamed.WriteByte((Byte) (ccf | t));
 			}
 			else
 			{
 				/* multiple octet */
-				out_Renamed.WriteByte((System.Byte) (ccf | 0x1F));
+				out_Renamed.WriteByte((Byte) (ccf | 0x1F));
 				encodeTagInteger(t, out_Renamed);
 			}
 			return ;
@@ -262,7 +262,7 @@ namespace Novell.Directory.Ldap.Asn1
 		{
 			if (length < 0x80)
 			{
-				out_Renamed.WriteByte((System.Byte) length);
+				out_Renamed.WriteByte((Byte) length);
 			}
 			else
 			{
@@ -274,7 +274,7 @@ namespace Novell.Directory.Ldap.Asn1
 					length >>= 8;
 				}
 				
-				out_Renamed.WriteByte((System.Byte) (0x80 | n));
+				out_Renamed.WriteByte((Byte) (0x80 | n));
 				
 				for (int i = n - 1; i >= 0; i--)
 					out_Renamed.WriteByte((byte) octets[i]);
@@ -294,7 +294,7 @@ namespace Novell.Directory.Ldap.Asn1
 			}
 			for (int i = n - 1; i > 0; i--)
 			{
-				out_Renamed.WriteByte((System.Byte) (octets[i] | 0x80));
+				out_Renamed.WriteByte((Byte) (octets[i] | 0x80));
 			}
 			out_Renamed.WriteByte((byte) octets[0]);
 			return ;

@@ -41,9 +41,9 @@ namespace Novell.Directory.Ldap.Rfc2251
 	public interface RfcRequest
 		{
 			/// <summary> Builds a new request using the data from the this object.</summary>
-			RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool reference);
+			RfcRequest dupRequest(String base_Renamed, String filter, bool reference);
 			
 			/// <summary> Builds a new request using the data from the this object.</summary>
-			System.String getRequestDN();
+			String getRequestDN();
 		}
 }

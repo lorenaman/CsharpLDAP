@@ -68,7 +68,7 @@ namespace Novell.Directory.Ldap
             /* package */
             set
             {
-                this.agent = value;
+                agent = value;
             }
         }
 
@@ -284,7 +284,7 @@ namespace Novell.Directory.Ldap
             this.agent = agent;
             this.queue = queue;
             this.mslimit = mslimit;
-            this.msgId = msg.MessageID;
+            msgId = msg.MessageID;
             this.bindprops = bindprops;
         }
 

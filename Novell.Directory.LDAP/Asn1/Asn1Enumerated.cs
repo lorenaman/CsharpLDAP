@@ -88,7 +88,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// 
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public Asn1Enumerated(Asn1Decoder dec, System.IO.Stream in_Renamed, int len):base(ID, (System.Int64) dec.decodeNumeric(in_Renamed, len))
+		public Asn1Enumerated(Asn1Decoder dec, System.IO.Stream in_Renamed, int len):base(ID, (Int64) dec.decodeNumeric(in_Renamed, len))
 		{
 			return ;
 		}
@@ -111,7 +111,7 @@ namespace Novell.Directory.Ldap.Asn1
 		}
 		
 		/// <summary> Return a String representation of this Asn1Enumerated.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString() + "ENUMERATED: " + longValue();
 		}

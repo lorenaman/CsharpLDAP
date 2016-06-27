@@ -330,21 +330,21 @@ namespace Novell.Directory.Ldap
         {
             get
             {
-                if (this.stringTag != null)
+                if (stringTag != null)
                 {
-                    return this.stringTag;
+                    return stringTag;
                 }
                 if (Request)
                 {
                     return null;
                 }
-                LdapMessage m = this.RequestingMessage;
+                LdapMessage m = RequestingMessage;
                 return m?.stringTag;
             }
 
             set
             {
-                this.stringTag = value;
+                stringTag = value;
             }
 
         }

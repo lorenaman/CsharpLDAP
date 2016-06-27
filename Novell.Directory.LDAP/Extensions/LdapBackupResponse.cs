@@ -107,7 +107,7 @@ namespace Novell.Directory.Ldap.Extensions
 			if (ResultCode == LdapException.SUCCESS) {
 			// Get the contents of the reply
 
-			byte[] returnedValue = SupportClass.ToByteArray(this.Value);
+			byte[] returnedValue = SupportClass.ToByteArray(Value);
 			if (returnedValue == null)
 				throw new Exception("LDAP Operations error. No returned value.");
 
@@ -142,7 +142,7 @@ namespace Novell.Directory.Ldap.Extensions
 			revision = asn1_revision.intValue();
 			
 			//Format stateInfo to contain both modificationTime and revision
-			this.stateInfo = modificationTime + "+" + revision;
+			stateInfo = modificationTime + "+" + revision;
 
 			// Parse returnedBuffer
 			Asn1OctetString asn1_returnedBuffer = (Asn1OctetString) decoder.decode(currentPtr);
@@ -198,15 +198,15 @@ namespace Novell.Directory.Ldap.Extensions
 			tempBuffer.Append(chunks[i]);
 
 			//Assign tempBuffer to parsedString to be returned to Application
-			this.chunkSizesString = tempBuffer.ToString();
+			chunkSizesString = tempBuffer.ToString();
 		} 
 		else 
 		{
 			//Intialize all these if getResultCode() != LdapException.SUCCESS
-			this.bufferLength = 0;
-			this.stateInfo = null;
-			this.chunkSizesString = null;
-			this.returnedBuffer = null;
+			bufferLength = 0;
+			stateInfo = null;
+			chunkSizesString = null;
+			returnedBuffer = null;
 		}
 
 	}

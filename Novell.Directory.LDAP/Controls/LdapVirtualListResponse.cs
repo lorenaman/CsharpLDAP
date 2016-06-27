@@ -88,7 +88,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// virtual list requests. Subsequent VLV requests to the same server
 		/// should return this String to the server.
 		/// </summary>
-		virtual public System.String Context
+		virtual public String Context
 		{
 			get
 			{
@@ -102,7 +102,7 @@ namespace Novell.Directory.Ldap.Controls
 		private int m_resultCode;
 		
 		/* The context field if one was returned by the server */
-		private System.String m_context = null;
+		private String m_context = null;
 		
 		/// <summary> This constructor is usually called by the SDK to instantiate an
 		/// a LdapControl corresponding to the Server response to a Ldap
@@ -145,7 +145,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <param name="values">    The control-specific data.
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public LdapVirtualListResponse(System.String oid, bool critical, sbyte[] values):base(oid, critical, values)
+		public LdapVirtualListResponse(String oid, bool critical, sbyte[] values):base(oid, critical, values)
 		{
 			
 			/* Create a decoder object */

@@ -80,14 +80,14 @@ namespace Novell.Directory.Ldap.Extensions
 		/// <exception> LdapException A general exception which includes an error
 		/// message and an Ldap error code.
 		/// </exception>
-		public SetReplicationFilterRequest(System.String serverDN, System.String[][] replicationFilter):base(ReplicationConstants.SET_REPLICATION_FILTER_REQ, null)
+		public SetReplicationFilterRequest(String serverDN, String[][] replicationFilter):base(ReplicationConstants.SET_REPLICATION_FILTER_REQ, null)
 		{
 			
 			try
 			{
 				
-				if ((System.Object) serverDN == null)
-					throw new System.ArgumentException(ExceptionMessages.PARAM_ERROR);
+				if ((object) serverDN == null)
+					throw new ArgumentException(ExceptionMessages.PARAM_ERROR);
 				
 				System.IO.MemoryStream encodedData = new System.IO.MemoryStream();
 				LBEREncoder encoder = new LBEREncoder();
@@ -128,7 +128,7 @@ namespace Novell.Directory.Ldap.Extensions
 					// For every attribute in the array - remember attributes start after
 					// the first element
 					int j = 1;
-					while ((j < replicationFilter[i].Length) && ((System.Object) replicationFilter[i][j] != null))
+					while ((j < replicationFilter[i].Length) && ((object) replicationFilter[i][j] != null))
 					{
 						
 						// Add the attribute name to the inner SequenceOf
@@ -148,7 +148,7 @@ namespace Novell.Directory.Ldap.Extensions
 			}
 			catch (System.IO.IOException ioe)
 			{
-				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (System.String) null);
+				throw new LdapException(ExceptionMessages.ENCODING_ERROR, LdapException.ENCODING_ERROR, (String) null);
 			}
 		}
 	}

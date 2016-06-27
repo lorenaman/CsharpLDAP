@@ -96,16 +96,16 @@ namespace Novell.Directory.Ldap.Asn1
 			{
 				// Should never happen - the current Asn1Object does not have
 				// a encode method. 
-				throw new System.Exception("IOException while encoding to byte array: " + e.ToString());
+				throw new Exception("IOException while encoding to byte array: " + e.ToString());
 			}
 			return SupportClass.ToSByteArray(out_Renamed.ToArray());
 		}
 		
 		/// <summary> Return a String representation of this Asn1Object.</summary>
 		[CLSCompliantAttribute(false)]
-		public override System.String ToString()
+		public override String ToString()
 		{
-			System.String[] classTypes = new System.String[]{"[UNIVERSAL ", "[APPLICATION ", "[", "[PRIVATE "};
+			String[] classTypes = new String[]{"[UNIVERSAL ", "[APPLICATION ", "[", "[PRIVATE "};
 			
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			Asn1Identifier id = getIdentifier(); // could be overridden.

@@ -42,7 +42,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 	{
 		
 		/// <summary> </summary>
-		public RfcAttributeValue(System.String value_Renamed):base(value_Renamed)
+		public RfcAttributeValue(String value_Renamed):base(value_Renamed)
 		{
 		}
 		

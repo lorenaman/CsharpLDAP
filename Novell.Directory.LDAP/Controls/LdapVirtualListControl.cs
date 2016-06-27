@@ -124,7 +124,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// virtual list requests. It should be the context field returned in a
 		/// virtual list response control for the same search.
 		/// </summary>
-		virtual public System.String Context
+		virtual public String Context
 		{
 			get
 			{
@@ -171,12 +171,12 @@ namespace Novell.Directory.Ldap.Controls
 		
 		
 		/// <summary> The Request OID for a VLV Request</summary>
-		private static System.String requestOID = "2.16.840.1.113730.3.4.9";
+		private static String requestOID = "2.16.840.1.113730.3.4.9";
 		
 		/*
 		 * The Response stOID for a VLV Response
 		 */
-		private static System.String responseOID = "2.16.840.1.113730.3.4.10";
+		private static String responseOID = "2.16.840.1.113730.3.4.10";
 		
 		/*
 		* The encoded ASN.1 VLV Control is stored in this variable
@@ -193,8 +193,8 @@ namespace Novell.Directory.Ldap.Controls
 		*/
 		private int m_beforeCount;
 		private int m_afterCount;
-		private System.String m_jumpTo;
-		private System.String m_context = null;
+		private String m_jumpTo;
+		private String m_context = null;
 		private int m_startIndex = 0;
 		private int m_contentCount = - 1;
 		
@@ -222,7 +222,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <param name="afterCount">       The number of entries after startIndex to be
 		/// returned. 
 		/// </param>
-		public LdapVirtualListControl(System.String jumpTo, int beforeCount, int afterCount):this(jumpTo, beforeCount, afterCount, null)
+		public LdapVirtualListControl(String jumpTo, int beforeCount, int afterCount):this(jumpTo, beforeCount, afterCount, null)
 		{
 			return ;
 		}
@@ -259,7 +259,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// and thereafter it should be whatever was returned by the server in the
 		/// virtual list response control.
 		/// </param>
-		public LdapVirtualListControl(System.String jumpTo, int beforeCount, int afterCount, System.String context):base(requestOID, true, null)
+		public LdapVirtualListControl(String jumpTo, int beforeCount, int afterCount, String context):base(requestOID, true, null)
 		{
 			
 			/* Save off the fields in local variables
@@ -303,7 +303,7 @@ namespace Novell.Directory.Ldap.Controls
 			
 			/* Add the optional context string if one is available.
 			*/
-			if ((System.Object) m_context != null)
+			if ((object) m_context != null)
 				m_vlvRequest.add(new Asn1OctetString(m_context));
 			
 			return ;
@@ -365,7 +365,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// and thereafter it should be whatever was returned by the server in the
 		/// virtual list response control.
 		/// </param>
-		public LdapVirtualListControl(int startIndex, int beforeCount, int afterCount, int contentCount, System.String context):base(requestOID, true, null)
+		public LdapVirtualListControl(int startIndex, int beforeCount, int afterCount, int contentCount, String context):base(requestOID, true, null)
 		{
 			
 			
@@ -416,7 +416,7 @@ namespace Novell.Directory.Ldap.Controls
 			
 			/* Add the optional context string if one is available.
 			*/
-			if ((System.Object) m_context != null)
+			if ((object) m_context != null)
 				m_vlvRequest.add(new Asn1OctetString(m_context));
 			
 			return ;
@@ -484,7 +484,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// returned.
 		/// </param>
 		
-		public virtual void  setRange(System.String jumpTo, int beforeCount, int afterCount)
+		public virtual void  setRange(String jumpTo, int beforeCount, int afterCount)
 		{
 			/* Save off the fields in local variables
 			*/
@@ -515,12 +515,12 @@ namespace Novell.Directory.Ldap.Controls
 				 */
 				try
 				{
-					LdapControl.register(responseOID, System.Type.GetType("Novell.Directory.Ldap.Controls.LdapVirtualListResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapVirtualListResponse"));
 				}
-				catch (System.Exception e)
+				catch (Exception e)
 				{
-					System.Console.Error.WriteLine ("Could not register response control for LdapVirtualListControl"); 
-					System.Console.Error.WriteLine ("Error message: " + e.Message);
+					Console.Error.WriteLine ("Could not register response control for LdapVirtualListControl"); 
+					Console.Error.WriteLine ("Error message: " + e.Message);
 				}
 			}
 		}

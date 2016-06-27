@@ -44,7 +44,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <summary>  If not null, this returns the attribute that caused the sort
 		/// operation to fail.
 		/// </summary>
-		virtual public System.String FailedAttribute
+		virtual public String FailedAttribute
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace Novell.Directory.Ldap.Controls
 			
 		}
 		
-		private System.String failedAttribute;
+		private String failedAttribute;
 		private int resultCode;
 		
 		/// <summary> This constructor is usually called by the SDK to instantiate an
@@ -113,7 +113,7 @@ namespace Novell.Directory.Ldap.Controls
 		/// <param name="values">    The control-specific data.
 		/// </param>
 		[CLSCompliantAttribute(false)]
-		public LdapSortResponse(System.String oid, bool critical, sbyte[] values):base(oid, critical, values)
+		public LdapSortResponse(String oid, bool critical, sbyte[] values):base(oid, critical, values)
 		{
 			
 			// Create a decoder object

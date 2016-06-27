@@ -74,7 +74,7 @@ namespace Novell.Directory.Ldap.Asn1
 		/// <param name="content">A string value that will be contained
 		/// in the this Asn1OctetString object
 		/// </param>
-		public Asn1OctetString(System.String content):base(ID)
+		public Asn1OctetString(String content):base(ID)
 		{
 			try
 			{
@@ -108,7 +108,7 @@ namespace Novell.Directory.Ldap.Asn1
 			}
 			catch (System.IO.IOException uee)
 			{
-				throw new System.Exception(uee.ToString());
+				throw new Exception(uee.ToString());
 			}
 			return ;
 		}
@@ -166,9 +166,9 @@ namespace Novell.Directory.Ldap.Asn1
 		
 		
 		/// <summary> Returns the content of this Asn1OctetString as a String.</summary>
-		public System.String stringValue()
+		public String stringValue()
 		{
-			System.String s = null;
+			String s = null;
 			try
 			{
                 /* Novell code
@@ -192,7 +192,7 @@ namespace Novell.Directory.Ldap.Asn1
 			}
 			catch (System.IO.IOException uee)
 			{
-				throw new System.Exception(uee.ToString());
+				throw new Exception(uee.ToString());
 			}
 			
 			return s;
@@ -200,7 +200,7 @@ namespace Novell.Directory.Ldap.Asn1
 		
 		
 		/// <summary> Return a String representation of this Asn1Object.</summary>
-		public override System.String ToString()
+		public override String ToString()
 		{
 			return base.ToString() + "OCTET STRING: " + stringValue();
 		}

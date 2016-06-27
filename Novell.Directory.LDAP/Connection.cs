@@ -99,7 +99,7 @@ namespace Novell.Directory.Ldap
         private static string GetProblemMessage(CertificateProblem Problem)
         {
             string ProblemMessage = "";
-            string ProblemCodeName = CertificateProblem.GetName(typeof(CertificateProblem), Problem);
+            string ProblemCodeName = Enum.GetName(typeof(CertificateProblem), Problem);
             if (ProblemCodeName != null)
                 ProblemMessage = ProblemMessage + ProblemCodeName;
             else
@@ -389,9 +389,9 @@ namespace Novell.Directory.Ldap
         internal object copy()
         {
             Connection c = new Connection();
-            c.host = this.host;
-            c.port = this.port;
-            protocol = Connection.protocol;
+            c.host = host;
+            c.port = port;
+            protocol = protocol;
             return c;
         }
 
@@ -512,7 +512,7 @@ namespace Novell.Directory.Ldap
             var rInst = reader;
             var tInst = readerThread;
 
-            while (!object.Equals(rInst, tInst))
+            while (!Equals(rInst, tInst))
             {
                 // Don't initialize connection while previous reader thread still
                 // active.
@@ -684,7 +684,7 @@ namespace Novell.Directory.Ldap
                         {
                             this.host = host;
                             this.port = port;
-                            this.sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                            sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                             IPAddress hostadd = Dns.GetHostEntryAsync(host).Result.AddressList[0];
                             IPEndPoint ephost = new IPEndPoint(hostadd, port);
                             sock.Connect(ephost);
@@ -732,7 +732,7 @@ namespace Novell.Directory.Ldap
                 this.host = host;
                 this.port = port;
                 // start the reader thread
-                this.startReader();
+                startReader();
                 clientActive = true; // Client is up
             }
             finally
@@ -794,7 +794,7 @@ namespace Novell.Directory.Ldap
                     // This is a clone, set a new connection object.
                     if (apiCall)
                     {
-                        conn = (Connection)this.copy();
+                        conn = (Connection)copy();
                     }
                     else
                     {
@@ -1190,7 +1190,7 @@ namespace Novell.Directory.Ldap
         /* package */
         internal void stopReaderOnReply(int messageID)
         {
-            this.stopReaderMessageID = messageID;
+            stopReaderMessageID = messageID;
         }
 
         /// <summary>startReader
@@ -1214,7 +1214,7 @@ namespace Novell.Directory.Ldap
         {
             get
             {
-                return (this.nonTLSBackup != null);
+                return (nonTLSBackup != null);
             }
         }
 
@@ -1236,7 +1236,7 @@ namespace Novell.Directory.Ldap
             try
             {
                 waitForReader(null);
-                this.nonTLSBackup = this.socket;
+                nonTLSBackup = socket;
 
                 var objSslClientStream = new SslStream(socket.GetStream(), true, ServerCertificateValidation);
                 objSslClientStream.AuthenticateAsClientAsync(host).Wait();
@@ -1247,13 +1247,13 @@ namespace Novell.Directory.Ldap
             }
             catch (IOException ioe)
             {
-                this.nonTLSBackup = null;
+                nonTLSBackup = null;
                 throw new LdapException("Could not negotiate a secure connection", LdapException.CONNECT_ERROR, null,
                     ioe);
             }
             catch (Exception uhe)
             {
-                this.nonTLSBackup = null;
+                nonTLSBackup = null;
                 throw new LdapException("The host is unknown", LdapException.CONNECT_ERROR, null, uhe);
             }
         }
@@ -1284,15 +1284,15 @@ namespace Novell.Directory.Ldap
         {
             try
             {
-                this.stopReaderMessageID = Connection.STOP_READING;
-                this.out_Renamed.Dispose();
-                this.in_Renamed.Dispose();
+                stopReaderMessageID = STOP_READING;
+                out_Renamed.Dispose();
+                in_Renamed.Dispose();
                 waitForReader(null);
-                this.socket = this.nonTLSBackup;
-                this.in_Renamed = this.socket.GetStream();
-                this.out_Renamed = this.socket.GetStream();
+                socket = nonTLSBackup;
+                in_Renamed = socket.GetStream();
+                out_Renamed = socket.GetStream();
                 // Allow the new reader to start
-                this.stopReaderMessageID = Connection.CONTINUE_READING;
+                stopReaderMessageID = CONTINUE_READING;
             }
             catch (IOException ioe)
             {
@@ -1300,7 +1300,7 @@ namespace Novell.Directory.Ldap
             }
             finally
             {
-                this.nonTLSBackup = null;
+                nonTLSBackup = null;
                 startReader();
             }
         }
@@ -1362,7 +1362,7 @@ namespace Novell.Directory.Ldap
                         /* get current value of in, keep value consistant
 						* though the loop, i.e. even during shutdown
 						*/
-                        Stream myIn = this.enclosingInstance.in_Renamed;
+                        Stream myIn = enclosingInstance.in_Renamed;
                         if (myIn == null)
                         {
                             break;
@@ -1380,7 +1380,7 @@ namespace Novell.Directory.Ldap
                             token.ThrowIfCancellationRequested();
                         }
                         Asn1Length asn1Len = new Asn1Length(myIn);
-                        RfcLdapMessage msg = new RfcLdapMessage(this.enclosingInstance.decoder, myIn, asn1Len.Length);
+                        RfcLdapMessage msg = new RfcLdapMessage(enclosingInstance.decoder, myIn, asn1Len.Length);
 
                         // ------------------------------------------------------------
                         // Process the decoded RfcLdapMessage.
@@ -1396,7 +1396,7 @@ namespace Novell.Directory.Ldap
                             {
                                 token.ThrowIfCancellationRequested();
                             }
-                            info = this.enclosingInstance.messages.findMessageById(msgId);
+                            info = enclosingInstance.messages.findMessageById(msgId);
                             if (token.IsCancellationRequested)
                             {
                                 token.ThrowIfCancellationRequested();
@@ -1433,7 +1433,7 @@ namespace Novell.Directory.Ldap
                             if (msgId == 0)
                             {
                                 // Notify any listeners that might have been registered
-                                this.enclosingInstance.notifyAllUnsolicitedListeners(msg);
+                                enclosingInstance.notifyAllUnsolicitedListeners(msg);
 
                                 /*
 								* Was this a server shutdown unsolicited notification.
@@ -1441,10 +1441,10 @@ namespace Novell.Directory.Ldap
 								* first transfer control to the finally clause which
 								* will do the necessary clean up.
 								*/
-                                if (this.enclosingInstance.unsolSvrShutDnNotification)
+                                if (enclosingInstance.unsolSvrShutDnNotification)
                                 {
                                     notify = new InterThreadException(ExceptionMessages.SERVER_SHUTDOWN_REQ,
-                                        new object[] { this.enclosingInstance.host, this.enclosingInstance.port },
+                                        new object[] { enclosingInstance.host, enclosingInstance.port },
                                         LdapException.CONNECT_ERROR, null, null);
 
                                     return;
@@ -1456,8 +1456,8 @@ namespace Novell.Directory.Ldap
                             }
                         }
 
-                        if ((this.enclosingInstance.stopReaderMessageID == msgId) ||
-                            (this.enclosingInstance.stopReaderMessageID == Connection.STOP_READING))
+                        if ((enclosingInstance.stopReaderMessageID == msgId) ||
+                            (enclosingInstance.stopReaderMessageID == STOP_READING))
                         {
                             // Stop the reader Thread.
                             return;
@@ -1473,17 +1473,17 @@ namespace Novell.Directory.Ldap
                 catch (IOException ioe)
                 {
                     ioex = ioe;
-                    if ((this.enclosingInstance.stopReaderMessageID != Connection.STOP_READING) &&
-                        this.enclosingInstance.clientActive)
+                    if ((enclosingInstance.stopReaderMessageID != STOP_READING) &&
+                        enclosingInstance.clientActive)
                     {
                         // Connection lost waiting for results from host:port
                         notify = new InterThreadException(ExceptionMessages.CONNECTION_WAIT,
-                            new object[] { this.enclosingInstance.host, this.enclosingInstance.port },
+                            new object[] { enclosingInstance.host, enclosingInstance.port },
                             LdapException.CONNECT_ERROR, ioe, info);
                     }
                     // The connection is no good, don't use it any more
-                    this.enclosingInstance.in_Renamed = null;
-                    this.enclosingInstance.out_Renamed = null;
+                    enclosingInstance.in_Renamed = null;
+                    enclosingInstance.out_Renamed = null;
                 }
                 catch (Exception ex)
                 {
@@ -1512,19 +1512,19 @@ namespace Novell.Directory.Ldap
 					*      - Indicated by an IOException AND notify is not NULL
 					*      - call Shutdown.
 					*/
-                    if ((!this.enclosingInstance.clientActive) || (notify != null))
+                    if ((!enclosingInstance.clientActive) || (notify != null))
                     {
                         //#3 & 4
-                        this.enclosingInstance.Dispose(false, reason, 0, notify);
+                        enclosingInstance.Dispose(false, reason, 0, notify);
                     }
                     else
                     {
-                        this.enclosingInstance.stopReaderMessageID = Connection.CONTINUE_READING;
+                        enclosingInstance.stopReaderMessageID = CONTINUE_READING;
                     }
 
-                    this.enclosingInstance.deadReaderException = ioex;
-                    this.enclosingInstance.deadReader = this.enclosingInstance.reader;
-                    this.enclosingInstance.reader = null;
+                    enclosingInstance.deadReaderException = ioex;
+                    enclosingInstance.deadReader = enclosingInstance.reader;
+                    enclosingInstance.reader = null;
                     Debug.WriteLine("ReaderThread Finished");
                 }
             }
@@ -1564,8 +1564,8 @@ namespace Novell.Directory.Ldap
             /* package */
             internal UnsolicitedListenerThread(LdapUnsolicitedNotificationListener l, LdapExtendedResponse m)
             {
-                this.listenerObj = l;
-                this.unsolicitedMsg = m;
+                listenerObj = l;
+                unsolicitedMsg = m;
             }
 
             public override void Run()

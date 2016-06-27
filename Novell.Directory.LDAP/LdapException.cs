@@ -1012,7 +1012,7 @@ namespace Novell.Directory.Ldap
             this.resultCode = resultCode;
             this.rootException = rootException;
             this.matchedDN = matchedDN;
-            this.serverMessage = serverMsg;
+            serverMessage = serverMsg;
         }
 
         /// <summary> Returns a string representing the result code in the default

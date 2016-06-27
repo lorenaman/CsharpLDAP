@@ -56,7 +56,7 @@ namespace Novell.Directory.Ldap.Extensions
 		private int modificationTime;
 		private int purgeTime;
 		private int localPartitionID;
-		private System.String partitionDN;
+		private String partitionDN;
 		private int replicaType;
 		private int flags;
 		
@@ -84,7 +84,7 @@ namespace Novell.Directory.Ldap.Extensions
 			if (ResultCode == LdapException.SUCCESS)
 			{
 				// parse the contents of the reply
-				sbyte[] returnedValue = this.Value;
+				sbyte[] returnedValue = Value;
 				if (returnedValue == null)
 					throw new System.IO.IOException("No returned value");
 				
@@ -139,7 +139,7 @@ namespace Novell.Directory.Ldap.Extensions
 					throw new System.IO.IOException("Decoding error");
 				
 				partitionDN = asn1_partitionDN.stringValue();
-				if ((System.Object) partitionDN == null)
+				if ((object) partitionDN == null)
 					throw new System.IO.IOException("Decoding error");
 				
 				
@@ -254,7 +254,7 @@ namespace Novell.Directory.Ldap.Extensions
 		/// </summary>
 		/// <returns> String value specifying the name of the partition read.
 		/// </returns>
-		public virtual System.String getpartitionDN()
+		public virtual String getpartitionDN()
 		{
 			return partitionDN;
 		}

@@ -83,11 +83,11 @@ namespace Novell.Directory.Ldap.Rfc2251
 		
 		/// <summary> Constructs a new Search Request copying from an existing request.</summary>
 		/* package */
-		internal RfcSearchRequest(Asn1Object[] origRequest, System.String base_Renamed, System.String filter, bool request):base(origRequest, origRequest.Length)
+		internal RfcSearchRequest(Asn1Object[] origRequest, String base_Renamed, String filter, bool request):base(origRequest, origRequest.Length)
 		{
 			
 			// Replace the base if specified, otherwise keep original base
-			if ((System.Object) base_Renamed != null)
+			if ((object) base_Renamed != null)
 			{
 				set_Renamed(0, new RfcLdapDN(base_Renamed));
 			}
@@ -104,7 +104,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 				}
 			}
 			// Replace the filter if specified, otherwise keep original filter
-			if ((System.Object) filter != null)
+			if ((object) filter != null)
 			{
 				set_Renamed(6, new RfcFilter(filter));
 			}
@@ -126,12 +126,12 @@ namespace Novell.Directory.Ldap.Rfc2251
 			return new Asn1Identifier(Asn1Identifier.APPLICATION, true, LdapMessage.SEARCH_REQUEST);
 		}
 		
-		public RfcRequest dupRequest(System.String base_Renamed, System.String filter, bool request)
+		public RfcRequest dupRequest(String base_Renamed, String filter, bool request)
 		{
 			return new RfcSearchRequest(toArray(), base_Renamed, filter, request);
 		}
 		
-		public System.String getRequestDN()
+		public String getRequestDN()
 		{
 			return ((RfcLdapDN) get_Renamed(0)).stringValue();
 		}

@@ -57,7 +57,7 @@ namespace Novell.Directory.Ldap.Rfc2251
 		}
 
 		[CLSCompliantAttribute(false)]		
-		public RfcAuthenticationChoice(System.String mechanism, sbyte[] credentials):base(new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, 3), new RfcSaslCredentials(new RfcLdapString(mechanism), credentials != null?new Asn1OctetString(credentials):null), false))
+		public RfcAuthenticationChoice(String mechanism, sbyte[] credentials):base(new Asn1Tagged(new Asn1Identifier(Asn1Identifier.CONTEXT, true, 3), new RfcSaslCredentials(new RfcLdapString(mechanism), credentials != null?new Asn1OctetString(credentials):null), false))
 		{ // implicit tagging
 		}
 		

@@ -37,83 +37,94 @@ using Novell.Directory.Ldap.Rfc2251;
 
 namespace Novell.Directory.Ldap.Utilclass
 {
-  /// <summary>
-  ///
-  /// Takes an LDAPIntermediateResponse and returns an object
-  /// (that implements the base class LDAPIntermediateResponse)
-  ///  based on the OID.
-  ///
-  ///  You can then call methods defined in the child
-  ///  class to parse the contents of the response.  The methods available
-  ///  depend on the child class. All child classes inherit from the
-  ///  LdapIntermediateResponse.
-  ///
-  /// </summary>
-public class IntermediateResponseFactory 
-{
+    /// <summary>
+    ///
+    /// Takes an LDAPIntermediateResponse and returns an object
+    /// (that implements the base class LDAPIntermediateResponse)
+    ///  based on the OID.
+    ///
+    ///  You can then call methods defined in the child
+    ///  class to parse the contents of the response.  The methods available
+    ///  depend on the child class. All child classes inherit from the
+    ///  LdapIntermediateResponse.
+    ///
+    /// </summary>
+    public class IntermediateResponseFactory
+    {
 
-    /**
-     * Used to Convert an RfcLDAPMessage object to the appropriate
-     * LDAPIntermediateResponse object depending on the operation being performed.
-     *
-     * @param inResponse   The LDAPIntermediateResponse object as returned by the
-     *                     extendedOperation method in the LDAPConnection object.
-     * <br><br>
-     * @return An object of base class LDAPIntermediateResponse.  The actual child
-     *         class of this returned object depends on the operation being
-     *         performed.
-     *
-     * @exception LDAPException A general exception which includes an error message
-     *                          and an LDAP error code.
-     */
+        /**
+         * Used to Convert an RfcLDAPMessage object to the appropriate
+         * LDAPIntermediateResponse object depending on the operation being performed.
+         *
+         * @param inResponse   The LDAPIntermediateResponse object as returned by the
+         *                     extendedOperation method in the LDAPConnection object.
+         * <br><br>
+         * @return An object of base class LDAPIntermediateResponse.  The actual child
+         *         class of this returned object depends on the operation being
+         *         performed.
+         *
+         * @exception LDAPException A general exception which includes an error message
+         *                          and an LDAP error code.
+         */
 
-    static public LdapIntermediateResponse convertToIntermediateResponse(RfcLdapMessage inResponse)
-      //          throws LDAPException 
-  {
-        
-        LdapIntermediateResponse tempResponse = new LdapIntermediateResponse(inResponse);
-        // Get the oid stored in the Extended response
-        String inOID = tempResponse.getID();
+        static public LdapIntermediateResponse convertToIntermediateResponse(RfcLdapMessage inResponse)
+        //          throws LDAPException 
+        {
 
-        RespExtensionSet regExtResponses = 
-                                LdapIntermediateResponse.getRegisteredResponses();
-        try{
-            Type extRespClass = regExtResponses.findResponseExtension(inOID);            
-            if ( extRespClass == null ){
-                return tempResponse;
-            }
-            
-            Type[] argsClass = new Type[]{typeof(RfcLdapMessage)};
-            Object[] args = { inResponse };
-            Exception ex;
-            try{
-                ConstructorInfo extConstructor = extRespClass.GetConstructor(argsClass);
+            LdapIntermediateResponse tempResponse = new LdapIntermediateResponse(inResponse);
+            // Get the oid stored in the Extended response
+            string inOID = tempResponse.getID();
 
-                try{
-                    Object resp = null;
-                    resp = extConstructor.Invoke(args);
-                    return (LdapIntermediateResponse) resp;
-                } catch (UnauthorizedAccessException e) {
-                    ex = e;
-                } catch (TargetInvocationException e) {
+            RespExtensionSet regExtResponses = LdapIntermediateResponse.getRegisteredResponses();
+            try
+            {
+                Type extRespClass = regExtResponses.findResponseExtension(inOID);
+                if (extRespClass == null)
+                {
+                    return tempResponse;
+                }
+
+                Type[] argsClass = new Type[] { typeof(RfcLdapMessage) };
+                object[] args = { inResponse };
+                Exception ex;
+                try
+                {
+                    ConstructorInfo extConstructor = extRespClass.GetConstructor(argsClass);
+
+                    try
+                    {
+                        object resp = null;
+                        resp = extConstructor.Invoke(args);
+                        return (LdapIntermediateResponse)resp;
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        ex = e;
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        ex = e;
+                    }
+                }
+                catch (MissingMethodException e)
+                {
+                    // bad class was specified, fall through and return a
+                    // default  LDAPIntermediateResponse object
                     ex = e;
                 }
-            } catch (MissingMethodException e) {
-                // bad class was specified, fall through and return a
-                // default  LDAPIntermediateResponse object
-                ex = e;
             }
-        } catch (MissingFieldException e) {
-            // No match with the OID
-            // Do nothing. Fall through and construct a default LDAPControl object.
+            catch (MissingFieldException e)
+            {
+                // No match with the OID
+                // Do nothing. Fall through and construct a default LDAPControl object.
 
+            }
+            // If we get here we did not have a registered extendedresponse
+            // for this oid.  Return a default LDAPIntermediateResponse object.
+            return tempResponse;
         }
-        // If we get here we did not have a registered extendedresponse
-        // for this oid.  Return a default LDAPIntermediateResponse object.
-        return tempResponse;
-    }
 
-}
+    }
 
 }
 
