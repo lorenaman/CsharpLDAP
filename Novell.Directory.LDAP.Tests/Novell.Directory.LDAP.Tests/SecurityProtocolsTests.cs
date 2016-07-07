@@ -53,7 +53,7 @@ namespace Novell.Directory.LDAP.Tests
         public void Ldap_Connection_Should_Not_Start_TLS_With_Invalid_Certificate_That_Is_Processed_By_Default_Certificate_Validation_Handler()
         {
             var ldapHost = "192.168.1.32";
-            var ldapPort = 636;
+            var ldapPort = 389;
 
             var ldap = new LdapConnection();
             ldap.Connect(ldapHost, ldapPort);
@@ -65,7 +65,7 @@ namespace Novell.Directory.LDAP.Tests
         public void Ldap_Connection_Should_Connect_SSL()
         {
             var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
+            var ldapPort = 636;
             var loginDN = "dc=example,dc=com";
             var password = "";
 
