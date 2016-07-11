@@ -51,7 +51,7 @@ namespace Novell.Directory.LDAP.Tests
         }
 
         [Fact]
-        public void Ldap_Connection_Copy_Method_Should_Return_Another_Instance_Of_Object()
+        public void Ldap_Connection_Clone_Method_Should_Return_Another_Instance_Of_Object()
         {
             var ldapConnection = new LdapConnection();
             var ldapConnectionClone = ldapConnection.Clone();
