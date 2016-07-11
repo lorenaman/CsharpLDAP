@@ -9,14 +9,9 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Connection_Should_Bind_Login_And_Password()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
-            var loginDN = "dc=example,dc=com";
-            var password = "";
-
             var ldap = new LdapConnection();
-            ldap.Connect(ldapHost, ldapPort);
-            ldap.Bind(loginDN, password);
+            ldap.Connect(Globals.Host, Globals.DefaultPort);
+            ldap.Bind(Globals.LoginDN, Globals.Password);
 
             Assert.True(ldap.Connected);
         }
@@ -24,25 +19,20 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Connection_Should_Start_TLS()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
-
             var ldap = new LdapConnection();
             ldap.UserDefinedServerCertValidationDelegate += (certificate, certificateErrors) => true;
-            ldap.Connect(ldapHost, ldapPort);
+            ldap.Connect(Globals.Host, Globals.DefaultPort);
             ldap.startTLS();
+
             Assert.True(ldap.TLS);
         }
 
         [Fact]
         public void Ldap_Connection_Should_Start_and_Stop_TLS()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
-
             var ldap = new LdapConnection();
             ldap.UserDefinedServerCertValidationDelegate += (certificate, certificateErrors) => true;
-            ldap.Connect(ldapHost, ldapPort);
+            ldap.Connect(Globals.Host, Globals.DefaultPort);
             ldap.startTLS();
             ldap.stopTLS();
 
@@ -52,11 +42,8 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Connection_Should_Not_Start_TLS_With_Invalid_Certificate_That_Is_Processed_By_Default_Certificate_Validation_Handler()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
-
             var ldap = new LdapConnection();
-            ldap.Connect(ldapHost, ldapPort);
+            ldap.Connect(Globals.Host, Globals.DefaultPort);
 
             Assert.Throws(typeof(LdapException), () => { ldap.startTLS(); });
         }
@@ -64,16 +51,11 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Connection_Should_Connect_SSL()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 636;
-            var loginDN = "dc=example,dc=com";
-            var password = "";
-
             var ldap = new LdapConnection();
             ldap.SecureSocketLayer = true;
             ldap.UserDefinedServerCertValidationDelegate += (certificate, certificateErrors) => true;
-            ldap.Connect(ldapHost, ldapPort);
-            ldap.Bind(loginDN, password);
+            ldap.Connect(Globals.Host, Globals.SslPort);
+            ldap.Bind(Globals.LoginDN, Globals.Password);
             
             Assert.True(ldap.Connected);
         }

@@ -12,13 +12,11 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Search_Should_Return_Correct_Results_Count()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
             var loginDN = "dc=example,dc=com";
             var password = "";
 
             LdapConnection conn = new LdapConnection();
-            conn.Connect(ldapHost, ldapPort);
+            conn.Connect(Globals.Host, Globals.DefaultPort);
             conn.Bind(loginDN, password);
             LdapSearchResults lsc = conn.Search(
                     "dc=example,dc=com",
@@ -43,13 +41,11 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Search_Should_Return_Not_Null_Entries()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
             var loginDN = "dc=example,dc=com";
             var password = "";
 
             LdapConnection conn = new LdapConnection();
-            conn.Connect(ldapHost, ldapPort);
+            conn.Connect(Globals.Host, Globals.DefaultPort);
             conn.Bind(loginDN, password);
             LdapSearchResults lsc = conn.Search(
                     "dc=example,dc=com",
@@ -70,13 +66,11 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Entry_Should_Return_Dn_Property()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
             var loginDN = "dc=example,dc=com";
             var password = "";
 
             LdapConnection conn = new LdapConnection();
-            conn.Connect(ldapHost, ldapPort);
+            conn.Connect(Globals.Host, Globals.DefaultPort);
             conn.Bind(loginDN, password);
             LdapSearchResults lsc = conn.Search(
                     "dc=example,dc=com",
@@ -97,14 +91,12 @@ namespace Novell.Directory.LDAP.Tests
         [Fact]
         public void Ldap_Search_Should_Return_Not_More_Results_Than_Defined_In_Ldap_Search_Constraints()
         {
-            var ldapHost = "192.168.1.32";
-            var ldapPort = 389;
             var loginDN = "dc=example,dc=com";
             var password = "";
             int maxResults = 1;
 
             LdapConnection conn = new LdapConnection();
-            conn.Connect(ldapHost, ldapPort);
+            conn.Connect(Globals.Host, Globals.DefaultPort);
             conn.Bind(loginDN, password);
             LdapSearchResults lsc = conn.Search(
                     "dc=example,dc=com",
@@ -123,6 +115,7 @@ namespace Novell.Directory.LDAP.Tests
                     ++counter;
                 }
             });
+
             Assert.IsType<LdapException>(exception);
             Assert.Equal(exception.Message, "Sizelimit Exceeded");
             Assert.InRange(counter, 0, maxResults);
