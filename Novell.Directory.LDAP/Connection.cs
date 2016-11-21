@@ -45,6 +45,8 @@ using System.Reflection;
 using System.Net.Security;
 using System.Threading.Tasks;
 
+using System.Linq;
+
 namespace Novell.Directory.Ldap
 {
     public delegate bool CertificateValidationCallback(
@@ -685,7 +687,11 @@ namespace Novell.Directory.Ldap
                             this.host = host;
                             this.port = port;
                             sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                            IPAddress hostadd = Dns.GetHostEntryAsync(host).Result.AddressList[0];
+                            IPAddress hostadd = Dns.GetHostEntryAsync(host)
+                                                   .Result
+                                                   .AddressList
+                                                   .FirstOrDefault(address => address.AddressFamily == AddressFamily.InterNetwork);
+
                             IPEndPoint ephost = new IPEndPoint(hostadd, port);
                             sock.Connect(ephost);
                             NetworkStream nstream = new NetworkStream(sock, true);
