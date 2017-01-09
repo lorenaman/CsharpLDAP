@@ -687,9 +687,8 @@ namespace Novell.Directory.Ldap
                             this.host = host;
                             this.port = port;
                             sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                            IPAddress hostadd = Dns.GetHostEntryAsync(host)
+                            IPAddress hostadd = Dns.GetHostAddressesAsync(host)
                                                    .Result
-                                                   .AddressList
                                                    .FirstOrDefault(address => address.AddressFamily == AddressFamily.InterNetwork);
 
                             IPEndPoint ephost = new IPEndPoint(hostadd, port);
