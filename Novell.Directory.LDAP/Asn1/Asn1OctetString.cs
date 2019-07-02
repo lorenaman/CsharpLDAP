@@ -175,8 +175,6 @@ namespace Novell.Directory.Ldap.Asn1
                     char[] dchar = encoder.GetChars(SupportClass.ToByteArray(content));
                     s = new String(dchar);
 
-    //				sbyte *sb=content;
-    //				s = new  String(sb,0,content.Length, new System.Text.UTF8Encoding());
 			}
 			catch (System.IO.IOException uee)
 			{
