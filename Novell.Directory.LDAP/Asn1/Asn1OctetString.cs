@@ -171,24 +171,10 @@ namespace Novell.Directory.Ldap.Asn1
 			String s = null;
 			try
 			{
-                /* Novell code
                     System.Text.Encoding encoder = System.Text.Encoding.GetEncoding("utf-8"); 
                     char[] dchar = encoder.GetChars(SupportClass.ToByteArray(content));
                     s = new String(dchar);
 
-    //				sbyte *sb=content;
-    //				s = new  String(sb,0,content.Length, new System.Text.UTF8Encoding());
-                 */
-                var i = 0;
-                byte[] bytes = new byte[content.Length];
-                foreach (var item in content)
-                {
-                    bytes[i++] = unchecked((byte)item);
-                }
-
-				s = "";
-				foreach (byte b in bytes)
-					s += (char)b;
 			}
 			catch (System.IO.IOException uee)
 			{
