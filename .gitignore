@@ -6,3 +6,4 @@ bin/
 *.csproj.*
 *.lock.json
 .vs/*
+.idea/*
