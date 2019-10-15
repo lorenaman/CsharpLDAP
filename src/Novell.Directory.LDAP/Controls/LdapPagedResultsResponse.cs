@@ -88,11 +88,43 @@ namespace Novell.Directory.LDAP.VQ.Controls
 			 */
 			Asn1Object asn1Cookie = ((Asn1Sequence)asnObj).get_Renamed (1);
 			if ((asn1Cookie != null) && (asn1Cookie is Asn1OctetString))
-				m_cookie = ((Asn1OctetString)asn1Cookie).stringValue ();
+				m_cookie = DecodeCookie((Asn1OctetString)asn1Cookie);
 			else
 				throw new System.IO.IOException ("Decoding error");
 
 			return ;
 		}
+
+        //
+		//  We need to use this decode method instead of the Asn1OctetString one
+		//  see this issue: https://github.com/VQComms/CsharpLDAP/issues/10
+		//
+		private string DecodeCookie(Asn1OctetString cookie)
+        {
+            var s = string.Empty;
+
+            try
+            {
+                var i = 0;
+                var content = cookie.byteValue();
+                byte[] bytes = new byte[content.Length];
+                foreach (var item in content)
+                {
+                    bytes[i++] = unchecked((byte)item);
+                }
+
+                s = "";
+                foreach (byte b in bytes)
+                {
+                    s += (char)b;
+                }
+            }
+            catch (System.IO.IOException e)
+            {
+                throw new System.SystemException(e.ToString());
+            }
+
+            return s;
+        }
 	}
 }
