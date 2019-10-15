@@ -34,72 +34,72 @@ using Novell.Directory.LDAP.VQ.Asn1;
 
 namespace Novell.Directory.LDAP.VQ.Controls
 {
-	public class LdapPagedResultsResponse:LdapControl
-	{
-		virtual public int Size
-		{
-			get
-			{
-				return m_size;
-			}
+    public class LdapPagedResultsResponse : LdapControl
+    {
+        virtual public int Size
+        {
+            get
+            {
+                return m_size;
+            }
 
-		}
+        }
 
-		virtual public String Cookie
-		{
-			get
-			{
-				return m_cookie;
-			}
+        virtual public String Cookie
+        {
+            get
+            {
+                return m_cookie;
+            }
 
-		}
+        }
 
-		/* The parsed fields are stored in these private variables */
-		private int m_size;
-		private String m_cookie;
+        /* The parsed fields are stored in these private variables */
+        private int m_size;
+        private String m_cookie;
 
-		[CLSCompliant(false)]
-		public LdapPagedResultsResponse(String oid, bool critical, sbyte[] values):base(oid, critical, values)
-		{
-		
-			/* Create a decoder object */
-			LBERDecoder decoder = new LBERDecoder ();
-			if (decoder == null)
-				throw new System.IO.IOException ("Decoding error");
+        [CLSCompliant(false)]
+        public LdapPagedResultsResponse(String oid, bool critical, sbyte[] values) : base(oid, critical, values)
+        {
 
-			/* We should get back an ASN.1 Sequence object */
-			Asn1Object asnObj = decoder.decode (values);
-			if ((asnObj == null) || (!(asnObj is Asn1Sequence)))
-				throw new System.IO.IOException ("Decoding error");
+            /* Create a decoder object */
+            LBERDecoder decoder = new LBERDecoder();
+            if (decoder == null)
+                throw new System.IO.IOException("Decoding error");
 
-			/* 
+            /* We should get back an ASN.1 Sequence object */
+            Asn1Object asnObj = decoder.decode(values);
+            if ((asnObj == null) || (!(asnObj is Asn1Sequence)))
+                throw new System.IO.IOException("Decoding error");
+
+            /* 
 			 * Get the 1st element which should be an integer containing the
 			 * size (RFC 2696).
 			 */
-			Asn1Object asn1Size = ((Asn1Sequence)asnObj).get_Renamed (0);
-			if ((asn1Size != null) && (asn1Size is Asn1Integer))
-				m_size = ((Asn1Integer)asn1Size).intValue ();
-			else
-				throw new System.IO.IOException ("Decoding error");
+            Asn1Object asn1Size = ((Asn1Sequence)asnObj).get_Renamed(0);
+            if ((asn1Size != null) && (asn1Size is Asn1Integer))
+                m_size = ((Asn1Integer)asn1Size).intValue();
+            else
+                throw new System.IO.IOException("Decoding error");
 
-			/*
+            /*
 			 * Get the 2nd element which should be an octet string containing the
 			 * cookie (RFC 2696).
 			 */
-			Asn1Object asn1Cookie = ((Asn1Sequence)asnObj).get_Renamed (1);
-			if ((asn1Cookie != null) && (asn1Cookie is Asn1OctetString))
-				m_cookie = DecodeCookie((Asn1OctetString)asn1Cookie);
-			else
-				throw new System.IO.IOException ("Decoding error");
+            Asn1Object asn1Cookie = ((Asn1Sequence)asnObj).get_Renamed(1);
+            if ((asn1Cookie != null) && (asn1Cookie is Asn1OctetString))
+                m_cookie = DecodeCookie((Asn1OctetString)asn1Cookie);
+            else
+                throw new System.IO.IOException("Decoding error");
 
-			return ;
-		}
+            return;
+        }
 
         //
-		//  We need to use this decode method instead of the Asn1OctetString one
-		//  see this issue: https://github.com/VQComms/CsharpLDAP/issues/10
-		//
-		private string DecodeCookie(Asn1OctetString cookie)
+        //  We need to use this decode method instead of the Asn1OctetString one
+        //  See this issue: https://github.com/VQComms/CsharpLDAP/issues/10
+        //
+        private string DecodeCookie(Asn1OctetString cookie)
         {
             var s = string.Empty;
 
@@ -126,5 +126,5 @@ namespace Novell.Directory.LDAP.VQ.Controls
 
             return s;
         }
-	}
+    }
 }
