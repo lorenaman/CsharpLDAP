@@ -119,7 +119,7 @@ namespace Novell.Directory.LDAP.VQ.Controls
 				*/
 				try
 				{
-					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapSortResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.LDAP.VQ.Controls.LdapSortResponse"));
 				}
 				catch (Exception e)
 				{

@@ -112,7 +112,7 @@ namespace Novell.Directory.LDAP.VQ.Controls
 				// in response to a Paged Results Request - same OID
 				try
 				{
-					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapPagedResultsResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.LDAP.VQ.Controls.LdapPagedResultsResponse"));
 				}
 				catch (Exception e)
 				{

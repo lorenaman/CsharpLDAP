@@ -77,7 +77,7 @@ namespace Novell.Directory.LDAP.VQ.Extensions
 			{
 				LdapExtendedResponse.register(
 					BackupRestoreConstants.NLDAP_LDAP_BACKUP_RESPONSE,
-					Type.GetType("Novell.Directory.Ldap.Extensions.LdapBackupResponse"));
+					Type.GetType("Novell.Directory.LDAP.VQ.Extensions.LdapBackupResponse"));
 			} 
 			catch (TypeLoadException e) 
 			{

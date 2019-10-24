@@ -65,7 +65,7 @@ namespace Novell.Directory.LDAP.VQ.Extensions
 				*/
 			try
 			{
-				LdapExtendedResponse.register(ReplicationConstants.GET_REPLICATION_FILTER_RES, Type.GetType("Novell.Directory.Ldap.Extensions.GetReplicationFilterResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.GET_REPLICATION_FILTER_RES, Type.GetType("Novell.Directory.LDAP.VQ.Extensions.GetReplicationFilterResponse"));
 			}
 			catch (Exception e)
 			{

@@ -51,7 +51,7 @@ namespace Novell.Directory.LDAP.VQ.Events.Edir
       try
       {
 	LdapExtendedResponse.register(EventOids.NLDAP_MONITOR_EVENTS_RESPONSE,
-				      Type.GetType("Novell.Directory.Ldap.Events.Edir.MonitorEventResponse", true));
+				      Type.GetType("Novell.Directory.LDAP.VQ.Events.Edir.MonitorEventResponse", true));
       }
       catch(TypeLoadException e)
       {
@@ -66,7 +66,7 @@ namespace Novell.Directory.LDAP.VQ.Events.Edir
       try
       {
 	LdapIntermediateResponse.register(EventOids.NLDAP_EVENT_NOTIFICATION,
-					  Type.GetType("Novell.Directory.Ldap.Events.Edir.EdirEventIntermediateResponse", true));
+					  Type.GetType("Novell.Directory.LDAP.VQ.Events.Edir.EdirEventIntermediateResponse", true));
       }
       catch(TypeLoadException e)
       {

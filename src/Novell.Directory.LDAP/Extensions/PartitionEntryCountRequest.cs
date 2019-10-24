@@ -67,7 +67,7 @@ namespace Novell.Directory.LDAP.VQ.Extensions
 				*/
 			try
 			{
-				LdapExtendedResponse.register(ReplicationConstants.NAMING_CONTEXT_COUNT_RES, Type.GetType("Novell.Directory.Ldap.Extensions.PartitionEntryCountResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.NAMING_CONTEXT_COUNT_RES, Type.GetType("Novell.Directory.LDAP.VQ.Extensions.PartitionEntryCountResponse"));
 			}
 			catch (Exception e)
 			{

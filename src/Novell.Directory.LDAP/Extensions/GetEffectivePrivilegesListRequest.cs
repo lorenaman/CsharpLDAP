@@ -64,7 +64,7 @@ namespace Novell.Directory.LDAP.VQ.Extensions
 		{
 			try 
 			{
-				LdapExtendedResponse.register(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_RES,Type.GetType("Novell.Directory.Ldap.Extensions.GetEffectivePrivilegesListResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.GET_EFFECTIVE_LIST_PRIVILEGES_RES,Type.GetType("Novell.Directory.LDAP.VQ.Extensions.GetEffectivePrivilegesListResponse"));
 			}
 			catch (Exception e)
 			{

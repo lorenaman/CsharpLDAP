@@ -62,7 +62,7 @@ namespace Novell.Directory.LDAP.VQ.Extensions
 				*/
 			try
 			{
-				LdapExtendedResponse.register(ReplicationConstants.GET_IDENTITY_NAME_RES, Type.GetType("Novell.Directory.Ldap.Extensions.GetBindDNResponse"));
+				LdapExtendedResponse.register(ReplicationConstants.GET_IDENTITY_NAME_RES, Type.GetType("Novell.Directory.LDAP.VQ.Extensions.GetBindDNResponse"));
 			}
 			catch (Exception e)
 			{

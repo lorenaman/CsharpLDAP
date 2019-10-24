@@ -269,7 +269,7 @@ namespace Novell.Directory.LDAP.VQ.Controls
 				try
 				{
 					// Register LdapEntryChangeControl
-					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapEntryChangeControl"));
+					register(responseOID, Type.GetType("Novell.Directory.LDAP.VQ.Controls.LdapEntryChangeControl"));
 				}
 				catch (Exception e)
 				{
