@@ -514,7 +514,7 @@ namespace Novell.Directory.LDAP.VQ.Controls
 				 */
 				try
 				{
-					register(responseOID, Type.GetType("Novell.Directory.Ldap.Controls.LdapVirtualListResponse"));
+					register(responseOID, Type.GetType("Novell.Directory.LDAP.VQ.Controls.LdapVirtualListResponse"));
 				}
 				catch (Exception e)
 				{
