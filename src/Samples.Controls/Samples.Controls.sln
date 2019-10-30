@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsynchronousSortControl", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePassword", "SimplePassword.csproj", "{FE91AD72-3CDB-4E2E-BF57-EE0C97436572}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortSearch", "SortSearch.csproj", "{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{FE91AD72-3CDB-4E2E-BF57-EE0C97436572}.Release|x64.Build.0 = Release|Any CPU
 		{FE91AD72-3CDB-4E2E-BF57-EE0C97436572}.Release|x86.ActiveCfg = Release|Any CPU
 		{FE91AD72-3CDB-4E2E-BF57-EE0C97436572}.Release|x86.Build.0 = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|x64.Build.0 = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x64.ActiveCfg = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x64.Build.0 = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
