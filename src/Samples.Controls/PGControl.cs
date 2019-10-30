@@ -59,8 +59,8 @@ public class PGControl
 		/* Check if we have the correct number of command line arguments */
 		if (args.Length < 4)
 		{
-			System.Console.Error.WriteLine("Usage:   mono PGControl <host name> <login dn>" + " <password> <container> [ssl]");
-			System.Console.Error.WriteLine("Example: mono PGControl Acme.com \"cn=admin,o=Acme\" secret" + " \"ou=Sales,o=Acme\"");
+			System.Console.Error.WriteLine("Usage:   PGControl <host name> <login dn>" + " <password> <container> [ssl]");
+			System.Console.Error.WriteLine("Example: PGControl Acme.com \"cn=admin,o=Acme\" secret" + " \"ou=Sales,o=Acme\"");
 			System.Console.Error.WriteLine("\tfor test over a secure connection add SSL argument");
 			System.Console.Error.WriteLine("Example: ./PGControl Acme.com \"cn=admin,o=Acme\" secret" + " \"ou=Sales,o=Acme\" ssl");
 			System.Environment.Exit(1);
@@ -75,11 +75,6 @@ public class PGControl
 
 		if (args.Length == 5 && String.Equals(args[4], "ssl", StringComparison.OrdinalIgnoreCase))
 			ssl = true;
-
-		/*System.String LdapHost = "23.20.46.132";
-		System.String loginDN = "cn=read-only-admin, dc=example,dc=com";
-		System.String password = "password";
-		System.String searchBase = "dc=example,dc=com";*/
 
 		/*System.String LdapHost = @"192.168.50.133";
 		System.String loginDN = @"test@rem.dev";
@@ -254,17 +249,3 @@ public class PGControl
 		}
 	}
 }
-
-/*using System;
-
-namespace Samples.Controls
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
-    }
-}
-*/
