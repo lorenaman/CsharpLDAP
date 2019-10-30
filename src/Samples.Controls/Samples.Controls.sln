@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PGControl", "PGControl.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VLVControl", "VLVControl.csproj", "{8514C2FA-184D-4A16-826A-D2CFAB666245}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsynchronousSortControl", "AsynchronousSortControl.csproj", "{07839E2A-9B8B-422D-816A-6B832EA83B39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{8514C2FA-184D-4A16-826A-D2CFAB666245}.Release|x64.Build.0 = Release|Any CPU
 		{8514C2FA-184D-4A16-826A-D2CFAB666245}.Release|x86.ActiveCfg = Release|Any CPU
 		{8514C2FA-184D-4A16-826A-D2CFAB666245}.Release|x86.Build.0 = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|x64.Build.0 = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Debug|x86.Build.0 = Debug|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|x64.ActiveCfg = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|x64.Build.0 = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|x86.ActiveCfg = Release|Any CPU
+		{07839E2A-9B8B-422D-816A-6B832EA83B39}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
