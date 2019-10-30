@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePassword", "SimplePas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortSearch", "SortSearch.csproj", "{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchPersist", "SearchPersist.csproj", "{7E95309B-40D5-4DFB-85DD-034C97782CDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +88,17 @@ Global
 		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x64.Build.0 = Release|Any CPU
 		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x86.ActiveCfg = Release|Any CPU
 		{A349C1E9-3440-4495-A8FD-9A91FAFF45AD}.Release|x86.Build.0 = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|x64.Build.0 = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E95309B-40D5-4DFB-85DD-034C97782CDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
