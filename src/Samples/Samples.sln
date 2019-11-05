@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelEntry", "DelEntry.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicGroup", "DynamicGroup.csproj", "{0FBB088F-CF0B-4A88-B616-277F0558096E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetAttributeSchema", "GetAttributeSchema.csproj", "{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +116,17 @@ Global
 		{0FBB088F-CF0B-4A88-B616-277F0558096E}.Release|x64.Build.0 = Release|Any CPU
 		{0FBB088F-CF0B-4A88-B616-277F0558096E}.Release|x86.ActiveCfg = Release|Any CPU
 		{0FBB088F-CF0B-4A88-B616-277F0558096E}.Release|x86.Build.0 = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|x64.Build.0 = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD627C27-3B3B-4660-874A-1D9F6BBB7B13}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
