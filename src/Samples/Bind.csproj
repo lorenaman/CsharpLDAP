@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <StartupObject>Samples.Bind</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Novell.Directory.LDAP.VQ">
+      <HintPath>../Novell.Directory.LDAP/bin/Debug/netstandard2.0/publish/Novell.Directory.LDAP.VQ.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
